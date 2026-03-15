@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1200px; }
+    .demo-section { margin-bottom: 2.5rem; }
+    .demo-section h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; color: #1e293b; }
+    .demo-section > p { color: #64748b; margin: 0 0 1rem; font-size: 0.9rem; }
+    .demo-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; overflow: hidden; }
+    .demo-card-body { padding: 1.25rem; }
+    .demo-card-code { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .demo-card-code summary { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; user-select: none; }
+    .demo-card-code pre { margin: 0; padding: 0 1.25rem 1rem; font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: #334155; }
+    .phone-frame {
+      width: 375px;
+      height: 667px;
+      border: 3px solid #1e293b;
+      border-radius: 28px;
+      overflow: hidden;
+      margin: 0 auto;
+      background: #f8f9fa;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      position: relative;
+    }
+    .phone-frame-sm {
+      height: 500px;
+    }
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 24px;
+      background: #1e293b;
+      border-radius: 0 0 14px 14px;
+      z-index: 100;
+    }
+    .phone-content {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .demo-btn { padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.15s; }
+    .demo-btn:hover { border-color: #3b82f6; color: #3b82f6; }
+    .demo-btn-primary { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+
+    .msg-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
+    .msg-avatar { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; color: #64748b; flex-shrink: 0; }
+    .msg-body { flex: 1; min-width: 0; }
+    .msg-sender { font-weight: 600; font-size: 14px; color: #1f2937; }
+    .msg-subject { font-size: 13px; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .msg-preview { font-size: 12px; color: #9ca3af; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .msg-time { font-size: 11px; color: #9ca3af; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Mobile Widgets</h1>
+        <p>Touch-optimized components designed for mobile applications. Shown inside phone-sized frames.</p>
+      </div>
+      <div class="showcase-content">
+
+        <!-- Navigation View -->
+        <div class="demo-section">
+          <h2>Navigation View</h2>
+          <p>iOS-style push/pop navigation with animated transitions and automatic back button. Click items to navigate deeper.</p>
+          <div class="demo-card">
+            <div class="demo-card-body">
+              <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <div class="phone-content" id="demo-nav-view"></div>
+              </div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>const nav = Teryx.frontoffice.mobile.navigationView('#container', {
+  items: [{
+    id: 'home',
+    title: 'Inbox',
+    content: '&lt;div&gt;...list of messages...&lt;/div&gt;',
+  }],
+});
+
+// Push a detail view
+nav.push({
+  id: 'detail-1',
+  title: 'Message Detail',
+  content: '&lt;div&gt;...message content...&lt;/div&gt;',
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Sheet -->
+        <div class="demo-section">
+          <h2>Bottom Sheet</h2>
+          <p>Action sheet that slides up from the bottom. Supports actions list, drag-to-dismiss, and custom content.</p>
+          <div class="demo-card">
+            <div class="demo-card-body btn-row">
+              <button class="demo-btn demo-btn-primary" id="btn-action-sheet">Action Sheet</button>
+              <button class="demo-btn" id="btn-content-sheet">Content Sheet</button>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>const actionSheet = Teryx.frontoffice.mobile.sheet({
+  title: 'Share Document',
+  message: 'Choose how you want to share this file',
+  actions: [
+    { label: 'Copy Link', icon: 'file' },
+    { label: 'Email', icon: 'email' },
+    { label: 'Download', icon: 'download' },
+    { label: 'Delete', icon: 'trash', destructive: true },
+  ],
+});
+actionSheet.open();</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Pull List -->
+        <div class="demo-section">
+          <h2>Pull-to-Refresh List</h2>
+          <p>Mobile list with pull-to-refresh, infinite scroll, and swipe actions. The list fetches data from an API.</p>
+          <div class="demo-card">
+            <div class="demo-card-body">
+              <div class="phone-frame phone-frame-sm">
+                <div class="phone-notch"></div>
+                <div class="phone-content" style="padding-top: 24px;">
+                  <div style="padding: 12px 16px; background: #fff; border-bottom: 1px solid #e5e7eb; font-weight: 600; font-size: 17px;">Messages</div>
+                  <div id="demo-pull-list" style="height: calc(100% - 50px);"></div>
+                </div>
+              </div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.frontoffice.mobile.pullList('#demo-pull-list', {
+  source: '/api/messages',
+  itemsField: 'items',
+  pullToRefresh: true,
+  infiniteScroll: true,
+  pageSize: 10,
+  itemTemplate: '&lt;div class="msg-item"&gt;' +
+    '&lt;div class="msg-avatar"&gt;{{sender}}&lt;/div&gt;' +
+    '&lt;div class="msg-body"&gt;' +
+    '&lt;div class="msg-sender"&gt;{{sender}}&lt;/div&gt;' +
+    '&lt;div class="msg-subject"&gt;{{subject}}&lt;/div&gt;' +
+    '&lt;/div&gt;&lt;span class="msg-time"&gt;{{time}}&lt;/span&gt;&lt;/div&gt;',
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Bottom Tabs -->
+        <div class="demo-section">
+          <h2>Bottom Tabs</h2>
+          <p>Fixed bottom tab bar for app-level navigation with icons, labels, and badge indicators.</p>
+          <div class="demo-card">
+            <div class="demo-card-body">
+              <div class="phone-frame phone-frame-sm">
+                <div class="phone-notch"></div>
+                <div class="phone-content" id="demo-bottom-tabs" style="padding-top: 24px;"></div>
+              </div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.frontoffice.mobile.bottomTabs('#container', {
+  items: [
+    { id: 'home', label: 'Home', icon: 'home', active: true,
+      content: '&lt;div style="padding:1.5rem; text-align:center"&gt;Home Screen&lt;/div&gt;' },
+    { id: 'search', label: 'Search', icon: 'search',
+      content: '&lt;div style="padding:1.5rem; text-align:center"&gt;Search Screen&lt;/div&gt;' },
+    { id: 'inbox', label: 'Inbox', icon: 'email', badge: '5',
+      content: '&lt;div style="padding:1.5rem; text-align:center"&gt;Inbox Screen&lt;/div&gt;' },
+    { id: 'profile', label: 'Profile', icon: 'user',
+      content: '&lt;div style="padding:1.5rem; text-align:center"&gt;Profile Screen&lt;/div&gt;' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    // Sidebar
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user', active: true },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+      ],
+    });
+
+    // Navigation View
+    const nav = Teryx.frontoffice.mobile.navigationView('#demo-nav-view', {
+      items: [{
+        id: 'inbox',
+        title: 'Inbox',
+        content: `
+          <div style="padding-top: 24px;">
+            ${[
+              { name: 'Sarah Connor', subject: 'Project update for Q3', time: '2m' },
+              { name: 'John Doe', subject: 'Meeting notes from today', time: '15m' },
+              { name: 'Jane Smith', subject: 'Q3 budget review attached', time: '1h' },
+              { name: 'Alex Kim', subject: 'New feature request from client', time: '3h' },
+              { name: 'Morgan Lee', subject: 'Bug report #1042 resolved', time: '5h' },
+              { name: 'Taylor Swift', subject: 'Design system update v3.0', time: '1d' },
+              { name: 'Chris Evans', subject: 'Deployment scheduled for Friday', time: '1d' },
+            ].map((m, i) => `
+              <div onclick="window.pushDetail(${i})" style="display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid #e5e7eb; cursor:pointer; background:#fff;">
+                <div style="width:40px;height:40px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#64748b;flex-shrink:0;">${m.name.split(' ').map(w=>w[0]).join('')}</div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-weight:600;font-size:14px;">${m.name}</div>
+                  <div style="font-size:13px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.subject}</div>
+                </div>
+                <span style="font-size:11px;color:#9ca3af;flex-shrink:0;">${m.time}</span>
+              </div>
+            `).join('')}
+          </div>
+        `,
+      }],
+    });
+
+    const messages = [
+      { name: 'Sarah Connor', subject: 'Project update for Q3', body: 'Hi team, I wanted to share the latest progress on our Q3 initiatives. We have completed 85% of the planned features and are on track for the end-of-quarter release. Key milestones achieved include the new dashboard redesign and API performance improvements.' },
+      { name: 'John Doe', subject: 'Meeting notes from today', body: 'Here are the key takeaways from our planning session: 1) We agreed to prioritize the mobile app rewrite. 2) The backend migration will begin next sprint. 3) Design review is scheduled for Thursday.' },
+      { name: 'Jane Smith', subject: 'Q3 budget review', body: 'Please find attached the Q3 budget review. Overall we are tracking 3% under budget which gives us some room for the additional infrastructure costs we discussed.' },
+      { name: 'Alex Kim', subject: 'New feature request', body: 'Our enterprise client has requested a bulk import feature for their user management workflow. I have created a detailed specification document. Estimated effort: 2 sprints.' },
+      { name: 'Morgan Lee', subject: 'Bug report #1042', body: 'The issue with the date picker component has been resolved. Root cause was a timezone offset calculation error in the formatting utility. Fix has been deployed to staging for verification.' },
+      { name: 'Taylor Swift', subject: 'Design system v3.0', body: 'The design system update includes new color tokens, updated spacing scale, and revised component specifications for buttons, inputs, and cards. Migration guide is available in the wiki.' },
+      { name: 'Chris Evans', subject: 'Deployment schedule', body: 'The production deployment is scheduled for Friday at 10 PM EST. Estimated downtime: 15 minutes. All team leads should be available in the deployment channel.' },
+    ];
+
+    window.pushDetail = function(idx) {
+      const m = messages[idx];
+      nav.push({
+        id: 'detail-' + idx,
+        title: m.name,
+        content: `
+          <div style="padding:16px;">
+            <h3 style="margin:0 0 4px;font-size:17px;">${m.subject}</h3>
+            <p style="margin:0 0 16px;font-size:13px;color:#6b7280;">From ${m.name}</p>
+            <p style="margin:0;font-size:15px;line-height:1.6;color:#374151;">${m.body}</p>
+          </div>
+        `,
+      });
+    };
+
+    // Action Sheet
+    const actionSheet = Teryx.frontoffice.mobile.sheet({
+      title: 'Share Document',
+      message: 'Choose how you want to share this file',
+      actions: [
+        { label: 'Copy Link', icon: 'file', handler: () => Teryx.toast.success('Link copied') },
+        { label: 'Send via Email', icon: 'edit', handler: () => Teryx.toast.info('Opening email') },
+        { label: 'Download', icon: 'download', handler: () => Teryx.toast.success('Download started') },
+        { label: 'Delete', icon: 'trash', destructive: true, handler: () => Teryx.toast.danger('File deleted') },
+      ],
+    });
+
+    document.getElementById('btn-action-sheet').onclick = () => actionSheet.open();
+
+    // Content Sheet
+    const contentSheet = Teryx.frontoffice.mobile.sheet({
+      title: 'Filter Options',
+      content: `
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <label style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Status</label>
+            <select style="width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:8px;font-size:15px;">
+              <option>All</option><option>Active</option><option>Inactive</option><option>Pending</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Date Range</label>
+            <select style="width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:8px;font-size:15px;">
+              <option>Last 7 days</option><option>Last 30 days</option><option>Last 90 days</option><option>All time</option>
+            </select>
+          </div>
+          <button style="width:100%;padding:12px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px;" onclick="this.closest('.tx-sheet-overlay').querySelector('.tx-sheet-cancel')?.click()">Apply Filters</button>
+        </div>
+      `,
+      showCancel: true,
+    });
+
+    document.getElementById('btn-content-sheet').onclick = () => contentSheet.open();
+
+    // Pull List
+    Teryx.frontoffice.mobile.pullList('#demo-pull-list', {
+      source: '/api/messages',
+      itemsField: 'items',
+      pullToRefresh: true,
+      infiniteScroll: true,
+      pageSize: 10,
+      itemTemplate: '<div class="msg-item"><div class="msg-avatar" style="background:#dbeafe;color:#3b82f6;">{{sender}}</div><div class="msg-body"><div class="msg-sender">{{sender}}</div><div class="msg-subject">{{subject}}</div><div class="msg-preview">{{preview}}</div></div><span class="msg-time">{{time}}</span></div>',
+      onItemTap: (item) => {
+        Teryx.toast.info('Tapped: ' + item.subject);
+      },
+    });
+
+    // Bottom Tabs
+    Teryx.frontoffice.mobile.bottomTabs('#demo-bottom-tabs', {
+      items: [
+        { id: 'home', label: 'Home', icon: 'home', active: true,
+          content: '<div style="padding:2rem; text-align:center;"><h2 style="margin:0 0 0.5rem; font-size:1.25rem;">Home</h2><p style="color:#6b7280; margin:0;">Welcome to your dashboard. Your recent activity and updates will appear here.</p></div>' },
+        { id: 'search', label: 'Search', icon: 'search',
+          content: '<div style="padding:2rem; text-align:center;"><h2 style="margin:0 0 0.5rem; font-size:1.25rem;">Search</h2><p style="color:#6b7280; margin:0;">Find people, messages, files, and more across your workspace.</p></div>' },
+        { id: 'inbox', label: 'Inbox', icon: 'edit', badge: '5',
+          content: '<div style="padding:2rem; text-align:center;"><h2 style="margin:0 0 0.5rem; font-size:1.25rem;">Inbox</h2><p style="color:#6b7280; margin:0;">You have 5 unread messages waiting for your attention.</p></div>' },
+        { id: 'profile', label: 'Profile', icon: 'user',
+          content: '<div style="padding:2rem; text-align:center;"><h2 style="margin:0 0 0.5rem; font-size:1.25rem;">Profile</h2><p style="color:#6b7280; margin:0;">Manage your account settings, preferences, and connected services.</p></div>' },
+      ],
+    });
+  </script>
+</body>
+</html>

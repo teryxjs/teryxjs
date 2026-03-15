@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teryx Widget Framework — Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: var(--tx-bg, #ffffff); color: var(--tx-text, #1f2937); }
+
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+
+    /* Hero Section */
+    .showcase-hero {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+      color: #fff;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .showcase-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 50%, rgba(139,92,246,0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .showcase-hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.02em;
+      position: relative;
+    }
+    .showcase-hero h1 span { color: #60a5fa; }
+    .showcase-hero p {
+      font-size: 1.25rem;
+      color: #94a3b8;
+      margin: 0 0 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+    .showcase-hero-version {
+      display: inline-block;
+      background: rgba(59,130,246,0.2);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: #93c5fd;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .showcase-hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      position: relative;
+    }
+    .showcase-hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .showcase-hero-btn-primary { background: #3b82f6; color: #fff; }
+    .showcase-hero-btn-primary:hover { background: #2563eb; }
+    .showcase-hero-btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+    .showcase-hero-btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
+
+    /* Stats bar */
+    .showcase-stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 1.5rem 2rem;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .showcase-stat-item { text-align: center; }
+    .showcase-stat-item strong { display: block; font-size: 1.75rem; font-weight: 800; color: #1e293b; }
+    .showcase-stat-item span { font-size: 0.85rem; color: #64748b; }
+
+    /* Feature grid */
+    .showcase-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    .showcase-section h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: #1e293b;
+    }
+    .showcase-section > p {
+      color: #64748b;
+      margin: 0 0 2rem;
+      font-size: 1.05rem;
+    }
+    .showcase-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .showcase-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      background: #fff;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    .showcase-card:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 4px 16px rgba(59,130,246,0.1);
+      transform: translateY(-2px);
+    }
+    .showcase-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
+    }
+    .showcase-card h3 { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.5rem; }
+    .showcase-card p { font-size: 0.9rem; color: #64748b; margin: 0; line-height: 1.5; flex: 1; }
+    .showcase-card-count {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .icon-grids { background: #eff6ff; color: #3b82f6; }
+    .icon-forms { background: #f0fdf4; color: #22c55e; }
+    .icon-charts { background: #fef3c7; color: #f59e0b; }
+    .icon-calendar { background: #fce7f3; color: #ec4899; }
+    .icon-layout { background: #f5f3ff; color: #8b5cf6; }
+    .icon-feedback { background: #fef2f2; color: #ef4444; }
+    .icon-content { background: #ecfeff; color: #06b6d4; }
+    .icon-data { background: #f0f9ff; color: #0ea5e9; }
+    .icon-mobile { background: #fdf4ff; color: #d946ef; }
+    .icon-frontoffice { background: #f7fee7; color: #84cc16; }
+
+    /* Footer */
+    .showcase-footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid #e2e8f0;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+
+      <div class="showcase-hero">
+        <div class="showcase-hero-version">v1.0 Framework</div>
+        <h1>The <span>Teryx</span> Widget Showcase</h1>
+        <p>A comprehensive collection of enterprise-grade UI widgets built on the xhtmlx engine. Explore interactive demos for every component.</p>
+        <div class="showcase-hero-actions">
+          <a href="/showcase/grids.html" class="showcase-hero-btn showcase-hero-btn-primary">Explore Widgets</a>
+          <a href="/dashboard.html" class="showcase-hero-btn showcase-hero-btn-outline">View Dashboard</a>
+        </div>
+      </div>
+
+      <div class="showcase-stats-bar">
+        <div class="showcase-stat-item"><strong>50+</strong><span>Widgets</span></div>
+        <div class="showcase-stat-item"><strong>10</strong><span>Categories</span></div>
+        <div class="showcase-stat-item"><strong>0</strong><span>Dependencies</span></div>
+        <div class="showcase-stat-item"><strong>SVG</strong><span>Charts</span></div>
+      </div>
+
+      <div class="showcase-section">
+        <h2>Widget Categories</h2>
+        <p>Click a category to see interactive demos of every widget with live code examples.</p>
+
+        <div class="showcase-cards">
+          <a href="/showcase/grids.html" class="showcase-card">
+            <div class="showcase-card-icon icon-grids">&#9638;</div>
+            <h3>Grids &amp; Tables</h3>
+            <p>Data grids with sorting, searching, pagination, row selection, toolbar, and export capabilities.</p>
+            <div class="showcase-card-count">5 demos</div>
+          </a>
+          <a href="/showcase/forms.html" class="showcase-card">
+            <div class="showcase-card-icon icon-forms">&#9998;</div>
+            <h3>Forms &amp; Inputs</h3>
+            <p>All field types with validation, layouts (vertical, horizontal, inline), and field group support.</p>
+            <div class="showcase-card-count">4 demos</div>
+          </a>
+          <a href="/showcase/charts.html" class="showcase-card">
+            <div class="showcase-card-icon icon-charts">&#9683;</div>
+            <h3>Charts</h3>
+            <p>Pure SVG charts: bar, line, area, pie, donut, scatter, and gauge visualizations.</p>
+            <div class="showcase-card-count">7 demos</div>
+          </a>
+          <a href="/showcase/calendar.html" class="showcase-card">
+            <div class="showcase-card-icon icon-calendar">&#9715;</div>
+            <h3>Calendar</h3>
+            <p>Full-featured calendar with month, week, and day views, event management, and navigation.</p>
+            <div class="showcase-card-count">3 demos</div>
+          </a>
+          <a href="/showcase/layout.html" class="showcase-card">
+            <div class="showcase-card-icon icon-layout">&#9707;</div>
+            <h3>Layout</h3>
+            <p>Tabs, accordion, sidebar, navbar, steps/wizard, splitter, and drawer containers.</p>
+            <div class="showcase-card-count">7 demos</div>
+          </a>
+          <a href="/showcase/feedback.html" class="showcase-card">
+            <div class="showcase-card-icon icon-feedback">&#9888;</div>
+            <h3>Feedback</h3>
+            <p>Modal dialogs, toast notifications, message boxes, alerts, progress bars, dropdowns, and context menus.</p>
+            <div class="showcase-card-count">7 demos</div>
+          </a>
+          <a href="/showcase/content.html" class="showcase-card">
+            <div class="showcase-card-icon icon-content">&#9733;</div>
+            <h3>Content</h3>
+            <p>Cards, stat/KPI panels, timeline, carousel, rating stars, and tree views.</p>
+            <div class="showcase-card-count">6 demos</div>
+          </a>
+          <a href="/showcase/data.html" class="showcase-card">
+            <div class="showcase-card-icon icon-data">&#9783;</div>
+            <h3>Data Widgets</h3>
+            <p>Property grid, descriptions, data list, standalone pagination, and data export utilities.</p>
+            <div class="showcase-card-count">5 demos</div>
+          </a>
+          <a href="/showcase/mobile.html" class="showcase-card">
+            <div class="showcase-card-icon icon-mobile">&#9743;</div>
+            <h3>Mobile</h3>
+            <p>Touch-optimized widgets: navigation view, bottom sheet, pull-to-refresh list, and bottom tabs.</p>
+            <div class="showcase-card-count">4 demos</div>
+          </a>
+          <a href="/showcase/frontoffice.html" class="showcase-card">
+            <div class="showcase-card-icon icon-frontoffice">&#9733;</div>
+            <h3>Front Office</h3>
+            <p>Landing page sections: hero, pricing tables, testimonials, feature grids, and footers.</p>
+            <div class="showcase-card-count">5 demos</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="showcase-footer">
+        Teryx Widget Framework &mdash; Built with xhtmlx
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home', active: true },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+        { section: true, label: 'Other' },
+        { label: 'Dashboard Demo', href: '/dashboard.html', icon: 'home' },
+      ],
+    });
+  </script>
+</body>
+</html>

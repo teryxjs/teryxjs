@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1200px; }
+    .demo-section { margin-bottom: 2.5rem; }
+    .demo-section h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; color: #1e293b; }
+    .demo-section > p { color: #64748b; margin: 0 0 1rem; font-size: 0.9rem; }
+    .demo-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; overflow: hidden; }
+    .demo-card-body { padding: 1.25rem; }
+    .demo-card-code { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .demo-card-code summary { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; user-select: none; }
+    .demo-card-code pre { margin: 0; padding: 0 1.25rem 1rem; font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: #334155; }
+    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .demo-btn { padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.15s; }
+    .demo-btn:hover { border-color: #3b82f6; color: #3b82f6; }
+    .demo-btn-primary { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+    .demo-btn-primary:hover { background: #2563eb; }
+    .demo-btn-success { background: #22c55e; color: #fff; border-color: #22c55e; }
+    .demo-btn-warning { background: #f59e0b; color: #fff; border-color: #f59e0b; }
+    .demo-btn-danger { background: #ef4444; color: #fff; border-color: #ef4444; }
+    .progress-demos { display: flex; flex-direction: column; gap: 1rem; }
+    .context-demo-area { padding: 2rem; border: 2px dashed #e2e8f0; border-radius: 8px; text-align: center; color: #94a3b8; user-select: none; }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Feedback Widgets</h1>
+        <p>Modals, notifications, alerts, progress indicators, dropdowns, and context menus.</p>
+      </div>
+      <div class="showcase-content">
+
+        <!-- Modal -->
+        <div class="demo-section">
+          <h2>Modal / Dialog</h2>
+          <p>Modal windows with customizable sizes, dragging, and button actions.</p>
+          <div class="demo-card">
+            <div class="demo-card-body btn-row">
+              <button class="demo-btn demo-btn-primary" id="btn-modal-sm">Small Modal</button>
+              <button class="demo-btn demo-btn-primary" id="btn-modal-md">Medium Modal</button>
+              <button class="demo-btn demo-btn-primary" id="btn-modal-lg">Large Modal</button>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>const mdl = Teryx.modal(document.body, {
+  title: 'Confirm Action',
+  content: '&lt;p&gt;Are you sure you want to proceed?&lt;/p&gt;',
+  size: 'md',
+  buttons: [
+    { label: 'Cancel', variant: 'secondary', action: 'close' },
+    { label: 'Confirm', variant: 'primary', handler: () => { Teryx.toast.success('Confirmed!'); mdl.close(); } },
+  ],
+});
+mdl.open();</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Toast -->
+        <div class="demo-section">
+          <h2>Toast Notifications</h2>
+          <p>Temporary notification messages that appear and auto-dismiss. Four types available.</p>
+          <div class="demo-card">
+            <div class="demo-card-body btn-row">
+              <button class="demo-btn" id="btn-toast-info">Info Toast</button>
+              <button class="demo-btn demo-btn-success" id="btn-toast-success">Success Toast</button>
+              <button class="demo-btn demo-btn-warning" id="btn-toast-warning">Warning Toast</button>
+              <button class="demo-btn demo-btn-danger" id="btn-toast-danger">Danger Toast</button>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.toast.info('This is an informational message');
+Teryx.toast.success('Operation completed successfully', { title: 'Success' });
+Teryx.toast.warning('Please review before continuing');
+Teryx.toast.danger('Something went wrong', { duration: 8000 });</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- MessageBox -->
+        <div class="demo-section">
+          <h2>Message Box</h2>
+          <p>System-style alert and confirmation dialogs with typed icons.</p>
+          <div class="demo-card">
+            <div class="demo-card-body btn-row">
+              <button class="demo-btn" id="btn-msg-info">Info</button>
+              <button class="demo-btn demo-btn-warning" id="btn-msg-warning">Warning</button>
+              <button class="demo-btn demo-btn-danger" id="btn-msg-error">Error</button>
+              <button class="demo-btn demo-btn-primary" id="btn-msg-confirm">Confirm Dialog</button>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.messageBox({
+  title: 'Delete Item',
+  message: 'This action cannot be undone. Are you sure?',
+  type: 'warning',
+  icon: true,
+  buttons: [
+    { text: 'Cancel', value: 'cancel', variant: 'secondary' },
+    { text: 'Delete', value: 'delete', variant: 'danger' },
+  ],
+  onResult: (btn) => Teryx.toast.info('You clicked: ' + btn),
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Alert -->
+        <div class="demo-section">
+          <h2>Alert</h2>
+          <p>Inline alert banners for contextual messages. Can be dismissible.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-alerts" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.alert('#container', { type: 'info', message: 'Your trial expires in 7 days.', dismissible: true, icon: true });
+Teryx.alert('#container', { type: 'success', message: 'Profile updated successfully.', icon: true });
+Teryx.alert('#container', { type: 'warning', message: 'Low disk space on server.', title: 'Warning', icon: true });
+Teryx.alert('#container', { type: 'danger', message: 'Payment failed. Please update your card.', icon: true, dismissible: true });</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="demo-section">
+          <h2>Progress Bar</h2>
+          <p>Progress indicators with various sizes, colors, and animation options.</p>
+          <div class="demo-card">
+            <div class="demo-card-body progress-demos">
+              <div id="demo-progress-1"></div>
+              <div id="demo-progress-2"></div>
+              <div id="demo-progress-3"></div>
+              <div id="demo-progress-4"></div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.progress('#p1', { value: 25, showValue: true, label: 'Upload Progress', size: 'sm' });
+Teryx.progress('#p2', { value: 60, showValue: true, color: 'success', size: 'md' });
+Teryx.progress('#p3', { value: 85, showValue: true, color: 'warning', striped: true, animated: true });
+Teryx.progress('#p4', { value: 45, showValue: true, color: 'danger', size: 'lg' });</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="demo-section">
+          <h2>Dropdown Menu</h2>
+          <p>Click-triggered dropdown menus with icons, nested items, and dividers.</p>
+          <div class="demo-card">
+            <div class="demo-card-body btn-row">
+              <button class="demo-btn demo-btn-primary" id="btn-dropdown">Actions Menu</button>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.dropdown({
+  trigger: '#btn-dropdown',
+  items: [
+    { label: 'Edit', icon: 'edit' },
+    { label: 'Duplicate', icon: 'file' },
+    { divider: true },
+    { label: 'Archive', icon: 'folder' },
+    { label: 'Delete', icon: 'trash', handler: () => Teryx.toast.danger('Deleted!') },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Context Menu -->
+        <div class="demo-section">
+          <h2>Context Menu</h2>
+          <p>Right-click the area below to see a context menu with custom actions.</p>
+          <div class="demo-card">
+            <div class="demo-card-body">
+              <div class="context-demo-area" id="context-demo-area">
+                Right-click here to open the context menu
+              </div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.contextMenu({
+  trigger: '#context-demo-area',
+  event: 'contextmenu',
+  items: [
+    { label: 'Cut', icon: 'edit', shortcut: 'Ctrl+X' },
+    { label: 'Copy', icon: 'file', shortcut: 'Ctrl+C' },
+    { label: 'Paste', icon: 'folder', shortcut: 'Ctrl+V' },
+    { divider: true },
+    { label: 'Select All', shortcut: 'Ctrl+A' },
+    { divider: true },
+    { label: 'Properties', icon: 'settings' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    // Sidebar
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info', active: true },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+      ],
+    });
+
+    // Modals
+    document.getElementById('btn-modal-sm').onclick = () => {
+      const m = Teryx.modal(document.body, {
+        title: 'Small Dialog',
+        content: '<div style="padding:0.5rem"><p>This is a small modal for quick confirmations or messages.</p></div>',
+        size: 'sm',
+        buttons: [
+          { label: 'Close', variant: 'secondary', action: 'close' },
+        ],
+      });
+      m.open();
+    };
+
+    document.getElementById('btn-modal-md').onclick = () => {
+      const m = Teryx.modal(document.body, {
+        title: 'Confirm Action',
+        content: '<div style="padding:0.5rem"><p>Are you sure you want to proceed with this operation? This action will update 47 records in the database.</p></div>',
+        size: 'md',
+        buttons: [
+          { label: 'Cancel', variant: 'secondary', action: 'close' },
+          { label: 'Confirm', variant: 'primary', handler: () => { Teryx.toast.success('Action confirmed!'); m.close(); } },
+        ],
+      });
+      m.open();
+    };
+
+    document.getElementById('btn-modal-lg').onclick = () => {
+      const m = Teryx.modal(document.body, {
+        title: 'User Details',
+        content: '<div style="padding:0.5rem"><p><strong>Name:</strong> Alice Johnson</p><p><strong>Email:</strong> alice@example.com</p><p><strong>Role:</strong> Administrator</p><p><strong>Department:</strong> Engineering</p><p><strong>Joined:</strong> January 15, 2024</p><p>Alice manages the platform team and oversees infrastructure operations. She has full admin access to all system modules.</p></div>',
+        size: 'lg',
+        buttons: [
+          { label: 'Close', variant: 'secondary', action: 'close' },
+          { label: 'Edit User', variant: 'primary', handler: () => { Teryx.toast.info('Edit mode enabled'); m.close(); } },
+        ],
+      });
+      m.open();
+    };
+
+    // Toasts
+    document.getElementById('btn-toast-info').onclick = () => {
+      Teryx.toast.info('This is an informational notification', { title: 'Info' });
+    };
+    document.getElementById('btn-toast-success').onclick = () => {
+      Teryx.toast.success('Operation completed successfully', { title: 'Success' });
+    };
+    document.getElementById('btn-toast-warning').onclick = () => {
+      Teryx.toast.warning('Please review your changes before saving', { title: 'Warning' });
+    };
+    document.getElementById('btn-toast-danger').onclick = () => {
+      Teryx.toast.danger('Failed to connect to the server', { title: 'Error', duration: 8000 });
+    };
+
+    // Message Boxes
+    document.getElementById('btn-msg-info').onclick = () => {
+      Teryx.messageBox({
+        title: 'System Update',
+        message: 'A new version of the application is available. Please refresh to get the latest features.',
+        type: 'info',
+        icon: true,
+      });
+    };
+    document.getElementById('btn-msg-warning').onclick = () => {
+      Teryx.messageBox({
+        title: 'Unsaved Changes',
+        message: 'You have unsaved changes that will be lost if you navigate away.',
+        type: 'warning',
+        icon: true,
+        buttons: [
+          { text: 'Discard', value: 'discard', variant: 'warning' },
+          { text: 'Save', value: 'save', variant: 'primary' },
+        ],
+        onResult: (btn) => Teryx.toast.info('You chose: ' + btn),
+      });
+    };
+    document.getElementById('btn-msg-error').onclick = () => {
+      Teryx.messageBox({
+        title: 'Connection Failed',
+        message: 'Unable to reach the database server. Please check your network connection and try again.',
+        type: 'error',
+        icon: true,
+      });
+    };
+    document.getElementById('btn-msg-confirm').onclick = () => {
+      Teryx.messageBox({
+        title: 'Delete Item',
+        message: 'This will permanently delete "Q3 Report.pdf". This action cannot be undone.',
+        type: 'warning',
+        icon: true,
+        buttons: [
+          { text: 'Cancel', value: 'cancel', variant: 'secondary' },
+          { text: 'Delete', value: 'delete', variant: 'danger' },
+        ],
+        onResult: (btn) => {
+          if (btn === 'delete') Teryx.toast.danger('Item deleted');
+          else Teryx.toast.info('Cancelled');
+        },
+      });
+    };
+
+    // Alerts
+    const alertContainer = document.getElementById('demo-alerts');
+    ['info', 'success', 'warning', 'danger'].forEach(type => {
+      const div = document.createElement('div');
+      alertContainer.appendChild(div);
+    });
+
+    Teryx.alert(alertContainer.children[0], { type: 'info', message: 'Your trial expires in 7 days. Upgrade now to keep all features.', dismissible: true, icon: true });
+    Teryx.alert(alertContainer.children[1], { type: 'success', message: 'Profile updated successfully. Changes are now live.', icon: true });
+    Teryx.alert(alertContainer.children[2], { type: 'warning', message: 'Server disk usage is at 89%. Consider cleaning up old logs.', title: 'Warning', icon: true });
+    Teryx.alert(alertContainer.children[3], { type: 'danger', message: 'Payment failed. Please update your billing information to avoid service interruption.', icon: true, dismissible: true });
+
+    // Progress
+    Teryx.progress('#demo-progress-1', { value: 25, showValue: true, label: 'Upload Progress', size: 'sm' });
+    Teryx.progress('#demo-progress-2', { value: 60, showValue: true, color: 'success', size: 'md' });
+    Teryx.progress('#demo-progress-3', { value: 85, showValue: true, color: 'warning', striped: true, animated: true });
+    Teryx.progress('#demo-progress-4', { value: 45, showValue: true, color: 'danger', size: 'lg' });
+
+    // Dropdown
+    Teryx.dropdown({
+      trigger: '#btn-dropdown',
+      items: [
+        { label: 'Edit', icon: 'edit', handler: () => Teryx.toast.info('Edit clicked') },
+        { label: 'Duplicate', icon: 'file', handler: () => Teryx.toast.info('Duplicated') },
+        { divider: true },
+        { label: 'Archive', icon: 'folder', handler: () => Teryx.toast.warning('Archived') },
+        { label: 'Delete', icon: 'trash', handler: () => Teryx.toast.danger('Deleted!') },
+      ],
+    });
+
+    // Context Menu
+    Teryx.contextMenu({
+      trigger: '#context-demo-area',
+      event: 'contextmenu',
+      items: [
+        { label: 'Cut', icon: 'edit', shortcut: 'Ctrl+X', handler: () => Teryx.toast.info('Cut') },
+        { label: 'Copy', icon: 'file', shortcut: 'Ctrl+C', handler: () => Teryx.toast.info('Copied') },
+        { label: 'Paste', icon: 'folder', shortcut: 'Ctrl+V', handler: () => Teryx.toast.info('Pasted') },
+        { divider: true },
+        { label: 'Select All', shortcut: 'Ctrl+A', handler: () => Teryx.toast.info('Selected all') },
+        { divider: true },
+        { label: 'Properties', icon: 'settings', handler: () => Teryx.toast.info('Properties opened') },
+      ],
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "name": "teryx",
+  "version": "0.1.0",
+  "description": "Enterprise widget framework built on xhtmlx — Sencha-grade components for JSON-driven UIs",
+  "type": "module",
+  "main": "./dist/teryx.cjs",
+  "module": "./dist/teryx.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/teryx.js",
+      "require": "./dist/teryx.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./css": "./dist/teryx.css"
+  },
+  "files": [
+    "dist",
+    "xhtmlx.js"
+  ],
+  "scripts": {
+    "build": "tsup && cp styles/teryx.css dist/teryx.css",
+    "dev": "tsup --watch",
+    "demo": "node examples/server.cjs",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["xhtmlx", "widgets", "ui", "framework", "components", "enterprise"],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "tsup": "^8.0.0",
+    "vitest": "^1.3.0",
+    "jsdom": "^24.0.0",
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1200px; }
+    .demo-section { margin-bottom: 2.5rem; }
+    .demo-section h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; color: #1e293b; }
+    .demo-section > p { color: #64748b; margin: 0 0 1rem; font-size: 0.9rem; }
+    .demo-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; overflow: hidden; }
+    .demo-card-body { padding: 1.25rem; }
+    .demo-card-code { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .demo-card-code summary { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; user-select: none; }
+    .demo-card-code pre { margin: 0; padding: 0 1.25rem 1rem; font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: #334155; }
+    .view-switcher { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .view-btn { padding: 0.4rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: #64748b; transition: all 0.15s; }
+    .view-btn:hover { border-color: #3b82f6; color: #3b82f6; }
+    .view-btn.active { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Calendar</h1>
+        <p>Full calendar widget with month, week, and day views plus event management.</p>
+      </div>
+      <div class="showcase-content">
+
+        <!-- Month View Calendar -->
+        <div class="demo-section">
+          <h2>Month View with Events</h2>
+          <p>Default month view showing events placed on their respective dates. Click events for details.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-month-cal"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>const cal = Teryx.calendar('#demo-month-cal', {
+  view: 'month',
+  events: [
+    { id: 'e1', title: 'Team Standup', start: '2025-03-15T09:00', color: '#3b82f6' },
+    { id: 'e2', title: 'Sprint Planning', start: '2025-03-16T10:00', end: '2025-03-16T12:00', color: '#22c55e' },
+    { id: 'e3', title: 'Design Review', start: '2025-03-17T14:00', color: '#f59e0b' },
+    { id: 'e4', title: 'Product Launch', start: '2025-03-20', allDay: true, color: '#ef4444' },
+    { id: 'e5', title: 'Board Meeting', start: '2025-03-18T13:00', color: '#8b5cf6' },
+    { id: 'e6', title: 'All-Hands', start: '2025-03-22T11:00', color: '#06b6d4' },
+  ],
+  onEventClick: (event) => {
+    Teryx.toast.info(event.title + ' clicked');
+  },
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Week View Calendar -->
+        <div class="demo-section">
+          <h2>Week View</h2>
+          <p>Weekly schedule showing events positioned by time of day across the week.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-week-cal"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.calendar('#demo-week-cal', {
+  view: 'week',
+  events: [...],
+  onDateClick: (date) => {
+    Teryx.toast.info('Clicked: ' + date);
+  },
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Day View Calendar -->
+        <div class="demo-section">
+          <h2>Day View</h2>
+          <p>Single-day view with hourly time slots showing today's schedule.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-day-cal"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.calendar('#demo-day-cal', {
+  view: 'day',
+  events: [...],
+  onEventClick: (event) => {
+    Teryx.messageBox({
+      title: event.title,
+      message: 'Start: ' + event.start,
+      type: 'info',
+    });
+  },
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    // Sidebar
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar', active: true },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+      ],
+    });
+
+    // Build events relative to today
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, '0');
+    const d = today.getDate();
+    function day(offset) { return String(Math.min(d + offset, 28)).padStart(2, '0'); }
+    function dateStr(offset, time) {
+      const ds = `${y}-${m}-${day(offset)}`;
+      return time ? ds + 'T' + time : ds;
+    }
+
+    const events = [
+      { id: 'e1', title: 'Team Standup', start: dateStr(0, '09:00'), end: dateStr(0, '09:30'), color: '#3b82f6' },
+      { id: 'e2', title: 'Sprint Planning', start: dateStr(1, '10:00'), end: dateStr(1, '12:00'), color: '#22c55e' },
+      { id: 'e3', title: 'Design Review', start: dateStr(2, '14:00'), end: dateStr(2, '15:30'), color: '#f59e0b' },
+      { id: 'e4', title: 'Product Launch', start: dateStr(5), allDay: true, color: '#ef4444' },
+      { id: 'e5', title: 'Board Meeting', start: dateStr(3, '13:00'), end: dateStr(3, '16:00'), color: '#8b5cf6' },
+      { id: 'e6', title: 'All-Hands', start: dateStr(7, '11:00'), end: dateStr(7, '12:00'), color: '#06b6d4' },
+      { id: 'e7', title: '1:1 with Manager', start: dateStr(0, '14:00'), end: dateStr(0, '14:30'), color: '#ec4899' },
+      { id: 'e8', title: 'Code Review', start: dateStr(1, '15:00'), end: dateStr(1, '16:00'), color: '#14b8a6' },
+    ];
+
+    // Month View
+    Teryx.calendar('#demo-month-cal', {
+      view: 'month',
+      events: events,
+      onEventClick: (event) => {
+        Teryx.toast.info(event.title + ' clicked');
+      },
+    });
+
+    // Week View
+    Teryx.calendar('#demo-week-cal', {
+      view: 'week',
+      events: events,
+      onDateClick: (date) => {
+        Teryx.toast.info('Clicked: ' + date);
+      },
+    });
+
+    // Day View
+    Teryx.calendar('#demo-day-cal', {
+      view: 'day',
+      events: events,
+      onEventClick: (event) => {
+        Teryx.messageBox({
+          title: event.title,
+          message: 'Starts at: ' + event.start,
+          type: 'info',
+        });
+      },
+    });
+  </script>
+</body>
+</html>

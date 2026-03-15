@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forms &amp; Inputs — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1200px; }
+    .demo-section { margin-bottom: 2.5rem; }
+    .demo-section h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; color: #1e293b; }
+    .demo-section > p { color: #64748b; margin: 0 0 1rem; font-size: 0.9rem; }
+    .demo-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; overflow: hidden; }
+    .demo-card-body { padding: 1.25rem; }
+    .demo-card-code { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .demo-card-code summary { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; user-select: none; }
+    .demo-card-code pre { margin: 0; padding: 0 1.25rem 1rem; font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: #334155; }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Forms &amp; Inputs</h1>
+        <p>Form generation with all field types, validation, and multiple layout modes.</p>
+      </div>
+      <div class="showcase-content">
+
+        <!-- All Field Types -->
+        <div class="demo-section">
+          <h2>All Field Types</h2>
+          <p>Demonstrates every supported input type in a vertical layout.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-all-fields"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.form('#demo-all-fields', {
+  action: '/api/form-demo',
+  layout: 'vertical',
+  submitLabel: 'Submit All',
+  fields: [
+    { name: 'fullname', label: 'Full Name', type: 'text', placeholder: 'John Doe', required: true },
+    { name: 'email', label: 'Email', type: 'email', placeholder: 'john@example.com', required: true },
+    { name: 'password', label: 'Password', type: 'password', minLength: 8 },
+    { name: 'age', label: 'Age', type: 'number', min: 18, max: 120 },
+    { name: 'phone', label: 'Phone', type: 'tel', placeholder: '+1 (555) 000-0000' },
+    { name: 'website', label: 'Website', type: 'url', placeholder: 'https://example.com' },
+    { name: 'bio', label: 'Bio', type: 'textarea', placeholder: 'Tell us about yourself...', rows: 3 },
+    { name: 'role', label: 'Role', type: 'select', options: [
+      { label: 'Developer', value: 'dev' },
+      { label: 'Designer', value: 'design' },
+      { label: 'Manager', value: 'mgr' },
+      { label: 'QA Engineer', value: 'qa' },
+    ]},
+    { name: 'notify', label: 'Email Notifications', type: 'switch' },
+    { name: 'agree', label: 'I agree to the terms', type: 'checkbox', required: true },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Validation -->
+        <div class="demo-section">
+          <h2>Form Validation</h2>
+          <p>Client-side validation with required fields, patterns, and length constraints. Try submitting with empty fields.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-validation"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.form('#demo-validation', {
+  action: '/api/form-demo',
+  layout: 'vertical',
+  submitLabel: 'Register',
+  liveValidation: true,
+  fields: [
+    { name: 'username', label: 'Username', type: 'text', required: true,
+      minLength: 3, maxLength: 20, helpText: 'Between 3 and 20 characters' },
+    { name: 'email', label: 'Email Address', type: 'email', required: true,
+      helpText: 'We will never share your email' },
+    { name: 'password', label: 'Password', type: 'password', required: true,
+      minLength: 8, helpText: 'Minimum 8 characters' },
+    { name: 'confirm', label: 'Confirm Password', type: 'password', required: true },
+    { name: 'terms', label: 'I accept the terms and conditions', type: 'checkbox', required: true },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Horizontal Layout -->
+        <div class="demo-section">
+          <h2>Horizontal Layout</h2>
+          <p>Labels appear to the left of fields. Ideal for wider forms.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-horizontal"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.form('#demo-horizontal', {
+  action: '/api/form-demo',
+  layout: 'horizontal',
+  labelWidth: '140px',
+  submitLabel: 'Save Settings',
+  fields: [
+    { name: 'company', label: 'Company', type: 'text', value: 'Acme Corp' },
+    { name: 'industry', label: 'Industry', type: 'select', options: [
+      { label: 'Technology', value: 'tech' },
+      { label: 'Finance', value: 'finance' },
+      { label: 'Healthcare', value: 'health' },
+      { label: 'Education', value: 'edu' },
+    ], value: 'tech' },
+    { name: 'size', label: 'Company Size', type: 'select', options: [
+      { label: '1-10', value: 'xs' },
+      { label: '11-50', value: 'sm' },
+      { label: '51-200', value: 'md' },
+      { label: '201-1000', value: 'lg' },
+      { label: '1000+', value: 'xl' },
+    ]},
+    { name: 'founded', label: 'Founded', type: 'date' },
+    { name: 'public', label: 'Publicly Traded', type: 'switch' },
+    { name: 'description', label: 'Description', type: 'textarea', rows: 3 },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Inline Layout & Field Groups -->
+        <div class="demo-section">
+          <h2>Inline Layout with Field Groups</h2>
+          <p>Compact inline form and grouped fields with collapsible sections.</p>
+          <div class="demo-card">
+            <div class="demo-card-body">
+              <div id="demo-inline" style="margin-bottom: 2rem;"></div>
+              <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 1.5rem 0;">
+              <h3 style="font-size: 1rem; font-weight: 600; margin: 0 0 1rem;">Field Groups</h3>
+              <div id="demo-groups"></div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>// Inline form
+Teryx.form('#demo-inline', {
+  action: '/api/form-demo',
+  layout: 'inline',
+  submitLabel: 'Search',
+  fields: [
+    { name: 'q', label: 'Keyword', type: 'text', placeholder: 'Search...' },
+    { name: 'category', label: 'Category', type: 'select', options: [
+      { label: 'All', value: '' },
+      { label: 'Users', value: 'users' },
+      { label: 'Products', value: 'products' },
+    ]},
+    { name: 'active', label: 'Active only', type: 'checkbox' },
+  ],
+});
+
+// Field groups
+Teryx.form('#demo-groups', {
+  action: '/api/form-demo',
+  layout: 'vertical',
+  submitLabel: 'Create Account',
+  fieldGroups: [
+    { name: 'personal', title: 'Personal Information' },
+    { name: 'account', title: 'Account Settings' },
+    { name: 'prefs', title: 'Preferences', collapsible: true },
+  ],
+  fields: [
+    { name: 'firstName', label: 'First Name', type: 'text', fieldGroup: 'personal', required: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', fieldGroup: 'personal', required: true },
+    { name: 'dob', label: 'Date of Birth', type: 'date', fieldGroup: 'personal' },
+    { name: 'email', label: 'Email', type: 'email', fieldGroup: 'account', required: true },
+    { name: 'password', label: 'Password', type: 'password', fieldGroup: 'account', required: true },
+    { name: 'role', label: 'Role', type: 'select', fieldGroup: 'account', options: [
+      { label: 'User', value: 'user' },
+      { label: 'Admin', value: 'admin' },
+    ]},
+    { name: 'theme', label: 'Theme', type: 'select', fieldGroup: 'prefs', options: [
+      { label: 'Light', value: 'light' },
+      { label: 'Dark', value: 'dark' },
+      { label: 'System', value: 'system' },
+    ]},
+    { name: 'newsletter', label: 'Subscribe to newsletter', type: 'checkbox', fieldGroup: 'prefs' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    // Sidebar
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit', active: true },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+      ],
+    });
+
+    // Demo: All Field Types
+    Teryx.form('#demo-all-fields', {
+      action: '/api/form-demo',
+      layout: 'vertical',
+      submitLabel: 'Submit All',
+      fields: [
+        { name: 'fullname', label: 'Full Name', type: 'text', placeholder: 'John Doe', required: true },
+        { name: 'email', label: 'Email', type: 'email', placeholder: 'john@example.com', required: true },
+        { name: 'password', label: 'Password', type: 'password', minLength: 8 },
+        { name: 'age', label: 'Age', type: 'number', min: 18, max: 120 },
+        { name: 'phone', label: 'Phone', type: 'tel', placeholder: '+1 (555) 000-0000' },
+        { name: 'website', label: 'Website', type: 'url', placeholder: 'https://example.com' },
+        { name: 'bio', label: 'Bio', type: 'textarea', placeholder: 'Tell us about yourself...', rows: 3 },
+        { name: 'role', label: 'Role', type: 'select', options: [
+          { label: 'Developer', value: 'dev' },
+          { label: 'Designer', value: 'design' },
+          { label: 'Manager', value: 'mgr' },
+          { label: 'QA Engineer', value: 'qa' },
+        ]},
+        { name: 'notify', label: 'Email Notifications', type: 'switch' },
+        { name: 'agree', label: 'I agree to the terms', type: 'checkbox', required: true },
+      ],
+    });
+
+    // Demo: Validation
+    Teryx.form('#demo-validation', {
+      action: '/api/form-demo',
+      layout: 'vertical',
+      submitLabel: 'Register',
+      liveValidation: true,
+      fields: [
+        { name: 'username', label: 'Username', type: 'text', required: true,
+          minLength: 3, maxLength: 20, helpText: 'Between 3 and 20 characters' },
+        { name: 'email', label: 'Email Address', type: 'email', required: true,
+          helpText: 'We will never share your email' },
+        { name: 'password', label: 'Password', type: 'password', required: true,
+          minLength: 8, helpText: 'Minimum 8 characters' },
+        { name: 'confirm', label: 'Confirm Password', type: 'password', required: true },
+        { name: 'terms', label: 'I accept the terms and conditions', type: 'checkbox', required: true },
+      ],
+    });
+
+    // Demo: Horizontal Layout
+    Teryx.form('#demo-horizontal', {
+      action: '/api/form-demo',
+      layout: 'horizontal',
+      labelWidth: '140px',
+      submitLabel: 'Save Settings',
+      fields: [
+        { name: 'company', label: 'Company', type: 'text', value: 'Acme Corp' },
+        { name: 'industry', label: 'Industry', type: 'select', options: [
+          { label: 'Technology', value: 'tech' },
+          { label: 'Finance', value: 'finance' },
+          { label: 'Healthcare', value: 'health' },
+          { label: 'Education', value: 'edu' },
+        ], value: 'tech' },
+        { name: 'size', label: 'Company Size', type: 'select', options: [
+          { label: '1-10', value: 'xs' },
+          { label: '11-50', value: 'sm' },
+          { label: '51-200', value: 'md' },
+          { label: '201-1000', value: 'lg' },
+          { label: '1000+', value: 'xl' },
+        ]},
+        { name: 'founded', label: 'Founded', type: 'date' },
+        { name: 'public', label: 'Publicly Traded', type: 'switch' },
+        { name: 'description', label: 'Description', type: 'textarea', rows: 3 },
+      ],
+    });
+
+    // Demo: Inline Layout
+    Teryx.form('#demo-inline', {
+      action: '/api/form-demo',
+      layout: 'inline',
+      submitLabel: 'Search',
+      fields: [
+        { name: 'q', label: 'Keyword', type: 'text', placeholder: 'Search...' },
+        { name: 'category', label: 'Category', type: 'select', options: [
+          { label: 'All', value: '' },
+          { label: 'Users', value: 'users' },
+          { label: 'Products', value: 'products' },
+        ]},
+        { name: 'active', label: 'Active only', type: 'checkbox' },
+      ],
+    });
+
+    // Demo: Field Groups
+    Teryx.form('#demo-groups', {
+      action: '/api/form-demo',
+      layout: 'vertical',
+      submitLabel: 'Create Account',
+      fieldGroups: [
+        { name: 'personal', title: 'Personal Information' },
+        { name: 'account', title: 'Account Settings' },
+        { name: 'prefs', title: 'Preferences', collapsible: true },
+      ],
+      fields: [
+        { name: 'firstName', label: 'First Name', type: 'text', fieldGroup: 'personal', required: true },
+        { name: 'lastName', label: 'Last Name', type: 'text', fieldGroup: 'personal', required: true },
+        { name: 'dob', label: 'Date of Birth', type: 'date', fieldGroup: 'personal' },
+        { name: 'email', label: 'Email', type: 'email', fieldGroup: 'account', required: true },
+        { name: 'password', label: 'Password', type: 'password', fieldGroup: 'account', required: true },
+        { name: 'role', label: 'Role', type: 'select', fieldGroup: 'account', options: [
+          { label: 'User', value: 'user' },
+          { label: 'Admin', value: 'admin' },
+        ]},
+        { name: 'theme', label: 'Theme', type: 'select', fieldGroup: 'prefs', options: [
+          { label: 'Light', value: 'light' },
+          { label: 'Dark', value: 'dark' },
+          { label: 'System', value: 'system' },
+        ]},
+        { name: 'newsletter', label: 'Subscribe to newsletter', type: 'checkbox', fieldGroup: 'prefs' },
+      ],
+    });
+  </script>
+</body>
+</html>

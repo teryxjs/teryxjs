@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charts — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1200px; }
+    .demo-section { margin-bottom: 2.5rem; }
+    .demo-section h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; color: #1e293b; }
+    .demo-section > p { color: #64748b; margin: 0 0 1rem; font-size: 0.9rem; }
+    .demo-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; overflow: hidden; }
+    .demo-card-body { padding: 1.25rem; }
+    .demo-card-code { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .demo-card-code summary { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; user-select: none; }
+    .demo-card-code pre { margin: 0; padding: 0 1.25rem 1rem; font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: #334155; }
+    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Charts</h1>
+        <p>Pure SVG chart rendering with no external dependencies. Supports bar, line, area, pie, donut, scatter, and gauge types.</p>
+      </div>
+      <div class="showcase-content">
+
+        <!-- Bar Chart -->
+        <div class="demo-section">
+          <h2>Bar Chart</h2>
+          <p>Vertical bar chart with multiple series comparing revenue and expenses.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-bar-chart" style="height: 380px;"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.chart('#demo-bar-chart', {
+  type: 'bar',
+  title: 'Monthly Revenue vs Expenses',
+  height: 350,
+  series: [
+    { name: 'Revenue', data: [
+      { x: 'Jan', y: 4200 }, { x: 'Feb', y: 5100 }, { x: 'Mar', y: 4800 },
+      { x: 'Apr', y: 6200 }, { x: 'May', y: 5900 }, { x: 'Jun', y: 7400 },
+    ]},
+    { name: 'Expenses', data: [
+      { x: 'Jan', y: 3200 }, { x: 'Feb', y: 3800 }, { x: 'Mar', y: 3500 },
+      { x: 'Apr', y: 4100 }, { x: 'May', y: 3900 }, { x: 'Jun', y: 4600 },
+    ]},
+  ],
+  yAxis: { title: 'Amount ($)' },
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Line Chart -->
+        <div class="demo-section">
+          <h2>Line Chart</h2>
+          <p>Multi-series line chart showing website traffic trends over time.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-line-chart" style="height: 380px;"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.chart('#demo-line-chart', {
+  type: 'line',
+  title: 'Website Traffic (Thousands)',
+  height: 350,
+  series: [
+    { name: 'Organic', data: [
+      { x: 'Mon', y: 12 }, { x: 'Tue', y: 19 }, { x: 'Wed', y: 15 },
+      { x: 'Thu', y: 22 }, { x: 'Fri', y: 18 }, { x: 'Sat', y: 10 }, { x: 'Sun', y: 8 },
+    ]},
+    { name: 'Paid', data: [
+      { x: 'Mon', y: 5 }, { x: 'Tue', y: 8 }, { x: 'Wed', y: 12 },
+      { x: 'Thu', y: 10 }, { x: 'Fri', y: 14 }, { x: 'Sat', y: 6 }, { x: 'Sun', y: 4 },
+    ]},
+    { name: 'Social', data: [
+      { x: 'Mon', y: 3 }, { x: 'Tue', y: 5 }, { x: 'Wed', y: 4 },
+      { x: 'Thu', y: 7 }, { x: 'Fri', y: 6 }, { x: 'Sat', y: 8 }, { x: 'Sun', y: 9 },
+    ]},
+  ],
+  yAxis: { title: 'Visitors (K)' },
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Area Chart -->
+        <div class="demo-section">
+          <h2>Area Chart</h2>
+          <p>Filled area chart showing quarterly growth with semi-transparent fills.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-area-chart" style="height: 380px;"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.chart('#demo-area-chart', {
+  type: 'area',
+  title: 'Quarterly Growth',
+  height: 350,
+  series: [
+    { name: 'Users', data: [
+      { x: 'Q1 2024', y: 1200 }, { x: 'Q2 2024', y: 1800 },
+      { x: 'Q3 2024', y: 2400 }, { x: 'Q4 2024', y: 3100 },
+      { x: 'Q1 2025', y: 3800 }, { x: 'Q2 2025', y: 4500 },
+    ]},
+    { name: 'Subscriptions', data: [
+      { x: 'Q1 2024', y: 400 }, { x: 'Q2 2024', y: 650 },
+      { x: 'Q3 2024', y: 900 }, { x: 'Q4 2024', y: 1200 },
+      { x: 'Q1 2025', y: 1550 }, { x: 'Q2 2025', y: 1900 },
+    ]},
+  ],
+  yAxis: { title: 'Count' },
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Pie and Donut -->
+        <div class="demo-section">
+          <h2>Pie &amp; Donut Charts</h2>
+          <p>Circular charts for proportional data. Donut charts include a hollow center for additional context.</p>
+          <div class="chart-row">
+            <div class="demo-card">
+              <div class="demo-card-body" id="demo-pie-chart" style="height: 320px;"></div>
+            </div>
+            <div class="demo-card">
+              <div class="demo-card-body" id="demo-donut-chart" style="height: 320px;"></div>
+            </div>
+          </div>
+          <details class="demo-card-code" style="margin-top: 0.5rem; border: 1px solid #e2e8f0; border-radius: 10px; background: #f8fafc;"><summary>View Code</summary>
+<pre><code>// Pie chart
+Teryx.chart('#demo-pie-chart', {
+  type: 'pie',
+  title: 'Market Share',
+  height: 300,
+  data: [
+    { x: 'Chrome', y: 65, label: 'Chrome' },
+    { x: 'Safari', y: 18, label: 'Safari' },
+    { x: 'Firefox', y: 8, label: 'Firefox' },
+    { x: 'Edge', y: 5, label: 'Edge' },
+    { x: 'Other', y: 4, label: 'Other' },
+  ],
+});
+
+// Donut chart
+Teryx.chart('#demo-donut-chart', {
+  type: 'donut',
+  title: 'Budget Allocation',
+  height: 300,
+  donutWidth: 0.35,
+  data: [
+    { x: 'Engineering', y: 45, label: 'Engineering' },
+    { x: 'Marketing', y: 25, label: 'Marketing' },
+    { x: 'Sales', y: 15, label: 'Sales' },
+    { x: 'Operations', y: 10, label: 'Operations' },
+    { x: 'HR', y: 5, label: 'HR' },
+  ],
+});</code></pre>
+          </details>
+        </div>
+
+        <!-- Scatter Chart -->
+        <div class="demo-section">
+          <h2>Scatter Chart</h2>
+          <p>XY scatter plot for visualizing correlations between two numeric variables.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-scatter-chart" style="height: 380px;"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.chart('#demo-scatter-chart', {
+  type: 'scatter',
+  title: 'Price vs Performance',
+  height: 350,
+  series: [
+    { name: 'Product A', data: [
+      { x: 10, y: 80 }, { x: 20, y: 75 }, { x: 35, y: 90 },
+      { x: 45, y: 85 }, { x: 55, y: 92 }, { x: 70, y: 88 },
+    ]},
+    { name: 'Product B', data: [
+      { x: 15, y: 60 }, { x: 25, y: 70 }, { x: 40, y: 65 },
+      { x: 50, y: 78 }, { x: 60, y: 72 }, { x: 75, y: 82 },
+    ]},
+  ],
+  xAxis: { title: 'Price ($)' },
+  yAxis: { title: 'Performance Score' },
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Gauge Chart -->
+        <div class="demo-section">
+          <h2>Gauge Chart</h2>
+          <p>Semi-circular gauge for displaying a single metric against a range. Color changes based on value threshold.</p>
+          <div class="chart-row">
+            <div class="demo-card">
+              <div class="demo-card-body" id="demo-gauge1" style="height: 280px;"></div>
+            </div>
+            <div class="demo-card">
+              <div class="demo-card-body" id="demo-gauge2" style="height: 280px;"></div>
+            </div>
+          </div>
+          <details class="demo-card-code" style="margin-top: 0.5rem; border: 1px solid #e2e8f0; border-radius: 10px; background: #f8fafc;"><summary>View Code</summary>
+<pre><code>Teryx.chart('#demo-gauge1', {
+  type: 'gauge',
+  title: 'CPU Usage',
+  height: 260,
+  gaugeMin: 0,
+  gaugeMax: 100,
+  gaugeValue: 73,
+  gaugeLabel: 'CPU %',
+});
+
+Teryx.chart('#demo-gauge2', {
+  type: 'gauge',
+  title: 'Disk Space',
+  height: 260,
+  gaugeMin: 0,
+  gaugeMax: 500,
+  gaugeValue: 342,
+  gaugeLabel: 'GB Used',
+});</code></pre>
+          </details>
+        </div>
+
+        <!-- Remote Data Chart -->
+        <div class="demo-section">
+          <h2>Chart from Remote API</h2>
+          <p>Chart data fetched from a server endpoint using the <code>source</code> option.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-remote-chart" style="height: 380px;"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.chart('#demo-remote-chart', {
+  type: 'bar',
+  title: 'Revenue vs Expenses (API Data)',
+  height: 350,
+  source: '/api/chart/revenue',
+  yAxis: { title: 'Amount ($)' },
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    // Sidebar
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye', active: true },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+      ],
+    });
+
+    // Bar Chart
+    Teryx.chart('#demo-bar-chart', {
+      type: 'bar',
+      title: 'Monthly Revenue vs Expenses',
+      height: 350,
+      series: [
+        { name: 'Revenue', data: [
+          { x: 'Jan', y: 4200 }, { x: 'Feb', y: 5100 }, { x: 'Mar', y: 4800 },
+          { x: 'Apr', y: 6200 }, { x: 'May', y: 5900 }, { x: 'Jun', y: 7400 },
+        ]},
+        { name: 'Expenses', data: [
+          { x: 'Jan', y: 3200 }, { x: 'Feb', y: 3800 }, { x: 'Mar', y: 3500 },
+          { x: 'Apr', y: 4100 }, { x: 'May', y: 3900 }, { x: 'Jun', y: 4600 },
+        ]},
+      ],
+      yAxis: { title: 'Amount ($)' },
+    });
+
+    // Line Chart
+    Teryx.chart('#demo-line-chart', {
+      type: 'line',
+      title: 'Website Traffic (Thousands)',
+      height: 350,
+      series: [
+        { name: 'Organic', data: [
+          { x: 'Mon', y: 12 }, { x: 'Tue', y: 19 }, { x: 'Wed', y: 15 },
+          { x: 'Thu', y: 22 }, { x: 'Fri', y: 18 }, { x: 'Sat', y: 10 }, { x: 'Sun', y: 8 },
+        ]},
+        { name: 'Paid', data: [
+          { x: 'Mon', y: 5 }, { x: 'Tue', y: 8 }, { x: 'Wed', y: 12 },
+          { x: 'Thu', y: 10 }, { x: 'Fri', y: 14 }, { x: 'Sat', y: 6 }, { x: 'Sun', y: 4 },
+        ]},
+        { name: 'Social', data: [
+          { x: 'Mon', y: 3 }, { x: 'Tue', y: 5 }, { x: 'Wed', y: 4 },
+          { x: 'Thu', y: 7 }, { x: 'Fri', y: 6 }, { x: 'Sat', y: 8 }, { x: 'Sun', y: 9 },
+        ]},
+      ],
+      yAxis: { title: 'Visitors (K)' },
+    });
+
+    // Area Chart
+    Teryx.chart('#demo-area-chart', {
+      type: 'area',
+      title: 'Quarterly Growth',
+      height: 350,
+      series: [
+        { name: 'Users', data: [
+          { x: 'Q1 2024', y: 1200 }, { x: 'Q2 2024', y: 1800 },
+          { x: 'Q3 2024', y: 2400 }, { x: 'Q4 2024', y: 3100 },
+          { x: 'Q1 2025', y: 3800 }, { x: 'Q2 2025', y: 4500 },
+        ]},
+        { name: 'Subscriptions', data: [
+          { x: 'Q1 2024', y: 400 }, { x: 'Q2 2024', y: 650 },
+          { x: 'Q3 2024', y: 900 }, { x: 'Q4 2024', y: 1200 },
+          { x: 'Q1 2025', y: 1550 }, { x: 'Q2 2025', y: 1900 },
+        ]},
+      ],
+      yAxis: { title: 'Count' },
+    });
+
+    // Pie Chart
+    Teryx.chart('#demo-pie-chart', {
+      type: 'pie',
+      title: 'Market Share',
+      height: 300,
+      data: [
+        { x: 'Chrome', y: 65, label: 'Chrome' },
+        { x: 'Safari', y: 18, label: 'Safari' },
+        { x: 'Firefox', y: 8, label: 'Firefox' },
+        { x: 'Edge', y: 5, label: 'Edge' },
+        { x: 'Other', y: 4, label: 'Other' },
+      ],
+    });
+
+    // Donut Chart
+    Teryx.chart('#demo-donut-chart', {
+      type: 'donut',
+      title: 'Budget Allocation',
+      height: 300,
+      donutWidth: 0.35,
+      data: [
+        { x: 'Engineering', y: 45, label: 'Engineering' },
+        { x: 'Marketing', y: 25, label: 'Marketing' },
+        { x: 'Sales', y: 15, label: 'Sales' },
+        { x: 'Operations', y: 10, label: 'Operations' },
+        { x: 'HR', y: 5, label: 'HR' },
+      ],
+    });
+
+    // Scatter Chart
+    Teryx.chart('#demo-scatter-chart', {
+      type: 'scatter',
+      title: 'Price vs Performance',
+      height: 350,
+      series: [
+        { name: 'Product A', data: [
+          { x: 10, y: 80 }, { x: 20, y: 75 }, { x: 35, y: 90 },
+          { x: 45, y: 85 }, { x: 55, y: 92 }, { x: 70, y: 88 },
+        ]},
+        { name: 'Product B', data: [
+          { x: 15, y: 60 }, { x: 25, y: 70 }, { x: 40, y: 65 },
+          { x: 50, y: 78 }, { x: 60, y: 72 }, { x: 75, y: 82 },
+        ]},
+      ],
+      xAxis: { title: 'Price ($)' },
+      yAxis: { title: 'Performance Score' },
+    });
+
+    // Gauge Charts
+    Teryx.chart('#demo-gauge1', {
+      type: 'gauge',
+      title: 'CPU Usage',
+      height: 260,
+      gaugeMin: 0,
+      gaugeMax: 100,
+      gaugeValue: 73,
+      gaugeLabel: 'CPU %',
+    });
+
+    Teryx.chart('#demo-gauge2', {
+      type: 'gauge',
+      title: 'Disk Space',
+      height: 260,
+      gaugeMin: 0,
+      gaugeMax: 500,
+      gaugeValue: 342,
+      gaugeLabel: 'GB Used',
+    });
+
+    // Remote Data Chart
+    Teryx.chart('#demo-remote-chart', {
+      type: 'bar',
+      title: 'Revenue vs Expenses (API Data)',
+      height: 350,
+      source: '/api/chart/revenue',
+      yAxis: { title: 'Amount ($)' },
+    });
+  </script>
+</body>
+</html>

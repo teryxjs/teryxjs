@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1200px; }
+    .demo-section { margin-bottom: 2.5rem; }
+    .demo-section h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; color: #1e293b; }
+    .demo-section > p { color: #64748b; margin: 0 0 1rem; font-size: 0.9rem; }
+    .demo-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; overflow: hidden; }
+    .demo-card-body { padding: 1.25rem; }
+    .demo-card-code { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .demo-card-code summary { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; user-select: none; }
+    .demo-card-code pre { margin: 0; padding: 0 1.25rem 1rem; font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: #334155; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .card-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Content Widgets</h1>
+        <p>Cards, stats, timelines, carousels, ratings, and tree views for displaying rich content.</p>
+      </div>
+      <div class="showcase-content">
+
+        <!-- Cards -->
+        <div class="demo-section">
+          <h2>Cards</h2>
+          <p>Versatile card containers with titles, content, footers, and collapsible support.</p>
+          <div class="demo-card">
+            <div class="demo-card-body card-row">
+              <div id="demo-card-1"></div>
+              <div id="demo-card-2"></div>
+              <div id="demo-card-3"></div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.card('#card-1', {
+  title: 'Getting Started',
+  content: '&lt;p&gt;Welcome to Teryx. Set up your first widget in minutes.&lt;/p&gt;',
+  footer: '&lt;small&gt;Updated 2 hours ago&lt;/small&gt;',
+});
+
+Teryx.card('#card-2', {
+  title: 'System Status',
+  content: '&lt;p&gt;All services operational. Uptime: 99.98%&lt;/p&gt;',
+  collapsible: true,
+});
+
+Teryx.card('#card-3', {
+  title: 'Quick Actions',
+  content: '&lt;p&gt;Create users, manage roles, and configure settings.&lt;/p&gt;',
+  closable: true,
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Stat / KPI -->
+        <div class="demo-section">
+          <h2>Stat / KPI Cards</h2>
+          <p>Key performance indicators with values, change indicators, icons, and sparklines.</p>
+          <div class="demo-card">
+            <div class="demo-card-body stat-row">
+              <div id="demo-stat-1"></div>
+              <div id="demo-stat-2"></div>
+              <div id="demo-stat-3"></div>
+              <div id="demo-stat-4"></div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.stat('#stat-1', {
+  label: 'Total Users', value: '12,847', icon: 'user', color: 'primary',
+  change: '+14.2%', changeType: 'up',
+  sparkline: [30, 40, 35, 50, 49, 60, 70, 65, 80, 75, 90, 100],
+});
+
+Teryx.stat('#stat-2', {
+  label: 'Revenue', value: '$284,500', icon: 'home', color: 'success',
+  change: '+8.7%', changeType: 'up', prefix: '',
+});
+
+Teryx.stat('#stat-3', {
+  label: 'Active Sessions', value: '1,247', icon: 'eye', color: 'info',
+  change: '+3.1%', changeType: 'up',
+});
+
+Teryx.stat('#stat-4', {
+  label: 'Error Rate', value: '0.12%', icon: 'info', color: 'danger',
+  change: '-2.4%', changeType: 'down',
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="demo-section">
+          <h2>Timeline</h2>
+          <p>Chronological list of events with status indicators, icons, and colored markers.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-timeline"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.timeline('#demo-timeline', {
+  items: [
+    { title: 'Application Deployed', content: 'v2.4.1 deployed to production', time: 'Today, 2:30 PM', status: 'completed', color: 'success' },
+    { title: 'Code Review Approved', content: 'PR #847 approved by 2 reviewers', time: 'Today, 11:15 AM', status: 'completed', color: 'info' },
+    { title: 'Build Started', content: 'CI pipeline running tests', time: 'Today, 10:45 AM', status: 'active', color: 'warning' },
+    { title: 'Feature Branch Created', content: 'feature/user-dashboard', time: 'Yesterday, 4:00 PM', status: 'completed' },
+    { title: 'Sprint Started', content: 'Sprint 24 kicked off', time: '3 days ago', status: 'completed' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Carousel -->
+        <div class="demo-section">
+          <h2>Carousel</h2>
+          <p>Slide-based content carousel with navigation arrows, dot indicators, and autoplay.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-carousel"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.carousel('#demo-carousel', {
+  autoplay: true,
+  interval: 5000,
+  indicators: true,
+  arrows: true,
+  loop: true,
+  slides: [
+    { title: 'Enterprise Data Grids', description: 'Sort, filter, paginate, and export with ease.',
+      content: '&lt;div style="..."&gt;...&lt;/div&gt;' },
+    { title: 'Pure SVG Charts', description: 'Bar, line, area, pie, donut, scatter, and gauge charts.' },
+    { title: 'Mobile-First Widgets', description: 'Touch-optimized components for iOS and Android.' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="demo-section">
+          <h2>Rating</h2>
+          <p>Star-based rating input. Click to set a rating or use in read-only mode for display.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" style="display: flex; flex-direction: column; gap: 1rem;">
+              <div>
+                <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.25rem;">Interactive (click to rate):</div>
+                <div id="demo-rating-1"></div>
+              </div>
+              <div>
+                <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.25rem;">Read-only (display):</div>
+                <div id="demo-rating-2"></div>
+              </div>
+              <div>
+                <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.25rem;">Large size, custom color:</div>
+                <div id="demo-rating-3"></div>
+              </div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.rating('#rating-1', { value: 3, max: 5, onChange: (v) => console.log('Rated:', v) });
+Teryx.rating('#rating-2', { value: 4, max: 5, readonly: true });
+Teryx.rating('#rating-3', { value: 4, max: 5, size: 'lg', color: '#f59e0b' });</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Tree -->
+        <div class="demo-section">
+          <h2>Tree View</h2>
+          <p>Hierarchical data browser with expandable nodes, checkboxes, and selection.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-tree"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.tree('#demo-tree', {
+  selectable: true,
+  checkable: true,
+  lines: true,
+  nodes: [
+    { id: '1', text: 'Engineering', icon: 'folder', expanded: true, children: [
+      { id: '1-1', text: 'Frontend', icon: 'folder', children: [
+        { id: '1-1-1', text: 'React Team', leaf: true },
+        { id: '1-1-2', text: 'Vue Team', leaf: true },
+      ]},
+      { id: '1-2', text: 'Backend', icon: 'folder', children: [
+        { id: '1-2-1', text: 'API Team', leaf: true },
+        { id: '1-2-2', text: 'Database Team', leaf: true },
+      ]},
+      { id: '1-3', text: 'DevOps', leaf: true },
+    ]},
+    { id: '2', text: 'Design', icon: 'folder', children: [
+      { id: '2-1', text: 'UI/UX', leaf: true },
+      { id: '2-2', text: 'Brand', leaf: true },
+    ]},
+    { id: '3', text: 'Product', icon: 'folder', children: [
+      { id: '3-1', text: 'Product Managers', leaf: true },
+      { id: '3-2', text: 'Analysts', leaf: true },
+    ]},
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    // Sidebar
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star', active: true },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+      ],
+    });
+
+    // Cards
+    Teryx.card('#demo-card-1', {
+      title: 'Getting Started',
+      content: '<p style="margin:0;color:#64748b;font-size:0.9rem;line-height:1.5;">Welcome to Teryx. Import any widget and initialize it with a single function call. Full TypeScript support included.</p>',
+      footer: '<small style="color:#94a3b8;">Updated 2 hours ago</small>',
+    });
+
+    Teryx.card('#demo-card-2', {
+      title: 'System Status',
+      content: '<p style="margin:0;color:#64748b;font-size:0.9rem;line-height:1.5;">All 12 services operational. Current uptime: 99.98%. Last incident resolved 14 days ago.</p>',
+      collapsible: true,
+    });
+
+    Teryx.card('#demo-card-3', {
+      title: 'Quick Actions',
+      content: '<p style="margin:0;color:#64748b;font-size:0.9rem;line-height:1.5;">Create users, manage team roles, configure API keys, and set up webhook integrations from here.</p>',
+      closable: true,
+    });
+
+    // Stats
+    Teryx.stat('#demo-stat-1', {
+      label: 'Total Users', value: '12,847', icon: 'user', color: 'primary',
+      change: '+14.2%', changeType: 'up',
+      sparkline: [30, 40, 35, 50, 49, 60, 70, 65, 80, 75, 90, 100],
+    });
+    Teryx.stat('#demo-stat-2', {
+      label: 'Revenue', value: '$284,500', icon: 'home', color: 'success',
+      change: '+8.7%', changeType: 'up',
+    });
+    Teryx.stat('#demo-stat-3', {
+      label: 'Active Sessions', value: '1,247', icon: 'eye', color: 'info',
+      change: '+3.1%', changeType: 'up',
+    });
+    Teryx.stat('#demo-stat-4', {
+      label: 'Error Rate', value: '0.12%', icon: 'info', color: 'danger',
+      change: '-2.4%', changeType: 'down',
+    });
+
+    // Timeline
+    Teryx.timeline('#demo-timeline', {
+      items: [
+        { title: 'Application Deployed', content: 'v2.4.1 deployed to production successfully', time: 'Today, 2:30 PM', status: 'completed', color: 'success' },
+        { title: 'Code Review Approved', content: 'PR #847 approved by Sarah Connor and John Doe', time: 'Today, 11:15 AM', status: 'completed', color: 'info' },
+        { title: 'Build Running', content: 'CI pipeline executing 148 test cases', time: 'Today, 10:45 AM', status: 'active', color: 'warning' },
+        { title: 'Feature Branch Created', content: 'feature/user-dashboard branched from main', time: 'Yesterday, 4:00 PM', status: 'completed' },
+        { title: 'Sprint 24 Started', content: '12 stories planned, 47 story points total', time: '3 days ago', status: 'completed' },
+      ],
+    });
+
+    // Carousel
+    Teryx.carousel('#demo-carousel', {
+      autoplay: true,
+      interval: 5000,
+      indicators: true,
+      arrows: true,
+      loop: true,
+      slides: [
+        { title: 'Enterprise Data Grids', description: 'Sort, filter, paginate, and export tabular data with server-side or client-side processing.',
+          content: '<div style="padding:3rem 2rem; text-align:center; background:linear-gradient(135deg,#eff6ff,#dbeafe); min-height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center;"><h3 style="margin:0 0 0.5rem; font-size:1.5rem; color:#1e40af;">Enterprise Data Grids</h3><p style="margin:0; color:#3b82f6; max-width:400px;">Sort, filter, paginate, and export tabular data with full server-side integration.</p></div>' },
+        { title: 'Pure SVG Charts', description: 'Zero-dependency chart rendering.',
+          content: '<div style="padding:3rem 2rem; text-align:center; background:linear-gradient(135deg,#f0fdf4,#dcfce7); min-height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center;"><h3 style="margin:0 0 0.5rem; font-size:1.5rem; color:#166534;">Pure SVG Charts</h3><p style="margin:0; color:#22c55e; max-width:400px;">Bar, line, area, pie, donut, scatter, and gauge charts with no dependencies.</p></div>' },
+        { title: 'Mobile-First Widgets', description: 'Touch-optimized components.',
+          content: '<div style="padding:3rem 2rem; text-align:center; background:linear-gradient(135deg,#fdf4ff,#fae8ff); min-height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center;"><h3 style="margin:0 0 0.5rem; font-size:1.5rem; color:#86198f;">Mobile-First Widgets</h3><p style="margin:0; color:#d946ef; max-width:400px;">Navigation views, bottom sheets, pull-to-refresh lists, and tab bars for mobile apps.</p></div>' },
+      ],
+    });
+
+    // Rating
+    Teryx.rating('#demo-rating-1', { value: 3, max: 5, onChange: (v) => Teryx.toast.info('You rated: ' + v + ' stars') });
+    Teryx.rating('#demo-rating-2', { value: 4, max: 5, readonly: true });
+    Teryx.rating('#demo-rating-3', { value: 4, max: 5, size: 'lg', color: '#f59e0b' });
+
+    // Tree
+    Teryx.tree('#demo-tree', {
+      selectable: true,
+      checkable: true,
+      lines: true,
+      nodes: [
+        { id: '1', text: 'Engineering', icon: 'folder', expanded: true, children: [
+          { id: '1-1', text: 'Frontend', icon: 'folder', children: [
+            { id: '1-1-1', text: 'React Team', leaf: true },
+            { id: '1-1-2', text: 'Vue Team', leaf: true },
+            { id: '1-1-3', text: 'Angular Team', leaf: true },
+          ]},
+          { id: '1-2', text: 'Backend', icon: 'folder', children: [
+            { id: '1-2-1', text: 'API Team', leaf: true },
+            { id: '1-2-2', text: 'Database Team', leaf: true },
+          ]},
+          { id: '1-3', text: 'DevOps', leaf: true },
+          { id: '1-4', text: 'QA', leaf: true },
+        ]},
+        { id: '2', text: 'Design', icon: 'folder', children: [
+          { id: '2-1', text: 'UI/UX', leaf: true },
+          { id: '2-2', text: 'Brand & Identity', leaf: true },
+          { id: '2-3', text: 'Motion Design', leaf: true },
+        ]},
+        { id: '3', text: 'Product', icon: 'folder', children: [
+          { id: '3-1', text: 'Product Managers', leaf: true },
+          { id: '3-2', text: 'Business Analysts', leaf: true },
+        ]},
+      ],
+    });
+  </script>
+</body>
+</html>

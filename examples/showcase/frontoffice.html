@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Front Office — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1200px; }
+    .demo-section { margin-bottom: 2.5rem; }
+    .demo-section h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; color: #1e293b; }
+    .demo-section > p { color: #64748b; margin: 0 0 1rem; font-size: 0.9rem; }
+    .demo-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; overflow: hidden; }
+    .demo-card-body { padding: 0; }
+    .demo-card-body-padded { padding: 1.25rem; }
+    .demo-card-code { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .demo-card-code summary { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; user-select: none; }
+    .demo-card-code pre { margin: 0; padding: 0 1.25rem 1rem; font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: #334155; }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Front Office Widgets</h1>
+        <p>Landing page sections for marketing sites: hero areas, pricing tables, testimonials, feature grids, and footers.</p>
+      </div>
+      <div class="showcase-content">
+
+        <!-- Hero -->
+        <div class="demo-section">
+          <h2>Hero Section</h2>
+          <p>Full-width hero with title, subtitle, CTA buttons, and gradient background.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-hero"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.frontoffice.desktop.hero('#demo-hero', {
+  title: 'Build Faster with Teryx',
+  subtitle: 'Enterprise-grade UI components that work out of the box. Ship products 10x faster.',
+  backgroundGradient: 'linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #1a365d 100%)',
+  minHeight: '400px',
+  align: 'center',
+  buttons: [
+    { label: 'Get Started Free', variant: 'primary', href: '#' },
+    { label: 'View Documentation', variant: 'outline', href: '#' },
+  ],
+  extraContent: '&lt;p style="..."&gt;Trusted by 2,000+ companies worldwide&lt;/p&gt;',
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="demo-section">
+          <h2>Feature Grid</h2>
+          <p>Grid of feature cards with icons, descriptions, and optional links.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-features"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.frontoffice.desktop.feature('#demo-features', {
+  title: 'Why Choose Teryx?',
+  subtitle: 'Everything you need to build modern enterprise applications.',
+  columns: 3,
+  variant: 'card',
+  align: 'center',
+  items: [
+    { icon: 'settings', title: 'Zero Config', description: 'Works out of the box with sensible defaults.' },
+    { icon: 'eye', title: 'Type Safe', description: 'Full TypeScript definitions for every widget.' },
+    { icon: 'home', title: 'Lightweight', description: 'No dependencies. Under 50KB gzipped.' },
+    ...
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="demo-section">
+          <h2>Pricing Table</h2>
+          <p>Tiered pricing cards with features, badges, and monthly/annual toggle.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-pricing"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.frontoffice.desktop.pricing('#demo-pricing', {
+  title: 'Simple, Transparent Pricing',
+  subtitle: 'Choose the plan that fits your team.',
+  toggle: { labelA: 'Monthly', labelB: 'Annual (Save 20%)' },
+  tiers: [
+    { name: 'Starter', price: '$0', period: '/month', features: [...], buttonLabel: 'Start Free' },
+    { name: 'Pro', price: '$29', period: '/month', recommended: true, badge: 'Most Popular', features: [...] },
+    { name: 'Enterprise', price: '$99', period: '/month', features: [...], buttonLabel: 'Contact Sales' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="demo-section">
+          <h2>Testimonials</h2>
+          <p>Customer testimonials displayed in a responsive grid layout with ratings and avatars.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-testimonials"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.frontoffice.desktop.testimonial('#demo-testimonials', {
+  title: 'Loved by Developers',
+  subtitle: 'See what our customers have to say.',
+  layout: 'grid',
+  columns: 3,
+  quotes: [
+    { text: 'Teryx cut our development time in half.', author: 'Sarah Chen', role: 'CTO, TechFlow', rating: 5 },
+    { text: 'Best widget library we have ever used.', author: 'Marcus Rivera', role: 'Lead Dev, DataCorp', rating: 5 },
+    { text: 'Enterprise-grade quality.', author: 'Emily Watson', role: 'VP Engineering, CloudBase', rating: 4 },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="demo-section">
+          <h2>Footer</h2>
+          <p>Multi-column footer with brand info, link columns, social icons, and copyright bar.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-footer"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.frontoffice.desktop.footer('#demo-footer', {
+  brand: 'Teryx',
+  brandDescription: 'Enterprise widget framework for modern web applications.',
+  variant: 'dark',
+  columns: [
+    { title: 'Product', links: [
+      { label: 'Features', href: '#' },
+      { label: 'Pricing', href: '#' },
+      { label: 'Changelog', href: '#' },
+    ]},
+    { title: 'Resources', links: [
+      { label: 'Documentation', href: '#' },
+      { label: 'API Reference', href: '#' },
+      { label: 'Examples', href: '#' },
+    ]},
+    { title: 'Company', links: [
+      { label: 'About', href: '#' },
+      { label: 'Blog', href: '#' },
+      { label: 'Careers', href: '#' },
+    ]},
+  ],
+  social: [
+    { platform: 'GitHub', href: '#' },
+    { platform: 'Twitter', href: '#' },
+    { platform: 'LinkedIn', href: '#' },
+  ],
+  bottomLinks: [
+    { label: 'Privacy Policy', href: '#' },
+    { label: 'Terms of Service', href: '#' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    // Sidebar
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink', active: true },
+      ],
+    });
+
+    // Hero
+    Teryx.frontoffice.desktop.hero('#demo-hero', {
+      title: 'Build Faster with Teryx',
+      subtitle: 'Enterprise-grade UI components that work out of the box. Ship products 10x faster with zero dependencies.',
+      backgroundGradient: 'linear-gradient(135deg, #1e3a5f 0%, #2d5a87 50%, #1a365d 100%)',
+      minHeight: '400px',
+      align: 'center',
+      buttons: [
+        { label: 'Get Started Free', variant: 'primary', href: '#' },
+        { label: 'View Documentation', variant: 'outline', href: '#' },
+      ],
+      extraContent: '<p style="color:#94a3b8; font-size:0.85rem; margin-top:1.5rem;">Trusted by 2,000+ companies worldwide</p>',
+    });
+
+    // Features
+    Teryx.frontoffice.desktop.feature('#demo-features', {
+      title: 'Why Choose Teryx?',
+      subtitle: 'Everything you need to build modern enterprise applications.',
+      columns: 3,
+      variant: 'card',
+      align: 'center',
+      items: [
+        {
+          icon: 'settings',
+          title: 'Zero Configuration',
+          description: 'Works out of the box with sensible defaults. Just import and use. No build tool setup required.',
+        },
+        {
+          icon: 'eye',
+          title: 'Type Safe',
+          description: 'Full TypeScript definitions for every widget, option, and callback. Catch errors at compile time.',
+        },
+        {
+          icon: 'home',
+          title: 'Lightweight',
+          description: 'No external dependencies. The entire framework is under 50KB gzipped including CSS.',
+        },
+        {
+          icon: 'star',
+          title: 'Pure SVG Charts',
+          description: 'Built-in chart engine renders bar, line, area, pie, donut, scatter, and gauge charts using SVG.',
+        },
+        {
+          icon: 'user',
+          title: 'Mobile Ready',
+          description: 'Touch-optimized widgets for mobile: navigation views, bottom sheets, pull lists, and tab bars.',
+        },
+        {
+          icon: 'download',
+          title: 'Data Export',
+          description: 'Export grid data to CSV, JSON, Excel, or HTML with a single function call. No server required.',
+        },
+      ],
+    });
+
+    // Pricing
+    Teryx.frontoffice.desktop.pricing('#demo-pricing', {
+      title: 'Simple, Transparent Pricing',
+      subtitle: 'Choose the plan that fits your team. No hidden fees.',
+      toggle: {
+        labelA: 'Monthly',
+        labelB: 'Annual (Save 20%)',
+        onChange: (isAnnual) => {
+          Teryx.toast.info(isAnnual ? 'Switched to annual pricing' : 'Switched to monthly pricing');
+        },
+      },
+      tiers: [
+        {
+          name: 'Starter',
+          description: 'Perfect for side projects',
+          price: '$0',
+          period: '/month',
+          buttonLabel: 'Start Free',
+          buttonVariant: 'outline',
+          features: [
+            { text: 'Up to 3 projects', included: true },
+            { text: 'All core widgets', included: true },
+            { text: 'Community support', included: true },
+            { text: 'Basic charts', included: true },
+            { text: 'Priority support', included: false },
+            { text: 'Custom themes', included: false },
+          ],
+        },
+        {
+          name: 'Pro',
+          description: 'For growing teams',
+          price: '$29',
+          period: '/month',
+          recommended: true,
+          badge: 'Most Popular',
+          buttonLabel: 'Start Free Trial',
+          features: [
+            { text: 'Unlimited projects', included: true },
+            { text: 'All widgets + mobile', included: true },
+            { text: 'Email support', included: true },
+            { text: 'Advanced charts', included: true },
+            { text: 'Priority support', included: true },
+            { text: 'Custom themes', included: false },
+          ],
+        },
+        {
+          name: 'Enterprise',
+          description: 'For large organizations',
+          price: '$99',
+          period: '/month',
+          buttonLabel: 'Contact Sales',
+          buttonVariant: 'outline',
+          features: [
+            { text: 'Unlimited everything', included: true },
+            { text: 'All widgets + custom', included: true },
+            { text: 'Dedicated support', included: true },
+            { text: 'All chart types', included: true },
+            { text: 'SLA guarantee', included: true },
+            { text: 'Custom themes', included: true },
+          ],
+        },
+      ],
+    });
+
+    // Testimonials
+    Teryx.frontoffice.desktop.testimonial('#demo-testimonials', {
+      title: 'Loved by Developers',
+      subtitle: 'See what teams around the world have to say about building with Teryx.',
+      layout: 'grid',
+      columns: 3,
+      quotes: [
+        {
+          text: 'Teryx cut our frontend development time in half. The grid widget alone saved us weeks of custom table implementation.',
+          author: 'Sarah Chen',
+          role: 'CTO, TechFlow Inc.',
+          rating: 5,
+        },
+        {
+          text: 'The best widget library we have ever used. Clean APIs, excellent TypeScript support, and the charts render beautifully.',
+          author: 'Marcus Rivera',
+          role: 'Lead Developer, DataCorp',
+          rating: 5,
+        },
+        {
+          text: 'Enterprise-grade quality without the enterprise-grade complexity. Our team was productive from day one.',
+          author: 'Emily Watson',
+          role: 'VP Engineering, CloudBase',
+          rating: 4,
+        },
+      ],
+    });
+
+    // Footer
+    Teryx.frontoffice.desktop.footer('#demo-footer', {
+      brand: 'Teryx',
+      brandDescription: 'Enterprise widget framework for modern web applications. Built with performance and developer experience in mind.',
+      variant: 'dark',
+      columns: [
+        {
+          title: 'Product',
+          links: [
+            { label: 'Features', href: '#' },
+            { label: 'Pricing', href: '#' },
+            { label: 'Changelog', href: '#' },
+            { label: 'Roadmap', href: '#' },
+          ],
+        },
+        {
+          title: 'Resources',
+          links: [
+            { label: 'Documentation', href: '#' },
+            { label: 'API Reference', href: '#' },
+            { label: 'Examples', href: '#' },
+            { label: 'Tutorials', href: '#' },
+          ],
+        },
+        {
+          title: 'Company',
+          links: [
+            { label: 'About', href: '#' },
+            { label: 'Blog', href: '#' },
+            { label: 'Careers', href: '#' },
+            { label: 'Contact', href: '#' },
+          ],
+        },
+      ],
+      social: [
+        { platform: 'GitHub', href: '#' },
+        { platform: 'Twitter', href: '#' },
+        { platform: 'LinkedIn', href: '#' },
+        { platform: 'YouTube', href: '#' },
+      ],
+      bottomLinks: [
+        { label: 'Privacy Policy', href: '#' },
+        { label: 'Terms of Service', href: '#' },
+        { label: 'Cookie Settings', href: '#' },
+      ],
+    });
+  </script>
+</body>
+</html>

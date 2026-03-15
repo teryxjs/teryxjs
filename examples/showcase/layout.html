@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1200px; }
+    .demo-section { margin-bottom: 2.5rem; }
+    .demo-section h2 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; color: #1e293b; }
+    .demo-section > p { color: #64748b; margin: 0 0 1rem; font-size: 0.9rem; }
+    .demo-card { border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; overflow: hidden; }
+    .demo-card-body { padding: 1.25rem; }
+    .demo-card-code { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .demo-card-code summary { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; user-select: none; }
+    .demo-card-code pre { margin: 0; padding: 0 1.25rem 1rem; font-size: 0.8rem; line-height: 1.6; overflow-x: auto; color: #334155; }
+    .panel-content { padding: 1rem; color: #64748b; font-size: 0.9rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Layout Widgets</h1>
+        <p>Containers and navigation structures for organizing application content.</p>
+      </div>
+      <div class="showcase-content">
+
+        <!-- Tabs -->
+        <div class="demo-section">
+          <h2>Tabs</h2>
+          <p>Tab panel with multiple style variants. Content loads when the tab is selected.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-tabs"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.tabs('#demo-tabs', {
+  variant: 'underline',
+  items: [
+    { id: 'overview', title: 'Overview', active: true,
+      content: '&lt;div class="panel-content"&gt;Overview of the application metrics and key performance indicators for the current quarter.&lt;/div&gt;' },
+    { id: 'analytics', title: 'Analytics', icon: 'eye',
+      content: '&lt;div class="panel-content"&gt;Detailed analytics showing user behavior, conversion rates, and traffic sources over time.&lt;/div&gt;' },
+    { id: 'reports', title: 'Reports', badge: '3',
+      content: '&lt;div class="panel-content"&gt;Generated reports ready for download. Three new reports are available since your last visit.&lt;/div&gt;' },
+    { id: 'settings', title: 'Settings', icon: 'settings',
+      content: '&lt;div class="panel-content"&gt;Configure dashboard preferences, notification settings, and data refresh intervals.&lt;/div&gt;' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Accordion -->
+        <div class="demo-section">
+          <h2>Accordion</h2>
+          <p>Collapsible panels for organizing content into sections. Supports multiple or single panel mode.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-accordion"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.accordion('#demo-accordion', {
+  bordered: true,
+  items: [
+    { id: 'general', title: 'General Settings', open: true,
+      content: '&lt;div class="panel-content"&gt;Application name, language, timezone, and default currency settings.&lt;/div&gt;' },
+    { id: 'security', title: 'Security', icon: 'eye',
+      content: '&lt;div class="panel-content"&gt;Two-factor authentication, session timeout, IP allowlisting, and audit logging.&lt;/div&gt;' },
+    { id: 'notifications', title: 'Notifications',
+      content: '&lt;div class="panel-content"&gt;Email alerts, push notifications, Slack integration, and digest frequency.&lt;/div&gt;' },
+    { id: 'billing', title: 'Billing & Invoices',
+      content: '&lt;div class="panel-content"&gt;Payment methods, billing history, invoice downloads, and subscription management.&lt;/div&gt;' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Sidebar Demo -->
+        <div class="demo-section">
+          <h2>Sidebar</h2>
+          <p>The sidebar navigation you see on the left of this page is a live Teryx sidebar widget. It supports collapsible sections, nested items, badges, and dark/light variants.</p>
+          <div class="demo-card">
+            <div class="demo-card-body">
+              <div style="display:flex; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; height: 350px;">
+                <div id="demo-sidebar-inner" style="width: 240px; flex-shrink: 0;"></div>
+                <div style="flex: 1; padding: 1.5rem; background: #f8fafc; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.9rem;">
+                  Main content area
+                </div>
+              </div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.sidebar('#demo-sidebar', {
+  brand: 'My App',
+  variant: 'dark',
+  items: [
+    { section: true, label: 'Navigation' },
+    { label: 'Dashboard', href: '#', icon: 'home', active: true },
+    { label: 'Users', href: '#', icon: 'user', badge: '12' },
+    { label: 'Settings', href: '#', icon: 'settings', children: [
+      { label: 'General', href: '#' },
+      { label: 'Security', href: '#' },
+    ]},
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Navbar -->
+        <div class="demo-section">
+          <h2>Navbar</h2>
+          <p>Top navigation bar with brand, navigation links, and end-aligned items.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" id="demo-navbar"></div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.navbar('#demo-navbar', {
+  brand: 'Acme Corp',
+  variant: 'light',
+  items: [
+    { label: 'Products', href: '#', active: true },
+    { label: 'Solutions', href: '#' },
+    { label: 'Pricing', href: '#' },
+    { label: 'Docs', href: '#' },
+  ],
+  endItems: [
+    { label: 'Sign In', href: '#', icon: 'user' },
+  ],
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Steps / Wizard -->
+        <div class="demo-section">
+          <h2>Steps / Wizard</h2>
+          <p>Multi-step progress indicator for guiding users through a sequential process.</p>
+          <div class="demo-card">
+            <div class="demo-card-body">
+              <div id="demo-steps"></div>
+              <div style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center;">
+                <button id="steps-prev" style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem;">Previous</button>
+                <button id="steps-next" style="padding: 0.5rem 1rem; border: none; border-radius: 6px; background: #3b82f6; color: #fff; cursor: pointer; font-size: 0.85rem;">Next</button>
+              </div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>const wizard = Teryx.steps('#demo-steps', {
+  current: 0,
+  items: [
+    { title: 'Account', description: 'Create your account', status: 'finish' },
+    { title: 'Profile', description: 'Set up your profile', status: 'process' },
+    { title: 'Preferences', description: 'Choose your settings' },
+    { title: 'Complete', description: 'Review and finish' },
+  ],
+});
+
+// Navigate with buttons
+document.getElementById('steps-next').onclick = () => wizard.next();
+document.getElementById('steps-prev').onclick = () => wizard.prev();</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Splitter -->
+        <div class="demo-section">
+          <h2>Splitter</h2>
+          <p>Resizable split panel. Drag the divider to resize the two panes.</p>
+          <div class="demo-card">
+            <div class="demo-card-body">
+              <div id="demo-splitter" style="height: 250px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                <div class="panel-content" style="height: 100%;">
+                  <strong>Left Panel</strong><br>This is the navigation or sidebar area. Drag the divider to resize.
+                </div>
+                <div class="panel-content" style="height: 100%;">
+                  <strong>Right Panel</strong><br>This is the main content area. It expands and contracts as you drag.
+                </div>
+              </div>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>Teryx.splitter('#demo-splitter', {
+  orientation: 'horizontal',
+  sizes: [30, 70],
+  minSize: 100,
+  gutterSize: 6,
+});</code></pre>
+            </details>
+          </div>
+        </div>
+
+        <!-- Drawer -->
+        <div class="demo-section">
+          <h2>Drawer</h2>
+          <p>Slide-out panel from any edge. Click the buttons to open drawers from different positions.</p>
+          <div class="demo-card">
+            <div class="demo-card-body" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button id="btn-drawer-left" style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem;">Left Drawer</button>
+              <button id="btn-drawer-right" style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem;">Right Drawer</button>
+              <button id="btn-drawer-top" style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem;">Top Drawer</button>
+              <button id="btn-drawer-bottom" style="padding: 0.5rem 1rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; font-size: 0.85rem;">Bottom Drawer</button>
+            </div>
+            <details class="demo-card-code"><summary>View Code</summary>
+<pre><code>const leftDrawer = Teryx.drawer(document.body, {
+  title: 'Left Drawer',
+  position: 'left',
+  content: '&lt;div style="padding:1rem"&gt;Navigation menu or filter panel.&lt;/div&gt;',
+});
+document.getElementById('btn-drawer-left').onclick = () => leftDrawer.open();</code></pre>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+
+    // Sidebar
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx',
+      brandHref: '/showcase/',
+      variant: 'dark',
+      collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings', active: true },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+      ],
+    });
+
+    // Tabs
+    Teryx.tabs('#demo-tabs', {
+      variant: 'underline',
+      items: [
+        { id: 'overview', title: 'Overview', active: true,
+          content: '<div class="panel-content">Overview of the application metrics and key performance indicators for the current quarter. This tab shows high-level summaries of user activity, revenue trends, and system health.</div>' },
+        { id: 'analytics', title: 'Analytics', icon: 'eye',
+          content: '<div class="panel-content">Detailed analytics showing user behavior, conversion rates, and traffic sources over time. Filter by date range and segment to drill into specific cohorts.</div>' },
+        { id: 'reports', title: 'Reports', badge: '3',
+          content: '<div class="panel-content">Generated reports ready for download. Three new reports are available since your last visit: Monthly Summary, User Retention Analysis, and Revenue Forecast.</div>' },
+        { id: 'settings', title: 'Settings', icon: 'settings',
+          content: '<div class="panel-content">Configure dashboard preferences, notification settings, and data refresh intervals. Changes are saved automatically.</div>' },
+      ],
+    });
+
+    // Accordion
+    Teryx.accordion('#demo-accordion', {
+      bordered: true,
+      items: [
+        { id: 'general', title: 'General Settings', open: true,
+          content: '<div class="panel-content">Application name, language preference, timezone selection, and default currency settings. These affect all users in your organization.</div>' },
+        { id: 'security', title: 'Security',
+          content: '<div class="panel-content">Two-factor authentication setup, session timeout configuration (15 min to 8 hours), IP allowlisting for restricted access, and comprehensive audit logging.</div>' },
+        { id: 'notifications', title: 'Notifications',
+          content: '<div class="panel-content">Email alert preferences, push notification settings, Slack and Teams integration, and digest frequency (real-time, hourly, daily, or weekly).</div>' },
+        { id: 'billing', title: 'Billing & Invoices',
+          content: '<div class="panel-content">Payment methods on file, billing history with downloadable invoices, current subscription plan details, and upgrade options.</div>' },
+      ],
+    });
+
+    // Inner Sidebar Demo
+    Teryx.sidebar('#demo-sidebar-inner', {
+      brand: 'My App',
+      variant: 'dark',
+      items: [
+        { section: true, label: 'Navigation' },
+        { label: 'Dashboard', href: '#', icon: 'home', active: true },
+        { label: 'Users', href: '#', icon: 'user', badge: '12' },
+        { label: 'Analytics', href: '#', icon: 'eye' },
+        { label: 'Settings', href: '#', icon: 'settings', children: [
+          { label: 'General', href: '#' },
+          { label: 'Security', href: '#' },
+          { label: 'Billing', href: '#' },
+        ]},
+        { section: true, label: 'Support' },
+        { label: 'Help Center', href: '#', icon: 'info' },
+      ],
+    });
+
+    // Navbar
+    Teryx.navbar('#demo-navbar', {
+      brand: 'Acme Corp',
+      variant: 'light',
+      items: [
+        { label: 'Products', href: '#', active: true },
+        { label: 'Solutions', href: '#' },
+        { label: 'Pricing', href: '#' },
+        { label: 'Docs', href: '#' },
+      ],
+      endItems: [
+        { label: 'Sign In', href: '#', icon: 'user' },
+      ],
+    });
+
+    // Steps
+    const wizard = Teryx.steps('#demo-steps', {
+      current: 1,
+      items: [
+        { title: 'Account', description: 'Create your account', status: 'finish' },
+        { title: 'Profile', description: 'Set up your profile', status: 'process' },
+        { title: 'Preferences', description: 'Choose your settings' },
+        { title: 'Complete', description: 'Review and finish' },
+      ],
+    });
+
+    document.getElementById('steps-next').onclick = () => wizard.next();
+    document.getElementById('steps-prev').onclick = () => wizard.prev();
+
+    // Splitter
+    Teryx.splitter('#demo-splitter', {
+      orientation: 'horizontal',
+      sizes: [30, 70],
+      minSize: 100,
+      gutterSize: 6,
+    });
+
+    // Drawers
+    const leftDrawer = Teryx.drawer(document.body, {
+      title: 'Left Drawer',
+      position: 'left',
+      content: '<div style="padding:1rem"><p>This drawer slides in from the left. It can contain navigation, filters, or any secondary content.</p><p>Click outside or use the close button to dismiss.</p></div>',
+    });
+
+    const rightDrawer = Teryx.drawer(document.body, {
+      title: 'Right Drawer',
+      position: 'right',
+      content: '<div style="padding:1rem"><p>This drawer slides in from the right. Ideal for detail panels, settings forms, or notifications.</p></div>',
+    });
+
+    const topDrawer = Teryx.drawer(document.body, {
+      title: 'Top Drawer',
+      position: 'top',
+      size: '200px',
+      content: '<div style="padding:1rem"><p>A drawer from the top. Useful for announcements or search overlays.</p></div>',
+    });
+
+    const bottomDrawer = Teryx.drawer(document.body, {
+      title: 'Bottom Drawer',
+      position: 'bottom',
+      size: '200px',
+      content: '<div style="padding:1rem"><p>A bottom drawer. Great for mobile-style action sheets or supplementary content.</p></div>',
+    });
+
+    document.getElementById('btn-drawer-left').onclick = () => leftDrawer.open();
+    document.getElementById('btn-drawer-right').onclick = () => rightDrawer.open();
+    document.getElementById('btn-drawer-top').onclick = () => topDrawer.open();
+    document.getElementById('btn-drawer-bottom').onclick = () => bottomDrawer.open();
+  </script>
+</body>
+</html>
