@@ -58,7 +58,7 @@
     .demo-btn-primary { background: #3b82f6; color: #fff; border-color: #3b82f6; }
 
     .msg-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
-    .msg-avatar { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; color: #64748b; flex-shrink: 0; }
+    .msg-avatar { width: 40px; height: 40px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: #3b82f6; flex-shrink: 0; overflow: hidden; line-height: 1; letter-spacing: 0.02em; }
     .msg-body { flex: 1; min-width: 0; }
     .msg-sender { font-weight: 600; font-size: 14px; color: #1f2937; }
     .msg-subject { font-size: 13px; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -153,7 +153,7 @@ actionSheet.open();</code></pre>
   infiniteScroll: true,
   pageSize: 10,
   itemTemplate: '&lt;div class="msg-item"&gt;' +
-    '&lt;div class="msg-avatar"&gt;{{sender}}&lt;/div&gt;' +
+    '&lt;div class="msg-avatar"&gt;{{initials}}&lt;/div&gt;' +
     '&lt;div class="msg-body"&gt;' +
     '&lt;div class="msg-sender"&gt;{{sender}}&lt;/div&gt;' +
     '&lt;div class="msg-subject"&gt;{{subject}}&lt;/div&gt;' +
@@ -323,7 +323,7 @@ actionSheet.open();</code></pre>
       pullToRefresh: true,
       infiniteScroll: true,
       pageSize: 10,
-      itemTemplate: '<div class="msg-item"><div class="msg-avatar" style="background:#dbeafe;color:#3b82f6;">{{sender}}</div><div class="msg-body"><div class="msg-sender">{{sender}}</div><div class="msg-subject">{{subject}}</div><div class="msg-preview">{{preview}}</div></div><span class="msg-time">{{time}}</span></div>',
+      itemTemplate: '<div class="msg-item"><div class="msg-avatar">{{initials}}</div><div class="msg-body"><div class="msg-sender">{{sender}}</div><div class="msg-subject">{{subject}}</div><div class="msg-preview">{{preview}}</div></div><span class="msg-time">{{time}}</span></div>',
       onItemTap: (item) => {
         Teryx.toast.info('Tapped: ' + item.subject);
       },

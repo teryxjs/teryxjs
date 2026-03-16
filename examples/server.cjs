@@ -240,6 +240,7 @@ app.get('/api/messages', (req, res) => {
   const allMessages = Array.from({ length: 45 }, (_, i) => ({
     id: i + 1,
     sender: ['Sarah Connor', 'John Doe', 'Jane Smith', 'Alex Kim', 'Morgan Lee'][i % 5],
+    initials: ['SC', 'JD', 'JS', 'AK', 'ML'][i % 5],
     subject: ['Project update', 'Meeting notes', 'Q3 budget review', 'New feature request', 'Bug report #' + (1000 + i)][i % 5],
     preview: ['Please review the attached documents...', 'Here are the notes from today...', 'Budget numbers look promising...', 'Users are requesting...', 'Steps to reproduce...'][i % 5],
     time: i < 5 ? `${i + 1}m ago` : i < 15 ? `${i}h ago` : `${Math.floor(i/5)}d ago`,
