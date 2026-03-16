@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 3000;
+const port = parseInt(process.env.PORT, 10) || 3000;
 
 // Serve framework files
 app.use('/teryx.css', express.static(path.join(__dirname, '..', 'styles', 'teryx.css')));
