@@ -53,9 +53,9 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
 
   html += `</div>`; // #id-data
 
-  // Drop indicator for column reorder
-  if (options.columnReorder) {
-    html += `<div id="${esc(id)}-drop-indicator" class="tx-grid-drop-indicator" style="display:none;"></div>`;
+  // Row drop line indicator
+  if (options.reorderable) {
+    html += `<div id="${esc(id)}-row-drop-line" class="tx-grid-row-drop-line" style="display:none;"></div>`;
   }
 
   html += `</div>`; // .tx-grid-body
@@ -67,9 +67,9 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
   // --- Post-render: attach sort click handlers ---
   requestAnimationFrame(() => attachSortHandlers(el, id, options));
 
-  // --- Post-render: attach column reorder ---
-  if (options.columnReorder) {
-    requestAnimationFrame(() => attachColumnReorder(el, id, options));
+  // --- Post-render: attach row reorder ---
+  if (options.reorderable) {
+    requestAnimationFrame(() => attachRowReorder(el, id, options));
   }
 
   const instance: GridInstance = {
@@ -221,6 +221,11 @@ function renderTableTemplate(
   // --- <thead> ---
   html += '<thead><tr>';
 
+  // Grip column header for reorderable rows
+  if (options.reorderable) {
+    html += '<th class="tx-grid-grip-col"></th>';
+  }
+
   if (options.rowNumbers) {
     html += '<th class="tx-grid-rownum-col">#</th>';
   }
@@ -249,6 +254,7 @@ function renderTableTemplate(
   // Column filters row
   if (cols.some((c) => c.filterable)) {
     html += '<tr class="tx-grid-filter-row">';
+    if (options.reorderable) html += '<th></th>';
     if (options.rowNumbers) html += '<th></th>';
     if (options.selectable) html += '<th></th>';
     for (const col of cols) {
@@ -268,6 +274,11 @@ function renderTableTemplate(
 
   const trCls = cls('tx-grid-row', options.rowClass);
   html += `<tr xh-each="${esc(rowsField)}" class="${trCls}">`;
+
+  // Grip handle for reorderable rows
+  if (options.reorderable) {
+    html += `<td class="tx-grid-grip">${icon('grip')}</td>`;
+  }
 
   if (options.rowNumbers) {
     html += '<td class="tx-grid-rownum-col" xh-text="$index"></td>';
@@ -305,6 +316,7 @@ function renderTableTemplate(
   // --- <tfoot> summary ---
   if (options.showSummary) {
     html += '<tfoot><tr class="tx-grid-summary">';
+    if (options.reorderable) html += '<td></td>';
     if (options.rowNumbers) html += '<td></td>';
     if (options.selectable) html += '<td></td>';
     for (const col of cols) {
@@ -442,72 +454,76 @@ function attachSortHandlers(root: HTMLElement, id: string, options: GridOptions)
 }
 
 // ----------------------------------------------------------
-// Column drag reorder (post-render)
+// Row drag reorder (post-render)
 // ----------------------------------------------------------
-function attachColumnReorder(root: HTMLElement, id: string, options: GridOptions): void {
-  const thead = root.querySelector('thead tr') as HTMLElement | null;
-  if (!thead) return;
+function attachRowReorder(root: HTMLElement, id: string, options: GridOptions): void {
+  const gridBody = root.querySelector('.tx-grid-body') as HTMLElement | null;
+  if (!gridBody) return;
 
-  const indicator = document.getElementById(`${id}-drop-indicator`);
-  let draggedTh: HTMLElement | null = null;
-  let ghost: HTMLElement | null = null;
-  let startX = 0;
-  let startY = 0;
+  const dropLine = document.getElementById(`${id}-row-drop-line`);
+  let draggedRow: HTMLElement | null = null;
+  let ghostRow: HTMLElement | null = null;
+  let dragStartIndex = -1;
 
-  // Get only data-column th elements (skip rownum/select columns)
-  function getDataHeaders(): HTMLElement[] {
-    return Array.from(thead!.querySelectorAll<HTMLElement>('th[data-field]'));
-  }
+  // Use event delegation for grip handle mousedown
+  gridBody.addEventListener('mousedown', (e: MouseEvent) => {
+    const grip = (e.target as HTMLElement).closest('.tx-grid-grip') as HTMLElement | null;
+    if (!grip) return;
 
-  thead.addEventListener('mousedown', (e: MouseEvent) => {
-    const th = (e.target as HTMLElement).closest('th[data-field]') as HTMLElement | null;
-    if (!th) return;
+    const tr = grip.closest('tr.tx-grid-row') as HTMLElement | null;
+    if (!tr) return;
 
     e.preventDefault();
-    draggedTh = th;
-    startX = e.clientX;
-    startY = e.clientY;
+    draggedRow = tr;
 
-    // Create ghost clone
-    ghost = th.cloneNode(true) as HTMLElement;
-    ghost.classList.add('tx-grid-header-dragging');
-    ghost.style.position = 'fixed';
-    ghost.style.left = `${e.clientX}px`;
-    ghost.style.top = `${e.clientY}px`;
-    ghost.style.width = `${th.offsetWidth}px`;
-    ghost.style.pointerEvents = 'none';
-    ghost.style.zIndex = '9999';
-    document.body.appendChild(ghost);
+    // Determine the index of the dragged row among siblings
+    const tbody = tr.parentElement;
+    if (tbody) {
+      const rows = Array.from(tbody.querySelectorAll<HTMLElement>('tr.tx-grid-row'));
+      dragStartIndex = rows.indexOf(tr);
+    }
 
-    th.style.opacity = '0.4';
+    // Create ghost row
+    ghostRow = tr.cloneNode(true) as HTMLElement;
+    ghostRow.classList.add('tx-grid-row-dragging');
+    ghostRow.style.position = 'fixed';
+    ghostRow.style.left = `${tr.getBoundingClientRect().left}px`;
+    ghostRow.style.top = `${e.clientY}px`;
+    ghostRow.style.width = `${tr.offsetWidth}px`;
+    ghostRow.style.pointerEvents = 'none';
+    ghostRow.style.zIndex = '9999';
+    document.body.appendChild(ghostRow);
+
+    tr.style.opacity = '0.4';
 
     const onMouseMove = (me: MouseEvent) => {
-      if (!ghost || !draggedTh) return;
+      if (!ghostRow || !draggedRow) return;
 
-      ghost.style.left = `${me.clientX}px`;
-      ghost.style.top = `${me.clientY}px`;
+      ghostRow.style.top = `${me.clientY}px`;
 
-      // Find drop target
-      const headers = getDataHeaders();
-      if (indicator) indicator.style.display = 'none';
+      // Determine drop position
+      const tbody = draggedRow.parentElement;
+      if (!tbody) return;
 
-      for (const header of headers) {
-        if (header === draggedTh) continue;
-        const rect = header.getBoundingClientRect();
-        const midX = rect.left + rect.width / 2;
+      const rows = Array.from(tbody.querySelectorAll<HTMLElement>('tr.tx-grid-row'));
+      if (dropLine) dropLine.style.display = 'none';
 
-        if (me.clientX > rect.left && me.clientX < rect.right) {
-          if (indicator) {
-            const gridRect = root.querySelector('.tx-grid')?.getBoundingClientRect();
-            const parentRect = root.getBoundingClientRect();
-            indicator.style.display = '';
-            indicator.style.position = 'absolute';
-            indicator.style.top = `${rect.top - parentRect.top}px`;
-            indicator.style.height = `${rect.height}px`;
-            if (me.clientX < midX) {
-              indicator.style.left = `${rect.left - parentRect.left}px`;
+      for (const row of rows) {
+        if (row === draggedRow) continue;
+        const rect = row.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+
+        if (me.clientY > rect.top && me.clientY < rect.bottom) {
+          if (dropLine) {
+            const parentRect = gridBody.getBoundingClientRect();
+            dropLine.style.display = '';
+            dropLine.style.position = 'absolute';
+            dropLine.style.left = '0';
+            dropLine.style.right = '0';
+            if (me.clientY < midY) {
+              dropLine.style.top = `${rect.top - parentRect.top}px`;
             } else {
-              indicator.style.left = `${rect.right - parentRect.left}px`;
+              dropLine.style.top = `${rect.bottom - parentRect.top}px`;
             }
           }
           break;
@@ -519,49 +535,50 @@ function attachColumnReorder(root: HTMLElement, id: string, options: GridOptions
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
-      if (ghost) {
-        ghost.remove();
-        ghost = null;
+      if (ghostRow) {
+        ghostRow.remove();
+        ghostRow = null;
       }
-      if (indicator) indicator.style.display = 'none';
-      if (draggedTh) {
-        draggedTh.style.opacity = '';
+      if (dropLine) dropLine.style.display = 'none';
 
-        // Determine drop position and reorder
-        const headers = getDataHeaders();
-        const dragIndex = headers.indexOf(draggedTh);
-        let dropIndex = dragIndex;
+      if (draggedRow) {
+        draggedRow.style.opacity = '';
 
-        for (let i = 0; i < headers.length; i++) {
-          if (headers[i] === draggedTh) continue;
-          const rect = headers[i].getBoundingClientRect();
-          const midX = rect.left + rect.width / 2;
+        const tbody = draggedRow.parentElement;
+        if (tbody) {
+          const rows = Array.from(tbody.querySelectorAll<HTMLElement>('tr.tx-grid-row'));
+          let dropIndex = dragStartIndex;
 
-          if (me.clientX > rect.left && me.clientX < rect.right) {
-            dropIndex = me.clientX < midX ? i : i + 1;
-            if (dropIndex > dragIndex) dropIndex--;
-            break;
+          for (let i = 0; i < rows.length; i++) {
+            if (rows[i] === draggedRow) continue;
+            const rect = rows[i].getBoundingClientRect();
+            const midY = rect.top + rect.height / 2;
+
+            if (me.clientY > rect.top && me.clientY < rect.bottom) {
+              dropIndex = me.clientY < midY ? i : i + 1;
+              if (dropIndex > dragStartIndex) dropIndex--;
+              break;
+            }
+          }
+
+          if (dropIndex !== dragStartIndex && dropIndex >= 0 && dropIndex < rows.length) {
+            // Move the DOM row
+            const targetRow = rows[dropIndex];
+            if (dropIndex > dragStartIndex) {
+              targetRow.after(draggedRow);
+            } else {
+              targetRow.before(draggedRow);
+            }
+
+            // Fire callback
+            if (options.onReorder) {
+              options.onReorder(dragStartIndex, dropIndex);
+            }
           }
         }
 
-        if (dropIndex !== dragIndex && dropIndex >= 0 && dropIndex < headers.length) {
-          // Reorder columns array
-          const visibleCols = options.columns.filter((c) => !c.hidden);
-          const [moved] = visibleCols.splice(dragIndex, 1);
-          visibleCols.splice(dropIndex, 0, moved);
-
-          // Rebuild options.columns preserving hidden ones
-          const hidden = options.columns.filter((c) => c.hidden);
-          options.columns = [...visibleCols, ...hidden];
-
-          // Re-render the grid
-          const gridEl = root.querySelector(`#${id}`) || root;
-          const parentEl = gridEl.parentElement || root;
-          parentEl.innerHTML = '';
-          grid(parentEl, options);
-        }
-
-        draggedTh = null;
+        draggedRow = null;
+        dragStartIndex = -1;
       }
     };
 

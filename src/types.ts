@@ -155,6 +155,8 @@ export interface GridOptions {
   selectionMode?: 'single' | 'multi';
   /** Enable row drag-and-drop reorder. */
   reorderable?: boolean;
+  /** Callback fired when a row is reordered via drag-and-drop. */
+  onReorder?: (fromIndex: number, toIndex: number) => void;
   /** Enable column reorder via drag. */
   columnReorder?: boolean;
   /** Row expand template. */
