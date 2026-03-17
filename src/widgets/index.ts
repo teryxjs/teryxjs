@@ -33,3 +33,4 @@ export { propertyGrid, descriptions } from './property-grid';
 export { exportCSV, exportExcel, exportJSON, exportHTML, gridColumnsToExport } from './exporter';
 export { chart } from './chart';
 export { tooltip, popover } from './tooltip';
+export { datePicker } from './datepicker';
