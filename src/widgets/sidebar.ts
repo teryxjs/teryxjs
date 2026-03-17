@@ -117,7 +117,7 @@ function renderSidebarItems(items: SidebarItem[], depth: number): string {
       if (item.icon) html += `<span class="tx-sidebar-icon">${icon(item.icon)}</span>`;
       html += `<span class="tx-sidebar-text">${esc(item.label)}</span>`;
       if (item.badge)
-        html += `<span class="tx-badge tx-badge-sm${item.badgeType ? ` tx-badge-${item.badgeType}` : ''}">${esc(item.badge)}</span>`;
+        html += `<span class="tx-badge tx-badge-sm${item.badgeType ? ` tx-badge-${esc(item.badgeType)}` : ''}">${esc(item.badge)}</span>`;
       html += `<span class="tx-sidebar-submenu-toggle">${icon('chevronDown')}</span>`;
       html += '</a>';
       html += `<div class="tx-sidebar-submenu"${!item.active ? ' style="display:none"' : ''}>`;
@@ -128,7 +128,7 @@ function renderSidebarItems(items: SidebarItem[], depth: number): string {
       if (item.icon) html += `<span class="tx-sidebar-icon">${icon(item.icon)}</span>`;
       html += `<span class="tx-sidebar-text">${esc(item.label)}</span>`;
       if (item.badge)
-        html += `<span class="tx-badge tx-badge-sm${item.badgeType ? ` tx-badge-${item.badgeType}` : ''}">${esc(item.badge)}</span>`;
+        html += `<span class="tx-badge tx-badge-sm${item.badgeType ? ` tx-badge-${esc(item.badgeType)}` : ''}">${esc(item.badge)}</span>`;
       html += '</a>';
     }
   }

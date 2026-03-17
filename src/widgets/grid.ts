@@ -492,7 +492,10 @@ function attachCellEditHandlers(root: HTMLElement, _id: string, options: GridOpt
       td.classList.remove('tx-grid-cell-editing');
 
       if (newValue !== oldValue) {
-        td.innerHTML = `<span>${newValue}</span>`;
+        const span = document.createElement('span');
+        span.textContent = newValue;
+        td.textContent = '';
+        td.appendChild(span);
 
         const detail = { field, oldValue, newValue };
         root.dispatchEvent(new CustomEvent('tx:cell-edit', { detail, bubbles: true }));
