@@ -114,7 +114,8 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
     setPage(page: number) {
       const dataEl = document.getElementById(`${id}-data`);
       if (dataEl) {
-        const url = new URL(options.source, window.location.origin);
+        const currentGet = dataEl.getAttribute('xh-get') || options.source;
+        const url = new URL(currentGet, window.location.origin);
         url.searchParams.set(pageParam, String(page));
         dataEl.setAttribute('xh-get', url.pathname + url.search);
         instance.reload();
@@ -492,7 +493,10 @@ function attachCellEditHandlers(root: HTMLElement, _id: string, options: GridOpt
       td.classList.remove('tx-grid-cell-editing');
 
       if (newValue !== oldValue) {
-        td.innerHTML = `<span>${newValue}</span>`;
+        const span = document.createElement('span');
+        span.textContent = newValue;
+        td.textContent = '';
+        td.appendChild(span);
 
         const detail = { field, oldValue, newValue };
         root.dispatchEvent(new CustomEvent('tx:cell-edit', { detail, bubbles: true }));

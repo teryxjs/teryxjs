@@ -70,14 +70,31 @@ export function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: numb
   }) as unknown as T;
 }
 
-/** Simple throttle. */
+/** Simple throttle with trailing-edge support. */
 export function throttle<T extends (...args: unknown[]) => void>(fn: T, ms: number): T {
   let last = 0;
+  let trailingTimer: ReturnType<typeof setTimeout> | null = null;
+  let lastArgs: unknown[] | null = null;
   return ((...args: unknown[]) => {
     const now = Date.now();
+    if (trailingTimer) {
+      clearTimeout(trailingTimer);
+      trailingTimer = null;
+    }
     if (now - last >= ms) {
       last = now;
+      lastArgs = null;
       fn(...args);
+    } else {
+      lastArgs = args;
+      trailingTimer = setTimeout(() => {
+        last = Date.now();
+        trailingTimer = null;
+        if (lastArgs) {
+          fn(...lastArgs);
+          lastArgs = null;
+        }
+      }, ms - (now - last));
     }
   }) as unknown as T;
 }

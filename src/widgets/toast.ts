@@ -86,6 +86,8 @@ export function toast(options: ToastOptions): { dismiss: () => void } {
   });
 
   let timer: ReturnType<typeof setTimeout> | null = null;
+  const startTime = Date.now();
+  let elapsed = 0;
 
   function dismiss(): void {
     if (timer) clearTimeout(timer);
@@ -107,6 +109,7 @@ export function toast(options: ToastOptions): { dismiss: () => void } {
         clearTimeout(timer);
         timer = null;
       }
+      elapsed = Date.now() - startTime;
       const progressBar = toastNode.querySelector('.tx-toast-progress-bar') as HTMLElement;
       if (progressBar) progressBar.style.animationPlayState = 'paused';
     });
@@ -114,7 +117,7 @@ export function toast(options: ToastOptions): { dismiss: () => void } {
     toastNode.addEventListener('mouseleave', () => {
       const progressBar = toastNode.querySelector('.tx-toast-progress-bar') as HTMLElement;
       if (progressBar) progressBar.style.animationPlayState = 'running';
-      timer = setTimeout(dismiss, duration / 2); // Resume with shorter duration
+      timer = setTimeout(dismiss, Math.max(500, duration - elapsed));
     });
   }
 

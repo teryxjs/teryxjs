@@ -158,8 +158,9 @@ function parseChildren(el: HTMLElement): Record<string, unknown[]> {
       childOpts['id'] = `_auto_${++idCounter}`;
     }
 
-    // Capture innerHTML as `content` (for tabs, accordion, steps, cards)
-    // Only if the child has actual content and no `content` attribute
+    // Capture innerHTML as `content` (for tabs, accordion, steps, cards).
+    // Only if the child has actual content and no `content` attribute.
+    // SAFETY: this HTML is developer-provided (declarative markup), not user input.
     const innerContent = child.innerHTML.trim();
     if (innerContent && !childOpts['content']) {
       // Check if inner content is just more tx-* children (don't treat as content)

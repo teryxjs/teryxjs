@@ -84,7 +84,7 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
     validate(): boolean {
       let valid = true;
       for (const field of options.fields) {
-        const input = formEl.querySelector(`[name="${field.name}"]`) as HTMLInputElement;
+        const input = formEl.elements.namedItem(field.name) as HTMLInputElement;
         if (input && !validateField(input, field)) {
           valid = false;
         }
@@ -101,7 +101,7 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
     },
     setData(data: Record<string, unknown>) {
       for (const [key, value] of Object.entries(data)) {
-        const input = formEl.querySelector(`[name="${key}"]`) as HTMLInputElement;
+        const input = formEl.elements.namedItem(key) as HTMLInputElement;
         if (input) {
           if (input.type === 'checkbox') {
             input.checked = !!value;
@@ -114,7 +114,7 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
     setErrors(errors: Record<string, string>) {
       instance.clearErrors();
       for (const [field, message] of Object.entries(errors)) {
-        const group = formEl.querySelector(`[data-field="${field}"]`);
+        const group = formEl.querySelector(`[data-field="${field.replace(/["\\\\]/g, '\\\\$&')}"]`);
         if (group) {
           group.classList.add('tx-form-error');
           const errEl = group.querySelector('.tx-form-feedback');
@@ -135,7 +135,7 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
       return formEl.checkValidity();
     },
     getField(name: string): HTMLElement | null {
-      return formEl.querySelector(`[name="${name}"]`);
+      return formEl.elements.namedItem(name) as HTMLElement | null;
     },
   };
 
