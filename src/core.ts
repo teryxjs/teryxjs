@@ -111,7 +111,8 @@ const boolAttrs = new Set([
 /** Parse all attributes of an element into a plain object. */
 function parseElementAttrs(el: Element): Record<string, unknown> {
   const obj: Record<string, unknown> = {};
-  for (const a of Array.from(el.attributes)) {
+  for (let i = 0; i < el.attributes.length; i++) {
+    const a = el.attributes[i];
     const key = a.name.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
 
     // Boolean attribute (present without value, or value="true"/"false")
@@ -186,7 +187,8 @@ function parseChildren(el: HTMLElement): Record<string, unknown[]> {
 /** Parse data-tx-* attributes into an options object. */
 function parseDataAttrs(el: HTMLElement): Record<string, unknown> {
   const opts: Record<string, unknown> = {};
-  for (const a of Array.from(el.attributes)) {
+  for (let i = 0; i < el.attributes.length; i++) {
+    const a = el.attributes[i];
     if (a.name.startsWith('data-tx-') && a.name !== 'data-tx-widget' && a.name !== 'data-tx-initialized') {
       const key = a.name.slice(8).replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
 
