@@ -40,7 +40,7 @@ describe('Grid widget', () => {
     grid(container, { source: '/api/users', columns: basicColumns });
 
     const ths = queryTemplateAll('th');
-    const labels = Array.from(ths).map(th => th.textContent?.trim());
+    const labels = Array.from(ths).map((th) => th.textContent?.trim());
     expect(labels).toContain('Name');
     expect(labels).toContain('Email');
     expect(labels).toContain('Age');
@@ -149,7 +149,7 @@ describe('Grid widget', () => {
     });
 
     const ths = queryTemplateAll('th');
-    const labels = Array.from(ths).map(th => th.textContent?.trim());
+    const labels = Array.from(ths).map((th) => th.textContent?.trim());
     expect(labels).toContain('Name');
     expect(labels).toContain('Age');
     expect(labels).not.toContain('Secret');

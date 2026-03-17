@@ -6,7 +6,10 @@ import type { RatingOptions, WidgetInstance } from '../types';
 import { uid, cls, icon, resolveTarget } from '../utils';
 import { registerWidget, emit } from '../core';
 
-export function rating(target: string | HTMLElement, options: RatingOptions): WidgetInstance & { getValue(): number; setValue(v: number): void } {
+export function rating(
+  target: string | HTMLElement,
+  options: RatingOptions,
+): WidgetInstance & { getValue(): number; setValue(v: number): void } {
   const el = resolveTarget(target);
   const id = options.id || uid('tx-rating');
   const max = options.max || 5;
@@ -69,8 +72,12 @@ export function rating(target: string | HTMLElement, options: RatingOptions): Wi
 
   return {
     el: container,
-    destroy() { el.innerHTML = ''; },
-    getValue() { return value; },
+    destroy() {
+      el.innerHTML = '';
+    },
+    getValue() {
+      return value;
+    },
     setValue(v: number) {
       value = Math.max(0, Math.min(max, v));
       render();

@@ -209,9 +209,7 @@ describe('Tabs widget', () => {
   });
 
   it('should render tab badges', () => {
-    const items = [
-      { id: 'a', title: 'A', content: 'A', badge: '5' },
-    ];
+    const items = [{ id: 'a', title: 'A', content: 'A', badge: '5' }];
     tabs(container, { items });
 
     const badge = container.querySelector('.tx-badge');
@@ -220,9 +218,7 @@ describe('Tabs widget', () => {
   });
 
   it('should render tab icons', () => {
-    const items = [
-      { id: 'a', title: 'A', content: 'A', icon: 'home' },
-    ];
+    const items = [{ id: 'a', title: 'A', content: 'A', icon: 'home' }];
     tabs(container, { items });
 
     const iconEl = container.querySelector('.tx-tab-icon');

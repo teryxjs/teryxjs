@@ -41,7 +41,7 @@ describe('Sidebar widget', () => {
     const items = container.querySelectorAll('.tx-sidebar-item');
     expect(items.length).toBe(3);
 
-    const labels = Array.from(container.querySelectorAll('.tx-sidebar-text')).map(el => el.textContent);
+    const labels = Array.from(container.querySelectorAll('.tx-sidebar-text')).map((el) => el.textContent);
     expect(labels).toContain('Dashboard');
     expect(labels).toContain('Users');
     expect(labels).toContain('Settings');
@@ -169,9 +169,7 @@ describe('Sidebar widget', () => {
   });
 
   it('should render badges', () => {
-    const items = [
-      { label: 'Inbox', href: '/inbox', badge: '5' },
-    ];
+    const items = [{ label: 'Inbox', href: '/inbox', badge: '5' }];
     sidebar(container, { items });
 
     const badge = container.querySelector('.tx-badge');

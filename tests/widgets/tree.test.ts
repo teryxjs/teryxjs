@@ -19,9 +19,7 @@ describe('Tree widget', () => {
       text: 'Root',
       children: [
         { id: 'child1', text: 'Child 1' },
-        { id: 'child2', text: 'Child 2', children: [
-          { id: 'grandchild1', text: 'Grandchild 1' },
-        ]},
+        { id: 'child2', text: 'Child 2', children: [{ id: 'grandchild1', text: 'Grandchild 1' }] },
       ],
     },
   ];
@@ -43,7 +41,7 @@ describe('Tree widget', () => {
 
     // Labels
     const labels = container.querySelectorAll('.tx-tree-label');
-    const texts = Array.from(labels).map(l => l.textContent);
+    const texts = Array.from(labels).map((l) => l.textContent);
     expect(texts).toContain('Root');
     expect(texts).toContain('Child 1');
     expect(texts).toContain('Child 2');
@@ -76,7 +74,7 @@ describe('Tree widget', () => {
     t.expandAll();
 
     const nodes = container.querySelectorAll('.tx-tree-node');
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const ch = node.querySelector(':scope > .tx-tree-children') as HTMLElement;
       if (ch) {
         expect(node.classList.contains('tx-tree-expanded')).toBe(true);
@@ -87,17 +85,20 @@ describe('Tree widget', () => {
 
   it('collapseAll() collapses all nodes', () => {
     const t = tree(container, {
-      nodes: [{ id: 'r', text: 'R', expanded: true, children: [
-        { id: 'c1', text: 'C1', expanded: true, children: [
-          { id: 'gc1', text: 'GC1' },
-        ]},
-      ]}],
+      nodes: [
+        {
+          id: 'r',
+          text: 'R',
+          expanded: true,
+          children: [{ id: 'c1', text: 'C1', expanded: true, children: [{ id: 'gc1', text: 'GC1' }] }],
+        },
+      ],
     });
 
     t.collapseAll();
 
     const nodes = container.querySelectorAll('.tx-tree-node');
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const ch = node.querySelector(':scope > .tx-tree-children') as HTMLElement;
       if (ch) {
         expect(ch.style.display).toBe('none');
@@ -151,8 +152,8 @@ describe('Tree widget', () => {
 
     const checked = t.getChecked();
     expect(checked.length).toBe(2);
-    expect(checked.map(n => n.id)).toContain('a');
-    expect(checked.map(n => n.id)).toContain('c');
+    expect(checked.map((n) => n.id)).toContain('a');
+    expect(checked.map((n) => n.id)).toContain('c');
   });
 
   it('getSelected() returns null when nothing selected', () => {
@@ -189,11 +190,7 @@ describe('Tree widget', () => {
   });
 
   it('should render expanded nodes as expanded', () => {
-    const nodes = [
-      { id: 'r', text: 'Root', expanded: true, children: [
-        { id: 'c', text: 'Child' },
-      ]},
-    ];
+    const nodes = [{ id: 'r', text: 'Root', expanded: true, children: [{ id: 'c', text: 'Child' }] }];
     tree(container, { nodes });
 
     const rootNode = container.querySelector('[data-id="r"]') as HTMLElement;
@@ -201,9 +198,7 @@ describe('Tree widget', () => {
   });
 
   it('leaf nodes do not render toggle', () => {
-    const nodes = [
-      { id: 'leaf', text: 'Leaf', leaf: true },
-    ];
+    const nodes = [{ id: 'leaf', text: 'Leaf', leaf: true }];
     tree(container, { nodes });
 
     const toggle = container.querySelector('[data-id="leaf"] .tx-tree-toggle');

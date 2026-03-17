@@ -85,8 +85,18 @@ function injectStyles(): void {
 // ----------------------------------------------------------
 const DAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 function fmtDate(d: Date): string {
@@ -162,15 +172,15 @@ export function calendar(target: string | HTMLElement, options: CalendarOptions)
   function fetchEvents(): void {
     if (!options.source) return;
     fetch(options.source)
-      .then(r => r.json())
+      .then((r) => r.json())
       .then((data: CalendarEvent[] | { events: CalendarEvent[] }) => {
-        const list = Array.isArray(data) ? data : (data.events || []);
+        const list = Array.isArray(data) ? data : data.events || [];
         // Merge: remote events replace by id, new ones are added
-        const idSet = new Set(list.map(e => e.id));
-        events = events.filter(e => !idSet.has(e.id)).concat(list);
+        const idSet = new Set(list.map((e) => e.id));
+        events = events.filter((e) => !idSet.has(e.id)).concat(list);
         render();
       })
-      .catch(err => console.error('Teryx calendar: failed to fetch events', err));
+      .catch((err) => console.error('Teryx calendar: failed to fetch events', err));
   }
 
   // ----------------------------------------------------------
@@ -335,7 +345,7 @@ export function calendar(target: string | HTMLElement, options: CalendarOptions)
     h += '<div class="tx-calendar-allday-cells">';
     for (const d of days) {
       const dateStr = fmtDate(d);
-      const allDayEvts = getEventsForDate(d).filter(e => isAllDay(e));
+      const allDayEvts = getEventsForDate(d).filter((e) => isAllDay(e));
       h += `<div class="tx-calendar-allday-cell" data-date="${dateStr}">`;
       for (const ev of allDayEvts) {
         h += `<span class="tx-calendar-event" data-event-id="${esc(ev.id)}" style="background:${eventColor(ev)}" title="${esc(ev.title)}">${esc(ev.title)}</span>`;
@@ -367,7 +377,7 @@ export function calendar(target: string | HTMLElement, options: CalendarOptions)
       }
 
       // Timed events
-      const timedEvts = getEventsForDate(d).filter(e => !isAllDay(e));
+      const timedEvts = getEventsForDate(d).filter((e) => !isAllDay(e));
       for (const ev of timedEvts) {
         const startDt = parseEventDateTime(ev.start);
         const endDt = ev.end ? parseEventDateTime(ev.end) : new Date(startDt.getTime() + 60 * 60 * 1000);
@@ -419,7 +429,7 @@ export function calendar(target: string | HTMLElement, options: CalendarOptions)
   // ----------------------------------------------------------
   function getEventsForDate(d: Date): CalendarEvent[] {
     const dateStr = fmtDate(d);
-    return events.filter(ev => {
+    return events.filter((ev) => {
       const evStart = ev.start.slice(0, 10);
       const evEnd = ev.end ? ev.end.slice(0, 10) : evStart;
       return dateStr >= evStart && dateStr <= evEnd;
@@ -459,7 +469,7 @@ export function calendar(target: string | HTMLElement, options: CalendarOptions)
       if (eventEl) {
         e.stopPropagation();
         const eventId = eventEl.getAttribute('data-event-id');
-        const ev = events.find(ev => ev.id === eventId);
+        const ev = events.find((ev) => ev.id === eventId);
         if (ev) {
           options.onEventClick?.(ev);
           emit('calendar:eventClick', { id, event: ev });
@@ -561,7 +571,7 @@ export function calendar(target: string | HTMLElement, options: CalendarOptions)
     },
 
     removeEvent(eventId: string) {
-      const idx = events.findIndex(e => e.id === eventId);
+      const idx = events.findIndex((e) => e.id === eventId);
       if (idx !== -1) {
         const removed = events.splice(idx, 1)[0];
         render();

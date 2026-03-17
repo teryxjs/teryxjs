@@ -81,13 +81,15 @@ export function navbar(target: string | HTMLElement, options: NavbarOptions): { 
   // Close dropdowns on outside click
   document.addEventListener('click', (e) => {
     if (!navEl.contains(e.target as Node)) {
-      navEl.querySelectorAll('.tx-navbar-dropdown-open').forEach(d => d.classList.remove('tx-navbar-dropdown-open'));
+      navEl.querySelectorAll('.tx-navbar-dropdown-open').forEach((d) => d.classList.remove('tx-navbar-dropdown-open'));
     }
   });
 
   return {
     el: navEl,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
   };
 }
 

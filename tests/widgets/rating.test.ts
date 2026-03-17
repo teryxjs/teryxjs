@@ -135,7 +135,7 @@ describe('Rating widget', () => {
     rating(container, { value: 2 });
 
     const stars = container.querySelectorAll('.tx-rating-star');
-    stars.forEach(star => {
+    stars.forEach((star) => {
       expect(star.innerHTML).toContain('<svg');
     });
   });

@@ -222,10 +222,7 @@ function injectStyles(): void {
 //  Widget implementation
 // ----------------------------------------------------------
 
-export function navigationView(
-  target: string | HTMLElement,
-  options: NavigationViewOptions,
-): NavigationViewInstance {
+export function navigationView(target: string | HTMLElement, options: NavigationViewOptions): NavigationViewInstance {
   injectStyles();
 
   const el = resolveTarget(target);
@@ -305,8 +302,10 @@ export function navigationView(
     panel.classList.add('tx-nav-panel-hidden');
     // Remove animation classes
     panel.classList.remove(
-      'tx-nav-anim-push-enter', 'tx-nav-anim-push-leave',
-      'tx-nav-anim-pop-enter', 'tx-nav-anim-pop-leave',
+      'tx-nav-anim-push-enter',
+      'tx-nav-anim-push-leave',
+      'tx-nav-anim-pop-enter',
+      'tx-nav-anim-pop-leave',
       'tx-nav-anim-active',
     );
   }
@@ -368,29 +367,46 @@ export function navigationView(
     let touchStartY = 0;
     let swiping = false;
 
-    viewport.addEventListener('touchstart', (e: TouchEvent) => {
-      if (animating || stack.length <= 1) return;
-      const touch = e.touches[0];
-      // Only detect from left edge (first 24px)
-      if (touch.clientX > 24) return;
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
-      swiping = true;
-    }, { passive: true });
+    viewport.addEventListener(
+      'touchstart',
+      (e: TouchEvent) => {
+        if (animating || stack.length <= 1) return;
+        const touch = e.touches[0];
+        // Only detect from left edge (first 24px)
+        if (touch.clientX > 24) return;
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        swiping = true;
+      },
+      { passive: true },
+    );
 
-    viewport.addEventListener('touchmove', (e: TouchEvent) => {
-      if (!swiping) return;
-      const dx = e.touches[0].clientX - touchStartX;
-      const dy = Math.abs(e.touches[0].clientY - touchStartY);
-      // Cancel if vertical scroll dominates
-      if (dy > Math.abs(dx)) { swiping = false; return; }
-      if (dx > 60) {
+    viewport.addEventListener(
+      'touchmove',
+      (e: TouchEvent) => {
+        if (!swiping) return;
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = Math.abs(e.touches[0].clientY - touchStartY);
+        // Cancel if vertical scroll dominates
+        if (dy > Math.abs(dx)) {
+          swiping = false;
+          return;
+        }
+        if (dx > 60) {
+          swiping = false;
+          instance.pop();
+        }
+      },
+      { passive: true },
+    );
+
+    viewport.addEventListener(
+      'touchend',
+      () => {
         swiping = false;
-        instance.pop();
-      }
-    }, { passive: true });
-
-    viewport.addEventListener('touchend', () => { swiping = false; }, { passive: true });
+      },
+      { passive: true },
+    );
   }
 
   // Back button ----
@@ -406,7 +422,7 @@ export function navigationView(
       if (animating) return;
 
       const outView = stack[stack.length - 1];
-      const outPanel = outView ? panelMap.get(outView.id) ?? null : null;
+      const outPanel = outView ? (panelMap.get(outView.id) ?? null) : null;
 
       stack.push(view);
       const inPanel = buildPanel(view);
@@ -448,7 +464,7 @@ export function navigationView(
       // Tear down everything
       for (const [vid, panel] of panelMap) {
         panel.remove();
-        const old = stack.find(v => v.id === vid);
+        const old = stack.find((v) => v.id === vid);
         if (old) old.onDeactivate?.();
       }
       panelMap.clear();
@@ -495,8 +511,6 @@ export function navigationView(
 // ----------------------------------------------------------
 //  Declarative registration
 // ----------------------------------------------------------
-registerWidget('navigation-view', (el, opts) =>
-  navigationView(el, opts as unknown as NavigationViewOptions),
-);
+registerWidget('navigation-view', (el, opts) => navigationView(el, opts as unknown as NavigationViewOptions));
 
 export default navigationView;

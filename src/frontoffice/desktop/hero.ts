@@ -49,10 +49,7 @@ export interface HeroOptions {
 //  Widget
 // ----------------------------------------------------------
 
-export function hero(
-  target: string | HTMLElement,
-  options: HeroOptions,
-): { el: HTMLElement; destroy(): void } {
+export function hero(target: string | HTMLElement, options: HeroOptions): { el: HTMLElement; destroy(): void } {
   const el = resolveTarget(target);
   const id = options.id || uid('tx-hero');
   const align = options.align || 'center';
@@ -105,10 +102,7 @@ export function hero(
       const variant = btn.variant || (i === 0 ? 'primary' : 'outline');
       const tag = btn.href ? 'a' : 'button';
       const hrefAttr = btn.href ? ` href="${esc(btn.href)}"` : '';
-      html += `<${tag} class="${cls(
-        'tx-hero-btn',
-        `tx-hero-btn-${variant}`,
-      )}"${hrefAttr}>`;
+      html += `<${tag} class="${cls('tx-hero-btn', `tx-hero-btn-${variant}`)}"${hrefAttr}>`;
       if (btn.icon && btn.iconPosition !== 'right') {
         html += `<span class="tx-hero-btn-icon">${icon(btn.icon)}</span>`;
       }

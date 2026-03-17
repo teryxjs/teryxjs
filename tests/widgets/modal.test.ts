@@ -6,7 +6,7 @@ describe('Modal widget', () => {
 
   afterEach(() => {
     // Clean up any modals appended to body
-    document.querySelectorAll('.tx-modal-overlay').forEach(el => el.remove());
+    document.querySelectorAll('.tx-modal-overlay').forEach((el) => el.remove());
     document.body.classList.remove('tx-modal-open');
     overlay = null;
   });
@@ -34,7 +34,7 @@ describe('Modal widget', () => {
     expect(overlay!.style.display).toBe('');
 
     // Wait for rAF to add classes
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(overlay!.classList.contains('tx-modal-active')).toBe(true);
 
     const dialog = overlay!.querySelector('.tx-modal') as HTMLElement;
@@ -45,7 +45,7 @@ describe('Modal widget', () => {
   it('close() hides overlay', async () => {
     const m = modal({ title: 'Close Test' });
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     expect(m.isOpen()).toBe(true);
     m.close();
@@ -59,7 +59,7 @@ describe('Modal widget', () => {
     expect(m.isOpen()).toBe(false);
 
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
     expect(m.isOpen()).toBe(true);
 
     m.destroy();
@@ -91,7 +91,7 @@ describe('Modal widget', () => {
   it('Escape key closes when keyboard=true', async () => {
     const m = modal({ title: 'Escape Test', keyboard: true });
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     expect(m.isOpen()).toBe(true);
 
@@ -103,7 +103,7 @@ describe('Modal widget', () => {
   it('Escape key does not close when keyboard=false', async () => {
     const m = modal({ title: 'No Escape', keyboard: false });
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     expect(m.isOpen()).toBe(true);
@@ -113,7 +113,7 @@ describe('Modal widget', () => {
   it('close button works', async () => {
     const m = modal({ title: 'Close Btn', closable: true });
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     overlay = document.querySelector('.tx-modal-overlay');
     const closeBtn = overlay!.querySelector('.tx-modal-close') as HTMLElement;
@@ -177,7 +177,7 @@ describe('Modal widget', () => {
     const onOpen = vi.fn();
     const m = modal({ title: 'Callback', onOpen });
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     expect(onOpen).toHaveBeenCalledTimes(1);
     m.destroy();
@@ -211,7 +211,7 @@ describe('Modal widget', () => {
   it('should add tx-modal-open class to body when opened', async () => {
     const m = modal({ title: 'Body Class' });
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     expect(document.body.classList.contains('tx-modal-open')).toBe(true);
     m.destroy();
@@ -220,7 +220,7 @@ describe('Modal widget', () => {
   it('backdrop click closes when backdrop is not static', async () => {
     const m = modal({ title: 'Backdrop', backdrop: true });
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     overlay = document.querySelector('.tx-modal-overlay') as HTMLElement;
     // Simulate clicking on the overlay itself (not the dialog)
@@ -232,7 +232,7 @@ describe('Modal widget', () => {
   it('backdrop click does NOT close when backdrop is static', async () => {
     const m = modal({ title: 'Static Backdrop', backdrop: 'static' });
     m.open();
-    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     overlay = document.querySelector('.tx-modal-overlay') as HTMLElement;
     overlay.dispatchEvent(new MouseEvent('click', { bubbles: true }));

@@ -53,7 +53,9 @@ export function datalist(target: string | HTMLElement, options: DataListOptions)
 
   return {
     el: el.querySelector(`#${id}`) || el,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
   };
 }
 

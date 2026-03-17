@@ -10,8 +10,18 @@ import { registerWidget } from '../core';
 //  Types
 // ----------------------------------------------------------
 
-interface ChartDataPoint { x: string | number; y: number; label?: string; color?: string; }
-interface ChartSeries { name: string; data: ChartDataPoint[]; color?: string; type?: ChartType; }
+interface ChartDataPoint {
+  x: string | number;
+  y: number;
+  label?: string;
+  color?: string;
+}
+interface ChartSeries {
+  name: string;
+  data: ChartDataPoint[];
+  color?: string;
+  type?: ChartType;
+}
 type ChartType = 'bar' | 'horizontalBar' | 'line' | 'area' | 'pie' | 'donut' | 'scatter' | 'gauge';
 
 interface ChartAxis {
@@ -86,7 +96,10 @@ const PAD = { top: 40, right: 20, bottom: 50, left: 60 };
 const LEGEND_H = 30;
 
 function niceScale(min: number, max: number, ticks: number): { min: number; max: number; step: number } {
-  if (min === max) { min -= 1; max += 1; }
+  if (min === max) {
+    min -= 1;
+    max += 1;
+  }
   const range = max - min;
   const rawStep = range / Math.max(ticks - 1, 1);
   const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
@@ -103,7 +116,7 @@ function niceScale(min: number, max: number, ticks: number): { min: number; max:
 }
 
 function polarToXY(cx: number, cy: number, r: number, angle: number): { x: number; y: number } {
-  const rad = (angle - 90) * Math.PI / 180;
+  const rad = ((angle - 90) * Math.PI) / 180;
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
@@ -129,10 +142,12 @@ function escSvg(s: string): string {
 // ----------------------------------------------------------
 
 function tooltipGroup(): string {
-  return `<g class="tx-chart-tooltip" visibility="hidden">` +
+  return (
+    `<g class="tx-chart-tooltip" visibility="hidden">` +
     `<rect class="tx-chart-tooltip-bg" rx="4" ry="4" fill="rgba(0,0,0,.8)" />` +
     `<text class="tx-chart-tooltip-text" fill="#fff" font-size="12" dominant-baseline="middle" />` +
-    `</g>`;
+    `</g>`
+  );
 }
 
 // ----------------------------------------------------------
@@ -154,7 +169,8 @@ function getColor(idx: number, colors: string[]): string {
 // ----------------------------------------------------------
 
 function renderAxes(
-  w: number, h: number,
+  w: number,
+  h: number,
   categories: string[],
   scale: { min: number; max: number; step: number },
   xTitle: string | undefined,
@@ -228,17 +244,17 @@ function renderAxes(
 //  Legend renderer
 // ----------------------------------------------------------
 
-function renderLegend(
-  series: ChartSeries[], colors: string[], w: number, h: number, pos: string,
-): string {
+function renderLegend(series: ChartSeries[], colors: string[], w: number, h: number, pos: string): string {
   let svg = '';
   const count = series.length;
-  if (count < 2 && series[0]?.data.every(d => !d.label)) return '';
+  if (count < 2 && series[0]?.data.every((d) => !d.label)) return '';
 
   // Use data point labels for pie/donut, series names otherwise
   const entries: { name: string; color: string }[] = [];
-  if (series.length === 1 && series[0].data.some(d => d.label)) {
-    series[0].data.forEach((d, i) => entries.push({ name: d.label || String(d.x), color: d.color || getColor(i, colors) }));
+  if (series.length === 1 && series[0].data.some((d) => d.label)) {
+    series[0].data.forEach((d, i) =>
+      entries.push({ name: d.label || String(d.x), color: d.color || getColor(i, colors) }),
+    );
   } else {
     series.forEach((s, i) => entries.push({ name: s.name, color: s.color || getColor(i, colors) }));
   }
@@ -265,8 +281,8 @@ function renderLegend(
 // ----------------------------------------------------------
 
 function renderBarChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[]): string {
-  const categories = series[0]?.data.map(d => String(d.x)) || [];
-  const allValues = series.flatMap(s => s.data.map(d => d.y));
+  const categories = series[0]?.data.map((d) => String(d.x)) || [];
+  const allValues = series.flatMap((s) => s.data.map((d) => d.y));
   const yMin = opts.yAxis?.min ?? Math.min(0, ...allValues);
   const yMax = opts.yAxis?.max ?? Math.max(...allValues);
   const scale = niceScale(yMin, yMax, opts.yAxis?.tickCount || 6);
@@ -310,9 +326,15 @@ function renderBarChart(series: ChartSeries[], opts: ChartOptions, w: number, h:
 //  Horizontal bar chart
 // ----------------------------------------------------------
 
-function renderHorizontalBarChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[]): string {
-  const categories = series[0]?.data.map(d => String(d.x)) || [];
-  const allValues = series.flatMap(s => s.data.map(d => d.y));
+function renderHorizontalBarChart(
+  series: ChartSeries[],
+  opts: ChartOptions,
+  w: number,
+  h: number,
+  colors: string[],
+): string {
+  const categories = series[0]?.data.map((d) => String(d.x)) || [];
+  const allValues = series.flatMap((s) => s.data.map((d) => d.y));
   const xMin = opts.yAxis?.min ?? Math.min(0, ...allValues);
   const xMax = opts.yAxis?.max ?? Math.max(...allValues);
   const scale = niceScale(xMin, xMax, opts.yAxis?.tickCount || 6);
@@ -354,8 +376,8 @@ function renderHorizontalBarChart(series: ChartSeries[], opts: ChartOptions, w: 
 // ----------------------------------------------------------
 
 function renderLineChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[]): string {
-  const categories = series[0]?.data.map(d => String(d.x)) || [];
-  const allValues = series.flatMap(s => s.data.map(d => d.y));
+  const categories = series[0]?.data.map((d) => String(d.x)) || [];
+  const allValues = series.flatMap((s) => s.data.map((d) => d.y));
   const yMin = opts.yAxis?.min ?? Math.min(...allValues);
   const yMax = opts.yAxis?.max ?? Math.max(...allValues);
   const scale = niceScale(yMin, yMax, opts.yAxis?.tickCount || 6);
@@ -374,9 +396,7 @@ function renderLineChart(series: ChartSeries[], opts: ChartOptions, w: number, h
 
     for (let di = 0; di < s.data.length; di++) {
       const d = s.data[di];
-      const px = categories.length > 1
-        ? PAD.left + catW * di
-        : PAD.left + plotW / 2;
+      const px = categories.length > 1 ? PAD.left + catW * di : PAD.left + plotW / 2;
       const ratio = (d.y - scale.min) / (scale.max - scale.min || 1);
       const py = PAD.top + plotH - ratio * plotH;
       points.push({ px, py, d });
@@ -409,8 +429,8 @@ function renderLineChart(series: ChartSeries[], opts: ChartOptions, w: number, h
 // ----------------------------------------------------------
 
 function renderAreaChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[]): string {
-  const categories = series[0]?.data.map(d => String(d.x)) || [];
-  const allValues = series.flatMap(s => s.data.map(d => d.y));
+  const categories = series[0]?.data.map((d) => String(d.x)) || [];
+  const allValues = series.flatMap((s) => s.data.map((d) => d.y));
   const yMin = opts.yAxis?.min ?? Math.min(0, ...allValues);
   const yMax = opts.yAxis?.max ?? Math.max(...allValues);
   const scale = niceScale(yMin, yMax, opts.yAxis?.tickCount || 6);
@@ -430,9 +450,7 @@ function renderAreaChart(series: ChartSeries[], opts: ChartOptions, w: number, h
 
     for (let di = 0; di < s.data.length; di++) {
       const d = s.data[di];
-      const px = categories.length > 1
-        ? PAD.left + catW * di
-        : PAD.left + plotW / 2;
+      const px = categories.length > 1 ? PAD.left + catW * di : PAD.left + plotW / 2;
       const ratio = (d.y - scale.min) / (scale.max - scale.min || 1);
       const py = PAD.top + plotH - ratio * plotH;
       points.push({ px, py, d });
@@ -475,9 +493,9 @@ function renderAreaChart(series: ChartSeries[], opts: ChartOptions, w: number, h
 // ----------------------------------------------------------
 
 function renderScatterChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[]): string {
-  const allXNumeric = series.every(s => s.data.every(d => typeof d.x === 'number'));
-  const allX = series.flatMap(s => s.data.map(d => Number(d.x)));
-  const allY = series.flatMap(s => s.data.map(d => d.y));
+  const allXNumeric = series.every((s) => s.data.every((d) => typeof d.x === 'number'));
+  const allX = series.flatMap((s) => s.data.map((d) => Number(d.x)));
+  const allY = series.flatMap((s) => s.data.map((d) => d.y));
 
   const xMin = opts.xAxis?.min ?? Math.min(...allX);
   const xMax = opts.xAxis?.max ?? Math.max(...allX);
@@ -547,7 +565,14 @@ function renderScatterChart(series: ChartSeries[], opts: ChartOptions, w: number
 //  Pie / Donut chart
 // ----------------------------------------------------------
 
-function renderPieChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[], isDonut: boolean): string {
+function renderPieChart(
+  series: ChartSeries[],
+  opts: ChartOptions,
+  w: number,
+  h: number,
+  colors: string[],
+  isDonut: boolean,
+): string {
   const data = series[0]?.data || [];
   if (data.length === 0) return '';
 
@@ -628,7 +653,7 @@ function renderPieChart(series: ChartSeries[], opts: ChartOptions, w: number, h:
 function renderGaugeChart(opts: ChartOptions, w: number, h: number, colors: string[]): string {
   const gMin = opts.gaugeMin ?? 0;
   const gMax = opts.gaugeMax ?? 100;
-  const value = opts.gaugeValue ?? (opts.data?.[0]?.y ?? opts.series?.[0]?.data[0]?.y ?? 0);
+  const value = opts.gaugeValue ?? opts.data?.[0]?.y ?? opts.series?.[0]?.data[0]?.y ?? 0;
   const label = opts.gaugeLabel ?? opts.data?.[0]?.label ?? '';
 
   const cx = w / 2;
@@ -637,7 +662,7 @@ function renderGaugeChart(opts: ChartOptions, w: number, h: number, colors: stri
   const innerR = outerR * 0.72;
 
   // Gauge spans 240 degrees (from -210 to 30 relative to "12 o'clock")
-  const startAngle = -120;  // from left
+  const startAngle = -120; // from left
   const totalSweep = 240;
 
   const ratio = Math.max(0, Math.min(1, (value - gMin) / (gMax - gMin || 1)));
@@ -663,7 +688,7 @@ function renderGaugeChart(opts: ChartOptions, w: number, h: number, colors: stri
     const valEnd = polarToXY(cx, cy, outerR, valueAngle);
     const valInStart = polarToXY(cx, cy, innerR, startAngle);
     const valInEnd = polarToXY(cx, cy, innerR, valueAngle);
-    const large = (valueAngle - startAngle) > 180 ? 1 : 0;
+    const large = valueAngle - startAngle > 180 ? 1 : 0;
 
     let valPath = `M ${bgStart.x} ${bgStart.y}`;
     valPath += ` A ${outerR} ${outerR} 0 ${large} 1 ${valEnd.x} ${valEnd.y}`;
@@ -811,7 +836,8 @@ export function chart(target: string | HTMLElement, options: ChartOptions): Char
 
   function renderStatic(container: HTMLElement, opts: ChartOptions, chartId: string, w: number, h: number): void {
     const svgContent = renderChart(opts, w, h);
-    container.innerHTML = `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
+    container.innerHTML =
+      `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
       `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
       svgContent +
       `</svg></div>`;
@@ -819,13 +845,14 @@ export function chart(target: string | HTMLElement, options: ChartOptions): Char
 
   function renderWithSource(container: HTMLElement, opts: ChartOptions, chartId: string, w: number, h: number): void {
     // Show loading state, then fetch
-    container.innerHTML = `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
+    container.innerHTML =
+      `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
       `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
       `<text x="${w / 2}" y="${h / 2}" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="#9ca3af">Loading\u2026</text>` +
       `</svg></div>`;
 
     fetch(opts.source!)
-      .then(r => r.json())
+      .then((r) => r.json())
       .then((json: unknown) => {
         // Support { series: [...] } or { data: [...] } or raw array
         const resolved = { ...opts };
@@ -839,7 +866,8 @@ export function chart(target: string | HTMLElement, options: ChartOptions): Char
         renderStatic(container, resolved, chartId, w, h);
       })
       .catch(() => {
-        container.innerHTML = `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
+        container.innerHTML =
+          `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
           `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
           `<text x="${w / 2}" y="${h / 2}" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="#ef4444">Failed to load chart data</text>` +
           `</svg></div>`;
@@ -862,7 +890,7 @@ export function chart(target: string | HTMLElement, options: ChartOptions): Char
   }
 
   return {
-    el: el.querySelector(`#${id}`) as HTMLElement || el,
+    el: (el.querySelector(`#${id}`) as HTMLElement) || el,
     destroy() {
       resizeObserver?.disconnect();
       el.innerHTML = '';

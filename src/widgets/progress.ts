@@ -6,7 +6,10 @@ import type { ProgressOptions, WidgetInstance } from '../types';
 import { uid, esc, cls, resolveTarget } from '../utils';
 import { registerWidget } from '../core';
 
-export function progress(target: string | HTMLElement, options: ProgressOptions): WidgetInstance & { setValue(v: number): void } {
+export function progress(
+  target: string | HTMLElement,
+  options: ProgressOptions,
+): WidgetInstance & { setValue(v: number): void } {
   const el = resolveTarget(target);
   const id = options.id || uid('tx-progress');
   const max = options.max || 100;
@@ -51,7 +54,9 @@ export function progress(target: string | HTMLElement, options: ProgressOptions)
 
   return {
     el: progressEl || el,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
     setValue(v: number) {
       const bar = (progressEl || el).querySelector('.tx-progress-bar') as HTMLElement;
       if (bar) {

@@ -17,7 +17,7 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
   const pageParam = options.pageParam || 'page';
   const pageSizeParam = options.pageSizeParam || 'pageSize';
   const pageSize = options.pageSize || 25;
-  const visibleCols = options.columns.filter(c => !c.hidden);
+  const visibleCols = options.columns.filter((c) => !c.hidden);
 
   let html = `<div class="${cls('tx-grid', options.class)}" id="${esc(id)}">`;
 
@@ -62,7 +62,9 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
 
   const instance: GridInstance = {
     el: el.querySelector(`#${id}`) || el,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
     reload() {
       const dataEl = document.getElementById(`${id}-data`);
       if (dataEl) {
@@ -78,13 +80,18 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
     },
     getSelected() {
       const checked = el.querySelectorAll<HTMLInputElement>('.tx-grid-row-select:checked');
-      return Array.from(checked).map(cb => {
-        try { return JSON.parse(cb.getAttribute('data-row') || '{}'); }
-        catch { return {}; }
+      return Array.from(checked).map((cb) => {
+        try {
+          return JSON.parse(cb.getAttribute('data-row') || '{}');
+        } catch {
+          return {};
+        }
       });
     },
     clearSelection() {
-      el.querySelectorAll<HTMLInputElement>('.tx-grid-row-select').forEach(cb => { cb.checked = false; });
+      el.querySelectorAll<HTMLInputElement>('.tx-grid-row-select').forEach((cb) => {
+        cb.checked = false;
+      });
       const selectAll = el.querySelector<HTMLInputElement>('.tx-grid-select-all');
       if (selectAll) selectAll.checked = false;
     },
@@ -212,7 +219,11 @@ function renderTableTemplate(
 
   for (const col of cols) {
     const thCls = cls(col.headerClass, col.align && `tx-text-${col.align}`, col.sortable && 'tx-grid-sortable');
-    const style = col.width ? ` style="width:${esc(col.width)}"` : col.minWidth ? ` style="min-width:${esc(col.minWidth)}"` : '';
+    const style = col.width
+      ? ` style="width:${esc(col.width)}"`
+      : col.minWidth
+        ? ` style="min-width:${esc(col.minWidth)}"`
+        : '';
     html += `<th class="${thCls}" data-field="${esc(col.field)}"${style}>`;
     html += `<span class="tx-grid-header-text">${esc(col.label)}</span>`;
     if (col.sortable) {
@@ -224,7 +235,7 @@ function renderTableTemplate(
   html += '</tr>';
 
   // Column filters row
-  if (cols.some(c => c.filterable)) {
+  if (cols.some((c) => c.filterable)) {
     html += '<tr class="tx-grid-filter-row">';
     if (options.rowNumbers) html += '<th></th>';
     if (options.selectable) html += '<th></th>';
@@ -390,7 +401,7 @@ function attachSortHandlers(root: HTMLElement, id: string, options: GridOptions)
     const newSort = currentSort === 'asc' ? 'desc' : 'asc';
 
     // Clear other sort indicators
-    root.querySelectorAll('.tx-grid-sortable').forEach(h => {
+    root.querySelectorAll('.tx-grid-sortable').forEach((h) => {
       h.removeAttribute('data-sort');
       const sortIcon = h.querySelector('.tx-grid-sort-icon');
       if (sortIcon) sortIcon.innerHTML = icon('sort');
