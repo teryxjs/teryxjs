@@ -34,3 +34,4 @@ export { exportCSV, exportExcel, exportJSON, exportHTML, gridColumnsToExport } f
 export { chart } from './chart';
 export { skeleton } from './skeleton';
 export { richEditor } from './rich-editor';
+export { tooltip, popover } from './tooltip';
