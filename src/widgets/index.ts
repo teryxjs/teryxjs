@@ -41,3 +41,4 @@ export { slider } from './slider';
 export { tagInput } from './tag-input';
 export { transferList } from './transfer-list';
 export { kanban } from './kanban';
+export { lightbox } from './lightbox';

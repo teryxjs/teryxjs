@@ -82,6 +82,7 @@ export {
   datePicker,
   transferList,
   kanban,
+  lightbox,
 } from './widgets';
 
 // Category imports
