@@ -26,6 +26,10 @@ export type { TeryxLocale } from './i18n';
 export { setTheme, getTheme, registerTheme, getThemeNames } from './theme';
 export type { TeryxTheme } from './theme';
 
+// Router
+export { createRouter } from './router';
+export type { Route, RouterOptions, Router } from './router';
+
 // Utilities
 export { uid, esc, cls, icon, icons, resolveTarget, createElement, debounce, throttle, clamp } from './utils';
 
