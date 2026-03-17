@@ -73,6 +73,8 @@ export {
   chart,
   skeleton,
   richEditor,
+  tooltip,
+  popover,
 } from './widgets';
 
 // Category imports
