@@ -62,7 +62,7 @@ export function compilePath(path: string): { regex: RegExp; paramNames: string[]
   // Split on param placeholders, escape regex-special chars in static segments
   const regexStr = path
     .replace(/:[a-zA-Z_][a-zA-Z0-9_]*/g, '\0PARAM\0')
-    .replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&')
+    .replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')
     .replace(/\0PARAM\0/g, () => '([^/]+)');
 
   // Collect param names separately
