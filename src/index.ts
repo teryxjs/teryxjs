@@ -83,6 +83,7 @@ export {
   transferList,
   kanban,
   lightbox,
+  pivotGrid,
 } from './widgets';
 
 // Category imports
