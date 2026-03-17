@@ -996,6 +996,53 @@ export interface TagOptions {
 }
 
 // ----------------------------------------------------------
+//  Tag Input / Chip Field
+// ----------------------------------------------------------
+export interface TagInputOptions {
+  value?: string[];
+  placeholder?: string;
+  maxTags?: number;
+  allowDuplicates?: boolean;
+  clearable?: boolean;
+  creatable?: boolean;
+  suggestions?: string[];
+  onChange?: (tags: string[]) => void;
+  onAdd?: (tag: string) => void;
+  onRemove?: (tag: string) => void;
+  class?: string;
+  id?: string;
+}
+
+export interface TagInputInstance extends WidgetInstance {
+  getValue(): string[];
+  setValue(tags: string[]): void;
+  addTag(tag: string): void;
+  removeTag(tag: string): void;
+  clear(): void;
+}
+
+// ----------------------------------------------------------
+//  Rich Text Editor
+// ----------------------------------------------------------
+export type RichEditorTool = 'bold' | 'italic' | 'underline' | '|' | 'ul' | 'ol' | 'link' | 'image' | 'clean';
+
+export interface RichEditorOptions {
+  value?: string;
+  placeholder?: string;
+  toolbar?: RichEditorTool[];
+  readonly?: boolean;
+  maxLength?: number;
+  onChange?: (html: string) => void;
+  class?: string;
+  id?: string;
+}
+
+export interface RichEditorInstance extends WidgetInstance {
+  getValue(): string;
+  setValue(html: string): void;
+}
+
+// ----------------------------------------------------------
 //  Avatar
 // ----------------------------------------------------------
 export interface AvatarOptions {
