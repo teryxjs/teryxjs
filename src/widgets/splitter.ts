@@ -44,49 +44,62 @@ export function splitter(target: string | HTMLElement, options: SplitterOptions)
   container.style.display = 'flex';
   container.style.flexDirection = isHorizontal ? 'row' : 'column';
 
-  // Drag handling
+  // Drag handling (mouse + touch)
   gutters.forEach((gutter, i) => {
     let startPos = 0;
     let startSizeA = 0;
     let startSizeB = 0;
 
-    const onMouseDown = (e: MouseEvent) => {
-      e.preventDefault();
-      startPos = isHorizontal ? e.clientX : e.clientY;
+    function beginDrag(clientPos: number): void {
+      startPos = clientPos;
       startSizeA = isHorizontal ? panels[i].offsetWidth : panels[i].offsetHeight;
       startSizeB = isHorizontal ? panels[i + 1].offsetWidth : panels[i + 1].offsetHeight;
 
       gutter.classList.add('tx-splitter-gutter-active');
       document.body.style.cursor = isHorizontal ? 'col-resize' : 'row-resize';
       document.body.style.userSelect = 'none';
+    }
+
+    function moveDrag(clientPos: number): void {
+      const delta = clientPos - startPos;
+      const newSizeA = Math.max(minSize, startSizeA + delta);
+      const newSizeB = Math.max(minSize, startSizeB - delta);
+
+      if (options.maxSize) {
+        if (newSizeA > options.maxSize || newSizeB > options.maxSize) return;
+      }
+
+      panels[i].style[isHorizontal ? 'width' : 'height'] = `${newSizeA}px`;
+      panels[i + 1].style[isHorizontal ? 'width' : 'height'] = `${newSizeB}px`;
+      panels[i].style.flexBasis = `${newSizeA}px`;
+      panels[i + 1].style.flexBasis = `${newSizeB}px`;
+    }
+
+    function endDrag(): void {
+      gutter.classList.remove('tx-splitter-gutter-active');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+
+      const currentSizes = panels.map((p) => (isHorizontal ? p.offsetWidth : p.offsetHeight));
+      const total = currentSizes.reduce((a, b) => a + b, 0);
+      const pctSizes = currentSizes.map((s) => (s / total) * 100);
+      options.onResize?.(pctSizes);
+      emit('splitter:resize', { id, sizes: pctSizes });
+    }
+
+    // Mouse events
+    const onMouseDown = (e: MouseEvent) => {
+      e.preventDefault();
+      beginDrag(isHorizontal ? e.clientX : e.clientY);
 
       const onMouseMove = (e: MouseEvent) => {
-        const delta = (isHorizontal ? e.clientX : e.clientY) - startPos;
-        const newSizeA = Math.max(minSize, startSizeA + delta);
-        const newSizeB = Math.max(minSize, startSizeB - delta);
-
-        if (options.maxSize) {
-          if (newSizeA > options.maxSize || newSizeB > options.maxSize) return;
-        }
-
-        panels[i].style[isHorizontal ? 'width' : 'height'] = `${newSizeA}px`;
-        panels[i + 1].style[isHorizontal ? 'width' : 'height'] = `${newSizeB}px`;
-        panels[i].style.flexBasis = `${newSizeA}px`;
-        panels[i + 1].style.flexBasis = `${newSizeB}px`;
+        moveDrag(isHorizontal ? e.clientX : e.clientY);
       };
 
       const onMouseUp = () => {
-        gutter.classList.remove('tx-splitter-gutter-active');
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
-
-        const currentSizes = panels.map((p) => (isHorizontal ? p.offsetWidth : p.offsetHeight));
-        const total = currentSizes.reduce((a, b) => a + b, 0);
-        const pctSizes = currentSizes.map((s) => (s / total) * 100);
-        options.onResize?.(pctSizes);
-        emit('splitter:resize', { id, sizes: pctSizes });
+        endDrag();
       };
 
       document.addEventListener('mousemove', onMouseMove);
@@ -94,6 +107,34 @@ export function splitter(target: string | HTMLElement, options: SplitterOptions)
     };
 
     gutter.addEventListener('mousedown', onMouseDown);
+
+    // Touch events
+    gutter.addEventListener(
+      'touchstart',
+      (e: TouchEvent) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        beginDrag(isHorizontal ? touch.clientX : touch.clientY);
+      },
+      { passive: false },
+    );
+
+    gutter.addEventListener(
+      'touchmove',
+      (e: TouchEvent) => {
+        const touch = e.touches[0];
+        moveDrag(isHorizontal ? touch.clientX : touch.clientY);
+      },
+      { passive: true },
+    );
+
+    gutter.addEventListener(
+      'touchend',
+      () => {
+        endDrag();
+      },
+      { passive: true },
+    );
   });
 
   return {

@@ -265,6 +265,14 @@ export function emit(event: string, ...args: unknown[]): void {
   });
 }
 
+export function once(event: string, handler: Handler): void {
+  const wrapper = (...args: unknown[]) => {
+    off(event, wrapper);
+    handler(...args);
+  };
+  on(event, wrapper);
+}
+
 // ----------------------------------------------------------
 //  Auto-init on DOMContentLoaded + MutationObserver
 // ----------------------------------------------------------
