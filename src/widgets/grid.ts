@@ -52,6 +52,14 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
   html += `</div>`;
 
   html += `</div>`; // #id-data
+
+  // Infinite scroll sentinel
+  if (options.infiniteScroll) {
+    html += `<div id="${esc(id)}-sentinel" class="tx-grid-infinite-loader" style="display:none;">`;
+    html += `<div class="tx-spinner"></div>`;
+    html += `</div>`;
+  }
+
   html += `</div>`; // .tx-grid-body
 
   html += `</div>`; // .tx-grid
@@ -60,6 +68,11 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
 
   // --- Post-render: attach sort click handlers ---
   requestAnimationFrame(() => attachSortHandlers(el, id, options));
+
+  // --- Post-render: attach infinite scroll ---
+  if (options.infiniteScroll) {
+    requestAnimationFrame(() => attachInfiniteScroll(el, id, options, pageSize, pageParam, rowsField, totalField));
+  }
 
   const instance: GridInstance = {
     el: el.querySelector(`#${id}`) || el,
@@ -427,6 +440,124 @@ function attachSortHandlers(root: HTMLElement, id: string, options: GridOptions)
         (window as any).xhtmlx.process(dataEl);
       }
     }
+  });
+}
+
+// ----------------------------------------------------------
+// Infinite scroll handling (post-render)
+// ----------------------------------------------------------
+function attachInfiniteScroll(
+  root: HTMLElement,
+  id: string,
+  options: GridOptions,
+  pageSize: number,
+  pageParam: string,
+  rowsField: string,
+  totalField: string,
+): void {
+  const gridBody = root.querySelector('.tx-grid-body') as HTMLElement | null;
+  if (!gridBody) return;
+
+  let currentPage = 1;
+  let totalRows = 0;
+  let loadedRows = 0;
+  let loading = false;
+  let allLoaded = false;
+
+  const sentinel = document.getElementById(`${id}-sentinel`);
+
+  // Listen for the initial data load to capture totals
+  const dataEl = document.getElementById(`${id}-data`);
+  if (dataEl) {
+    const observer = new MutationObserver(() => {
+      const rows = gridBody.querySelectorAll('.tx-grid-row');
+      if (rows.length > 0 && loadedRows === 0) {
+        loadedRows = rows.length;
+        const totalEl = gridBody.querySelector('.tx-grid-total');
+        if (totalEl) {
+          const match = totalEl.textContent?.match(/of\s+(\d+)/);
+          if (match) totalRows = parseInt(match[1], 10);
+        }
+        if (!totalRows) totalRows = loadedRows + pageSize;
+        if (loadedRows >= totalRows) {
+          allLoaded = true;
+        }
+      }
+    });
+    observer.observe(dataEl, { childList: true, subtree: true });
+  }
+
+  gridBody.addEventListener('scroll', () => {
+    if (loading || allLoaded) return;
+
+    const scrollBottom = gridBody.scrollHeight - gridBody.scrollTop - gridBody.clientHeight;
+    if (scrollBottom > 200) return;
+
+    loading = true;
+    if (sentinel) sentinel.style.display = '';
+
+    currentPage++;
+
+    const url = new URL(options.source, window.location.origin);
+    url.searchParams.set(pageParam, String(currentPage));
+    url.searchParams.set(options.pageSizeParam || 'pageSize', String(pageSize));
+
+    fetch(url.toString())
+      .then((res) => res.json())
+      .then((data: Record<string, unknown>) => {
+        const newRows = data[rowsField];
+        const total = data[totalField];
+        if (typeof total === 'number') totalRows = total;
+
+        if (Array.isArray(newRows) && newRows.length > 0) {
+          const tbody = gridBody.querySelector('tbody');
+          if (tbody) {
+            const visibleCols = options.columns.filter((c) => !c.hidden);
+            for (const row of newRows) {
+              const record = row as Record<string, unknown>;
+              const tr = document.createElement('tr');
+              tr.className = 'tx-grid-row';
+              if (options.rowClass) tr.classList.add(options.rowClass);
+
+              if (options.rowNumbers) {
+                const td = document.createElement('td');
+                td.className = 'tx-grid-rownum-col';
+                td.textContent = String(loadedRows + 1);
+                tr.appendChild(td);
+              }
+
+              if (options.selectable) {
+                const td = document.createElement('td');
+                td.className = 'tx-grid-select-col';
+                td.innerHTML = '<input type="checkbox" class="tx-checkbox tx-grid-row-select">';
+                tr.appendChild(td);
+              }
+
+              for (const col of visibleCols) {
+                const td = document.createElement('td');
+                if (col.class) td.className = col.class;
+                if (col.align) td.classList.add(`tx-text-${col.align}`);
+                td.textContent = String(record[col.field] ?? '');
+                tr.appendChild(td);
+              }
+
+              tbody.appendChild(tr);
+              loadedRows++;
+            }
+          }
+        }
+
+        if (!Array.isArray(newRows) || newRows.length === 0 || loadedRows >= totalRows) {
+          allLoaded = true;
+        }
+
+        loading = false;
+        if (sentinel) sentinel.style.display = 'none';
+      })
+      .catch(() => {
+        loading = false;
+        if (sentinel) sentinel.style.display = 'none';
+      });
   });
 }
 
