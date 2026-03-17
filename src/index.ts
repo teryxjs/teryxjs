@@ -71,6 +71,7 @@ export {
   exportHTML,
   gridColumnsToExport,
   chart,
+  slider,
 } from './widgets';
 
 // Category imports
