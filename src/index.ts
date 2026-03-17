@@ -72,6 +72,7 @@ export {
   gridColumnsToExport,
   chart,
   skeleton,
+  richEditor,
 } from './widgets';
 
 // Category imports
