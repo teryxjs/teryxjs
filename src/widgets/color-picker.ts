@@ -202,22 +202,22 @@ export function colorPicker(target: string | HTMLElement, options: ColorPickerOp
     },
     { passive: true },
   );
-  document.addEventListener('mousemove', (e) => {
+  const onDocMouseMove = (e: MouseEvent) => {
     if (dragging) pickSatLight(e);
-  });
-  document.addEventListener(
-    'touchmove',
-    (e) => {
-      if (dragging) pickSatLight(e);
-    },
-    { passive: true },
-  );
-  document.addEventListener('mouseup', () => {
+  };
+  const onDocTouchMove = (e: TouchEvent) => {
+    if (dragging) pickSatLight(e);
+  };
+  const onDocMouseUp = () => {
     dragging = false;
-  });
-  document.addEventListener('touchend', () => {
+  };
+  const onDocTouchEnd = () => {
     dragging = false;
-  });
+  };
+  document.addEventListener('mousemove', onDocMouseMove);
+  document.addEventListener('touchmove', onDocTouchMove, { passive: true });
+  document.addEventListener('mouseup', onDocMouseUp);
+  document.addEventListener('touchend', onDocTouchEnd);
 
   // Preset clicks
   container.querySelectorAll('.tx-colorpicker-preset').forEach((btn) => {
@@ -240,13 +240,19 @@ export function colorPicker(target: string | HTMLElement, options: ColorPickerOp
   });
 
   // Close on outside click
-  document.addEventListener('click', (e) => {
+  const onDocClick = (e: MouseEvent) => {
     if (isOpen && !container.contains(e.target as Node)) instance.close();
-  });
+  };
+  document.addEventListener('click', onDocClick);
 
   const instance: ColorPickerInstance = {
     el: container,
     destroy() {
+      document.removeEventListener('mousemove', onDocMouseMove);
+      document.removeEventListener('touchmove', onDocTouchMove);
+      document.removeEventListener('mouseup', onDocMouseUp);
+      document.removeEventListener('touchend', onDocTouchEnd);
+      document.removeEventListener('click', onDocClick);
       el.innerHTML = '';
     },
     getValue() {

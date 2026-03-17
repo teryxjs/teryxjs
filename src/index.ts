@@ -13,7 +13,7 @@
 //
 
 // Core
-export { configure, config, initWidgets, registerWidget, on, off, emit } from './core';
+export { configure, config, initWidgets, registerWidget, on, off, emit, teardown } from './core';
 
 // Types
 export type * from './types';

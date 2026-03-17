@@ -92,6 +92,7 @@ export function drawer(options: DrawerOptions): DrawerInstance {
     },
     destroy() {
       if (instance.isOpen()) instance.close();
+      document.removeEventListener('keydown', escapeHandler);
       setTimeout(() => overlay.remove(), 350);
     },
   };
@@ -107,9 +108,10 @@ export function drawer(options: DrawerOptions): DrawerInstance {
   }
 
   // Escape
-  document.addEventListener('keydown', (e) => {
+  const escapeHandler = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && instance.isOpen()) instance.close();
-  });
+  };
+  document.addEventListener('keydown', escapeHandler);
 
   return instance;
 }
