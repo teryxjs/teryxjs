@@ -114,7 +114,7 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
     setErrors(errors: Record<string, string>) {
       instance.clearErrors();
       for (const [field, message] of Object.entries(errors)) {
-        const group = formEl.querySelector(`[data-field="${field.replace(/["\\\\]/g, '\\\\$&')}"]`);
+        const group = formEl.querySelector(`[data-field="${field.replace(/["\\]/g, '\\$&')}"]`);
         if (group) {
           group.classList.add('tx-form-error');
           const errEl = group.querySelector('.tx-form-feedback');
