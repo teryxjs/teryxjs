@@ -73,6 +73,7 @@ export {
   chart,
   skeleton,
   richEditor,
+  datePicker,
   tooltip,
   popover,
 } from './widgets';
