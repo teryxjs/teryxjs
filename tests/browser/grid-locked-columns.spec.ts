@@ -74,10 +74,7 @@ test.describe('Grid Locked Columns', () => {
 
     await page.waitForSelector('.tx-grid-locked-container');
 
-    const leftHeaders = await texts(
-      page,
-      '.tx-grid-locked-left .tx-grid-header-text',
-    );
+    const leftHeaders = await texts(page, '.tx-grid-locked-left .tx-grid-header-text');
     expect(leftHeaders).toEqual(['ID']);
   });
 
@@ -100,16 +97,11 @@ test.describe('Grid Locked Columns', () => {
 
     await page.waitForSelector('.tx-grid-locked-container');
 
-    const centerHeaders = await texts(
-      page,
-      '.tx-grid-scrollable .tx-grid-header-text',
-    );
+    const centerHeaders = await texts(page, '.tx-grid-scrollable .tx-grid-header-text');
     expect(centerHeaders).toEqual(['Name', 'Email']);
   });
 
-  test('does not render locked container when no columns are locked', async ({
-    page,
-  }) => {
+  test('does not render locked container when no columns are locked', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
     await createWidget(
       page,
