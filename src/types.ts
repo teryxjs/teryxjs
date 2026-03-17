@@ -99,7 +99,7 @@ export interface GridColumn {
   /** Summary function for column footer. */
   summary?: 'sum' | 'avg' | 'min' | 'max' | 'count' | string;
   /** Locked column (always visible on scroll). */
-  locked?: boolean;
+  locked?: 'left' | 'right';
   /** Groupable by this column. */
   groupable?: boolean;
 }
