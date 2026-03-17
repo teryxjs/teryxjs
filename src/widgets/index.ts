@@ -35,3 +35,4 @@ export { chart } from './chart';
 export { skeleton } from './skeleton';
 export { richEditor } from './rich-editor';
 export { tooltip, popover } from './tooltip';
+export { datePicker } from './datepicker';
