@@ -450,7 +450,16 @@ test.describe('Grid', () => {
         columns: [{ field: 'name', label: 'Name' }],
       });
     });
+    // The empty message is inside a <template> element processed by xhtmlx.
+    // Check the template content, not the rendered DOM.
     const hasEmptyMessage = await page.evaluate(() => {
+      const tpl = document.querySelector('#target template');
+      if (tpl) {
+        const content = (tpl as HTMLTemplateElement).content;
+        const emptyText = content.querySelector('.tx-grid-empty-text');
+        return emptyText ? emptyText.textContent === 'No users available' : false;
+      }
+      // Fallback: check raw innerHTML
       const el = document.querySelector('#target');
       return el ? el.innerHTML.includes('No users available') : false;
     });

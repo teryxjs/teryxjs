@@ -77,6 +77,9 @@ export {
   popover,
   draggable,
   droppable,
+  slider,
+  tagInput,
+  datePicker,
 } from './widgets';
 
 // Category imports

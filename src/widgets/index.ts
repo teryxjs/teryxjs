@@ -37,3 +37,5 @@ export { richEditor } from './rich-editor';
 export { tooltip, popover } from './tooltip';
 export { datePicker } from './datepicker';
 export { draggable, droppable } from './drag-drop';
+export { slider } from './slider';
+export { tagInput } from './tag-input';
