@@ -13,13 +13,16 @@ test.describe('Navbar Widget', () => {
   ]`;
 
   test('brand renders with link', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         brand: 'Teryx App',
         brandHref: '/home',
         items: ${navItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-navbar')).toBeVisible();
     await expect(page.locator('.tx-navbar-brand')).toBeVisible();
@@ -28,24 +31,30 @@ test.describe('Navbar Widget', () => {
   });
 
   test('brand with image renders img element', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         brand: 'App',
         brandImage: '/img/logo.png',
         items: ${navItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-navbar-brand-img')).toHaveCount(1);
     await expect(page.locator('.tx-navbar-brand-img')).toHaveAttribute('src', '/img/logo.png');
   });
 
   test('nav items render', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         items: ${navItems}
       });
-    `);
+    `,
+    );
 
     const items = page.locator('.tx-navbar-nav .tx-navbar-item');
     expect(await items.count()).toBe(3);
@@ -55,11 +64,14 @@ test.describe('Navbar Widget', () => {
   });
 
   test('active item has active class', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         items: ${navItems}
       });
-    `);
+    `,
+    );
 
     const activeItems = page.locator('.tx-navbar-item-active');
     expect(await activeItems.count()).toBe(1);
@@ -67,7 +79,9 @@ test.describe('Navbar Widget', () => {
   });
 
   test('dropdown toggle opens menu', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         items: [
           { label: 'Home', href: '/' },
@@ -80,7 +94,8 @@ test.describe('Navbar Widget', () => {
           },
         ]
       });
-    `);
+    `,
+    );
 
     const dropdown = page.locator('.tx-navbar-dropdown');
     await expect(dropdown).toBeVisible();
@@ -98,7 +113,9 @@ test.describe('Navbar Widget', () => {
   });
 
   test('dropdown closes on outside click', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         items: [
           {
@@ -109,7 +126,8 @@ test.describe('Navbar Widget', () => {
           },
         ]
       });
-    `);
+    `,
+    );
 
     const dropdown = page.locator('.tx-navbar-dropdown');
 
@@ -126,13 +144,16 @@ test.describe('Navbar Widget', () => {
   });
 
   test('collapsible adds toggler button', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         brand: 'App',
         collapsible: true,
         items: ${navItems}
       });
-    `);
+    `,
+    );
 
     // Toggler should exist in the DOM
     await expect(page.locator('.tx-navbar-toggler')).toHaveCount(1);
@@ -157,38 +178,49 @@ test.describe('Navbar Widget', () => {
   });
 
   test('sticky class is applied when sticky option is true', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         sticky: true,
         items: ${navItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-navbar')).toHaveClass(/tx-navbar-sticky/);
   });
 
   test('variant dark and primary classes are applied', async ({ page }) => {
     // Dark variant
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         variant: 'dark',
         items: [{ label: 'Home', href: '/' }]
       });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-navbar')).toHaveClass(/tx-navbar-dark/);
 
     // Primary variant in target2
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target2', {
         variant: 'primary',
         items: [{ label: 'Home', href: '/' }]
       });
-    `);
+    `,
+    );
     await expect(page.locator('#target2 .tx-navbar')).toHaveClass(/tx-navbar-primary/);
   });
 
   test('end items render in navbar-end section', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.navbar('#target', {
         items: [{ label: 'Home', href: '/' }],
         endItems: [
@@ -196,7 +228,8 @@ test.describe('Navbar Widget', () => {
           { label: 'Sign Up', href: '/signup' },
         ]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-navbar-end')).toBeVisible();
     const endTexts = await texts(page, '.tx-navbar-end .tx-navbar-item');
@@ -204,12 +237,15 @@ test.describe('Navbar Widget', () => {
   });
 
   test('destroy removes all navbar DOM content', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__navbar = Teryx.navbar('#target', {
         brand: 'App',
         items: ${navItems}
       });
-    `);
+    `,
+    );
 
     await assertExists(page, '.tx-navbar');
 

@@ -31,7 +31,9 @@ test.describe('Grid', () => {
 
   test('renders table with correct column headers', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         columns: [
@@ -40,7 +42,8 @@ test.describe('Grid', () => {
           { field: 'role', label: 'Role' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     const headers = await texts(page, '.tx-table th .tx-grid-header-text');
     expect(headers).toEqual(['Name', 'Email', 'Role']);
@@ -48,7 +51,9 @@ test.describe('Grid', () => {
 
   test('renders data rows from mocked API', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         columns: [
@@ -57,7 +62,8 @@ test.describe('Grid', () => {
           { field: 'role', label: 'Role' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-grid-row');
     const rowCount = await count(page, '.tx-grid-row');
     expect(rowCount).toBe(3);
@@ -65,7 +71,9 @@ test.describe('Grid', () => {
 
   test('renders search input when searchable is true', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         searchable: true,
@@ -73,7 +81,8 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-grid-search');
     await expect(page.locator('.tx-grid-search')).toHaveAttribute('placeholder', 'Search...');
@@ -81,7 +90,9 @@ test.describe('Grid', () => {
 
   test('renders toolbar buttons', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         toolbar: [
@@ -93,7 +104,8 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-grid-toolbar');
     await assertExists(page, '.tx-grid-toolbar');
     const btnTexts = await texts(page, '.tx-grid-toolbar-start .tx-btn');
@@ -104,7 +116,9 @@ test.describe('Grid', () => {
 
   test('sort click toggles sort icon on sortable column', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         columns: [
@@ -112,7 +126,8 @@ test.describe('Grid', () => {
           { field: 'email', label: 'Email' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     const sortableHeader = page.locator('.tx-grid-sortable');
     await expect(sortableHeader).toHaveCount(1);
@@ -132,7 +147,9 @@ test.describe('Grid', () => {
 
   test('renders pagination section when paginated', async ({ page }) => {
     await mockAPI(page, '/api/users', PAGINATED_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         paginated: true,
@@ -141,7 +158,8 @@ test.describe('Grid', () => {
           { field: 'email', label: 'Email' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-grid-footer');
     await assertExists(page, '.tx-grid-pagination');
@@ -149,7 +167,9 @@ test.describe('Grid', () => {
 
   test('renders selectable checkboxes when selectable', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         selectable: true,
@@ -157,7 +177,8 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-grid-select-all');
     const selectCols = await count(page, '.tx-grid-select-col');
@@ -167,7 +188,9 @@ test.describe('Grid', () => {
 
   test('renders row numbers when rowNumbers is true', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         rowNumbers: true,
@@ -175,7 +198,8 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     const rownumHeaders = await count(page, 'th.tx-grid-rownum-col');
     expect(rownumHeaders).toBe(1);
@@ -183,14 +207,17 @@ test.describe('Grid', () => {
 
   test('renders empty state when API returns no rows', async ({ page }) => {
     await mockAPI(page, '/api/users', { rows: [], total: 0 });
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         columns: [
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await page.waitForTimeout(300);
     // The empty state div should be in the DOM (it uses xh-if so rendering depends on xhtmlx)
@@ -205,7 +232,9 @@ test.describe('Grid', () => {
 
   test('applies compact class', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         compact: true,
@@ -213,14 +242,17 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-table-compact');
   });
 
   test('applies striped class', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         striped: true,
@@ -228,14 +260,17 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-table-striped');
   });
 
   test('applies bordered class', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         bordered: true,
@@ -243,21 +278,25 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-table-bordered');
   });
 
   test('destroy clears the grid content', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__grid = Teryx.grid('#target', {
         source: '/api/users',
         columns: [
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-grid');
 
@@ -268,7 +307,9 @@ test.describe('Grid', () => {
 
   test('applies column widths via style attribute', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         columns: [
@@ -276,7 +317,8 @@ test.describe('Grid', () => {
           { field: 'email', label: 'Email', minWidth: '150px' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
 
     const nameHeader = page.locator('th[data-field="name"]');
@@ -288,21 +330,26 @@ test.describe('Grid', () => {
 
   test('renders hoverable class by default', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         columns: [
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-table-hoverable');
   });
 
   test('renders column menu button when columnMenu is true', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         columnMenu: true,
@@ -310,14 +357,17 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-grid-col-btn');
   });
 
   test('renders export button when exportable is true', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         exportable: true,
@@ -325,14 +375,17 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-grid-export-btn');
   });
 
   test('renders sticky header class when stickyHeader is true', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         stickyHeader: true,
@@ -340,7 +393,8 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-table');
     await assertExists(page, '.tx-table-sticky');
   });
@@ -366,7 +420,9 @@ test.describe('Grid', () => {
 
   test('applies maxHeight style to grid body', async ({ page }) => {
     await mockAPI(page, '/api/users', USERS_DATA);
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.grid('#target', {
         source: '/api/users',
         maxHeight: '300px',
@@ -374,7 +430,8 @@ test.describe('Grid', () => {
           { field: 'name', label: 'Name' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForSelector('.tx-grid-body');
     const body = page.locator('.tx-grid-body');
     await expect(body).toHaveAttribute('style', /max-height.*300px/);

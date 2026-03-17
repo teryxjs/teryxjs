@@ -7,7 +7,9 @@ test.describe('Accordion Widget', () => {
   });
 
   test('renders accordion items', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         items: [
           { id: 'a', title: 'Section A', content: 'Content A' },
@@ -15,7 +17,8 @@ test.describe('Accordion Widget', () => {
           { id: 'c', title: 'Section C', content: 'Content C' },
         ]
       });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-accordion')).toBeVisible();
     expect(await count(page, '.tx-accordion-item')).toBe(3);
     const titles = await texts(page, '.tx-accordion-title');
@@ -23,7 +26,9 @@ test.describe('Accordion Widget', () => {
   });
 
   test('click toggles item open and closed', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         animated: false,
         items: [
@@ -31,7 +36,8 @@ test.describe('Accordion Widget', () => {
           { id: 'b', title: 'Section B', content: '<p>Content B</p>' },
         ]
       });
-    `);
+    `,
+    );
 
     // Initially both panels are hidden
     const panelA = page.locator('[data-item="a"] .tx-accordion-panel');
@@ -53,7 +59,9 @@ test.describe('Accordion Widget', () => {
   });
 
   test('single mode closes other items when opening one', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         animated: false,
         multiple: false,
@@ -62,7 +70,8 @@ test.describe('Accordion Widget', () => {
           { id: 'b', title: 'B', content: 'Content B' },
         ]
       });
-    `);
+    `,
+    );
 
     // A is open initially
     await expect(page.locator('[data-item="a"]')).toHaveClass(/tx-accordion-open/);
@@ -77,7 +86,9 @@ test.describe('Accordion Widget', () => {
   });
 
   test('multiple mode keeps several items open', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         animated: false,
         multiple: true,
@@ -87,7 +98,8 @@ test.describe('Accordion Widget', () => {
           { id: 'c', title: 'C', content: 'Content C' },
         ]
       });
-    `);
+    `,
+    );
 
     // Open A
     await page.locator('[data-item="a"] .tx-accordion-header').click();
@@ -104,7 +116,9 @@ test.describe('Accordion Widget', () => {
   });
 
   test('initially open item renders expanded', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         animated: false,
         items: [
@@ -112,7 +126,8 @@ test.describe('Accordion Widget', () => {
           { id: 'b', title: 'B', content: 'Closed' },
         ]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('[data-item="a"]')).toHaveClass(/tx-accordion-open/);
     await expect(page.locator('[data-item="a"] .tx-accordion-panel')).toBeVisible();
@@ -123,14 +138,17 @@ test.describe('Accordion Widget', () => {
   });
 
   test('disabled item does not toggle on click', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         animated: false,
         items: [
           { id: 'a', title: 'A', content: 'Content', disabled: true },
         ]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('[data-item="a"]')).toHaveClass(/tx-accordion-disabled/);
     await expect(page.locator('[data-item="a"] .tx-accordion-header')).toBeDisabled();
@@ -143,7 +161,9 @@ test.describe('Accordion Widget', () => {
   });
 
   test('programmatic open method opens an item', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__acc = Teryx.accordion('#target', {
         animated: false,
         items: [
@@ -151,7 +171,8 @@ test.describe('Accordion Widget', () => {
           { id: 'b', title: 'B', content: 'Content B' },
         ]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('[data-item="a"]')).not.toHaveClass(/tx-accordion-open/);
 
@@ -163,14 +184,17 @@ test.describe('Accordion Widget', () => {
   });
 
   test('programmatic close method closes an item', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__acc = Teryx.accordion('#target', {
         animated: false,
         items: [
           { id: 'a', title: 'A', content: 'Content A', open: true },
         ]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('[data-item="a"]')).toHaveClass(/tx-accordion-open/);
 
@@ -182,14 +206,17 @@ test.describe('Accordion Widget', () => {
   });
 
   test('programmatic toggle method toggles an item', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__acc = Teryx.accordion('#target', {
         animated: false,
         items: [
           { id: 'a', title: 'A', content: 'Content A' },
         ]
       });
-    `);
+    `,
+    );
 
     // Toggle open
     await page.evaluate(() => (window as any).__acc.toggle('a'));
@@ -203,7 +230,9 @@ test.describe('Accordion Widget', () => {
   });
 
   test('openAll opens all items and closeAll closes all', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__acc = Teryx.accordion('#target', {
         animated: false,
         multiple: true,
@@ -213,7 +242,8 @@ test.describe('Accordion Widget', () => {
           { id: 'c', title: 'C', content: 'C' },
         ]
       });
-    `);
+    `,
+    );
 
     // Open all
     await page.evaluate(() => (window as any).__acc.openAll());
@@ -229,64 +259,79 @@ test.describe('Accordion Widget', () => {
   });
 
   test('animated class is applied by default', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         items: [
           { id: 'a', title: 'A', content: 'Content' },
         ]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-accordion-panel').first()).toHaveClass(/tx-accordion-animated/);
   });
 
   test('content renders inside accordion body', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         animated: false,
         items: [
           { id: 'a', title: 'A', content: '<strong>Bold text</strong>', open: true },
         ]
       });
-    `);
+    `,
+    );
 
     const body = page.locator('.tx-accordion-body');
     await expect(body.locator('strong')).toHaveText('Bold text');
   });
 
   test('bordered class is applied by default', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         items: [
           { id: 'a', title: 'A', content: 'Content' },
         ]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-accordion')).toHaveClass(/tx-accordion-bordered/);
   });
 
   test('bordered false removes bordered class', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.accordion('#target', {
         bordered: false,
         items: [
           { id: 'a', title: 'A', content: 'Content' },
         ]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-accordion')).not.toHaveClass(/tx-accordion-bordered/);
   });
 
   test('destroy removes all accordion DOM content', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__acc = Teryx.accordion('#target', {
         items: [
           { id: 'a', title: 'A', content: 'Content' },
         ]
       });
-    `);
+    `,
+    );
 
     await assertExists(page, '.tx-accordion');
 

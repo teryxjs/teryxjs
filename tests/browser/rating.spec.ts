@@ -7,17 +7,23 @@ test.describe('Rating Widget', () => {
   });
 
   test('renders the correct number of stars', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.rating('#target', { max: 5, value: 0 });
-    `);
+    `,
+    );
     const stars = await count(page, '.tx-rating-star');
     expect(stars).toBe(5);
   });
 
   test('renders custom number of stars', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.rating('#target', { max: 10, value: 0 });
-    `);
+    `,
+    );
     const stars = await count(page, '.tx-rating-star');
     expect(stars).toBe(10);
   });
@@ -76,9 +82,12 @@ test.describe('Rating Widget', () => {
   });
 
   test('hover adds preview class to stars', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.rating('#target', { max: 5, value: 0 });
-    `);
+    `,
+    );
     await page.locator('.tx-rating-star[data-value="4"]').hover();
     await page.waitForTimeout(200);
 

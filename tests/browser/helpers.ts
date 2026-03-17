@@ -21,7 +21,7 @@ export async function createWidget(page: Page, code: string): Promise<void> {
 
 /** Mock an API endpoint to return fixed JSON data. */
 export async function mockAPI(page: Page, url: string, data: unknown, status = 200): Promise<void> {
-  await page.route(`**${url}*`, route => {
+  await page.route(`**${url}*`, (route) => {
     route.fulfill({
       status,
       contentType: 'application/json',

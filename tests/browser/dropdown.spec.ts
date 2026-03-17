@@ -12,11 +12,7 @@ test.describe('Dropdown Widget', () => {
       el.innerHTML = '<button id="dd-trigger">Menu</button>';
       (window as any).__dd = (window as any).Teryx.dropdown({
         trigger: '#dd-trigger',
-        items: [
-          { label: 'Item 1' },
-          { label: 'Item 2' },
-          { label: 'Item 3' }
-        ]
+        items: [{ label: 'Item 1' }, { label: 'Item 2' }, { label: 'Item 3' }],
       });
     });
     await page.locator('#dd-trigger').click();
@@ -31,7 +27,7 @@ test.describe('Dropdown Widget', () => {
       el.innerHTML = '<button id="dd-trigger">Menu</button>';
       (window as any).__dd = (window as any).Teryx.dropdown({
         trigger: '#dd-trigger',
-        items: [{ label: 'Item 1' }]
+        items: [{ label: 'Item 1' }],
       });
     });
     await page.locator('#dd-trigger').click();
@@ -52,9 +48,19 @@ test.describe('Dropdown Widget', () => {
       (window as any).__dd = (window as any).Teryx.dropdown({
         trigger: '#dd-trigger',
         items: [
-          { label: 'Action A', handler: () => { (window as any).__clicked = 'A'; } },
-          { label: 'Action B', handler: () => { (window as any).__clicked = 'B'; } }
-        ]
+          {
+            label: 'Action A',
+            handler: () => {
+              (window as any).__clicked = 'A';
+            },
+          },
+          {
+            label: 'Action B',
+            handler: () => {
+              (window as any).__clicked = 'B';
+            },
+          },
+        ],
       });
     });
     await page.locator('#dd-trigger').click();
@@ -73,11 +79,7 @@ test.describe('Dropdown Widget', () => {
       el.innerHTML = '<button id="dd-trigger">Menu</button>';
       (window as any).__dd = (window as any).Teryx.dropdown({
         trigger: '#dd-trigger',
-        items: [
-          { label: 'Item 1' },
-          { divider: true },
-          { label: 'Item 2' }
-        ]
+        items: [{ label: 'Item 1' }, { divider: true }, { label: 'Item 2' }],
       });
     });
     await page.locator('#dd-trigger').click();
@@ -93,10 +95,7 @@ test.describe('Dropdown Widget', () => {
       el.innerHTML = '<button id="dd-trigger">Menu</button>';
       (window as any).__dd = (window as any).Teryx.dropdown({
         trigger: '#dd-trigger',
-        items: [
-          { label: 'Enabled' },
-          { label: 'Disabled', disabled: true }
-        ]
+        items: [{ label: 'Enabled' }, { label: 'Disabled', disabled: true }],
       });
     });
     await page.locator('#dd-trigger').click();
@@ -111,7 +110,7 @@ test.describe('Dropdown Widget', () => {
       el.innerHTML = '<button id="dd-trigger">Menu</button>';
       (window as any).__dd = (window as any).Teryx.dropdown({
         trigger: '#dd-trigger',
-        items: [{ label: 'Item 1' }]
+        items: [{ label: 'Item 1' }],
       });
     });
     await page.locator('#dd-trigger').click();
@@ -130,12 +129,7 @@ test.describe('Dropdown Widget', () => {
       el.innerHTML = '<button id="dd-trigger">Menu</button>';
       (window as any).__dd = (window as any).Teryx.dropdown({
         trigger: '#dd-trigger',
-        items: [
-          { label: 'Parent', children: [
-            { label: 'Child 1' },
-            { label: 'Child 2' }
-          ]}
-        ]
+        items: [{ label: 'Parent', children: [{ label: 'Child 1' }, { label: 'Child 2' }] }],
       });
     });
     await page.locator('#dd-trigger').click();
@@ -153,8 +147,8 @@ test.describe('Dropdown Widget', () => {
         trigger: '#dd-trigger',
         items: [
           { label: 'Edit', icon: 'edit' },
-          { label: 'Delete', icon: 'trash' }
-        ]
+          { label: 'Delete', icon: 'trash' },
+        ],
       });
     });
     await page.locator('#dd-trigger').click();

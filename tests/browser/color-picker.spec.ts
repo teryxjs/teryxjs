@@ -7,9 +7,12 @@ test.describe('ColorPicker Widget', () => {
   });
 
   test('clicking the trigger opens the color panel', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.colorPicker('#target', { value: '#3b82f6' });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-colorpicker-panel')).toBeHidden();
 
     await page.locator('.tx-colorpicker-trigger').click();
@@ -19,12 +22,13 @@ test.describe('ColorPicker Widget', () => {
   });
 
   test('swatch displays the current color', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.colorPicker('#target', { value: '#ef4444' });
-    `);
-    const bg = await page.locator('.tx-colorpicker-swatch').evaluate(
-      el => el.style.background
+    `,
     );
+    const bg = await page.locator('.tx-colorpicker-swatch').evaluate((el) => el.style.background);
     expect(bg).toContain('rgb(239, 68, 68)');
   });
 
@@ -75,9 +79,12 @@ test.describe('ColorPicker Widget', () => {
   });
 
   test('clicking outside closes the panel', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.colorPicker('#target', { value: '#3b82f6' });
-    `);
+    `,
+    );
     await page.locator('.tx-colorpicker-trigger').click();
     await page.waitForTimeout(200);
     await expect(page.locator('.tx-colorpicker-panel')).toBeVisible();
@@ -102,9 +109,7 @@ test.describe('ColorPicker Widget', () => {
     expect(updated).toBe('#ffffff');
 
     // The swatch should also reflect the new color
-    const swatchBg = await page.locator('.tx-colorpicker-swatch').evaluate(
-      el => el.style.background
-    );
+    const swatchBg = await page.locator('.tx-colorpicker-swatch').evaluate((el) => el.style.background);
     expect(swatchBg).toContain('rgb(255, 255, 255)');
   });
 });

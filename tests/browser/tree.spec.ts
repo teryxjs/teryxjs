@@ -24,27 +24,35 @@ test.describe('Tree Widget', () => {
   ]`;
 
   test('renders nodes with hierarchy', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.tree('#target', {
         nodes: ${treeNodes}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-tree')).toBeVisible();
     // 3 top-level nodes + 3 children = 6 total nodes
     expect(await count(page, '.tx-tree-node')).toBe(6);
 
     // Top-level labels
-    const rootLabels = await page.locator('.tx-tree > .tx-tree-node > .tx-tree-content .tx-tree-label').allTextContents();
+    const rootLabels = await page
+      .locator('.tx-tree > .tx-tree-node > .tx-tree-content .tx-tree-label')
+      .allTextContents();
     expect(rootLabels).toEqual(['Documents', 'Photos', 'README.md']);
   });
 
   test('expand and collapse toggle click', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.tree('#target', {
         nodes: ${treeNodes}
       });
-    `);
+    `,
+    );
 
     const root1 = page.locator('[data-id="root1"]');
     const children = root1.locator('.tx-tree-children');
@@ -69,11 +77,14 @@ test.describe('Tree Widget', () => {
   });
 
   test('expandAll and collapseAll methods', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__tree = Teryx.tree('#target', {
         nodes: ${treeNodes}
       });
-    `);
+    `,
+    );
 
     // Expand all
     await page.evaluate(() => (window as any).__tree.expandAll());
@@ -86,7 +97,7 @@ test.describe('Tree Widget', () => {
 
     // All children divs should be visible
     const childrenDivs = page.locator('.tx-tree-children');
-    for (let i = 0; i < await childrenDivs.count(); i++) {
+    for (let i = 0; i < (await childrenDivs.count()); i++) {
       await expect(childrenDivs.nth(i)).toBeVisible();
     }
 
@@ -95,13 +106,15 @@ test.describe('Tree Widget', () => {
     await page.waitForTimeout(100);
 
     expect(await count(page, '.tx-tree-expanded')).toBe(0);
-    for (let i = 0; i < await childrenDivs.count(); i++) {
+    for (let i = 0; i < (await childrenDivs.count()); i++) {
       await expect(childrenDivs.nth(i)).toBeHidden();
     }
   });
 
   test('nested children render correctly', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.tree('#target', {
         expandAll: true,
         nodes: [
@@ -118,7 +131,8 @@ test.describe('Tree Widget', () => {
           }
         ]
       });
-    `);
+    `,
+    );
 
     await page.waitForTimeout(200);
 
@@ -134,13 +148,16 @@ test.describe('Tree Widget', () => {
   });
 
   test('selection highlight on click', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__tree = Teryx.tree('#target', {
         selectable: true,
         expandAll: true,
         nodes: ${treeNodes}
       });
-    `);
+    `,
+    );
 
     await page.waitForTimeout(200);
 
@@ -159,7 +176,9 @@ test.describe('Tree Widget', () => {
   });
 
   test('checkbox mode renders checkboxes', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.tree('#target', {
         checkable: true,
         expandAll: true,
@@ -169,7 +188,8 @@ test.describe('Tree Widget', () => {
           { id: 'c', text: 'Node C', checked: true },
         ]
       });
-    `);
+    `,
+    );
 
     await page.waitForTimeout(200);
 
@@ -181,7 +201,9 @@ test.describe('Tree Widget', () => {
   });
 
   test('leaf nodes show file icon, folder nodes show folder icon', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.tree('#target', {
         expandAll: true,
         nodes: [
@@ -193,7 +215,8 @@ test.describe('Tree Widget', () => {
           }
         ]
       });
-    `);
+    `,
+    );
 
     await page.waitForTimeout(200);
 
@@ -212,24 +235,30 @@ test.describe('Tree Widget', () => {
   });
 
   test('lines class is applied when lines option is true', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.tree('#target', {
         lines: true,
         nodes: [{ id: 'a', text: 'Node A' }]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-tree')).toHaveClass(/tx-tree-lines/);
   });
 
   test('getSelected returns the selected node', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__tree = Teryx.tree('#target', {
         selectable: true,
         expandAll: true,
         nodes: ${treeNodes}
       });
-    `);
+    `,
+    );
 
     await page.waitForTimeout(200);
 
@@ -249,7 +278,9 @@ test.describe('Tree Widget', () => {
   });
 
   test('expanded attribute renders node expanded initially', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.tree('#target', {
         nodes: [
           {
@@ -266,7 +297,8 @@ test.describe('Tree Widget', () => {
           }
         ]
       });
-    `);
+    `,
+    );
 
     // root1 should be expanded
     await expect(page.locator('[data-id="root1"]')).toHaveClass(/tx-tree-expanded/);
@@ -278,7 +310,9 @@ test.describe('Tree Widget', () => {
   });
 
   test('getChecked returns checked nodes', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__tree = Teryx.tree('#target', {
         checkable: true,
         nodes: [
@@ -287,7 +321,8 @@ test.describe('Tree Widget', () => {
           { id: 'c', text: 'C', checked: true },
         ]
       });
-    `);
+    `,
+    );
 
     const checked = await page.evaluate(() => {
       return (window as any).__tree.getChecked().map((n: any) => n.id);
@@ -296,11 +331,14 @@ test.describe('Tree Widget', () => {
   });
 
   test('destroy removes all tree DOM content', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__tree = Teryx.tree('#target', {
         nodes: [{ id: 'a', text: 'Node' }]
       });
-    `);
+    `,
+    );
 
     await assertExists(page, '.tx-tree');
 
@@ -311,7 +349,9 @@ test.describe('Tree Widget', () => {
   });
 
   test('programmatic expand and collapse methods', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__tree = Teryx.tree('#target', {
         nodes: [
           {
@@ -322,7 +362,8 @@ test.describe('Tree Widget', () => {
           }
         ]
       });
-    `);
+    `,
+    );
 
     // Initially collapsed
     await expect(page.locator('[data-id="root1"]')).not.toHaveClass(/tx-tree-expanded/);
