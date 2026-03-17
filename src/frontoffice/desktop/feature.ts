@@ -51,10 +51,7 @@ export interface FeatureOptions {
 //  Widget
 // ----------------------------------------------------------
 
-export function feature(
-  target: string | HTMLElement,
-  options: FeatureOptions,
-): { el: HTMLElement; destroy(): void } {
+export function feature(target: string | HTMLElement, options: FeatureOptions): { el: HTMLElement; destroy(): void } {
   const el = resolveTarget(target);
   const id = options.id || uid('tx-feature');
   const columns = options.columns || 3;

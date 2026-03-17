@@ -90,7 +90,7 @@ export function propertyGrid(target: string | HTMLElement, options: PropertyGrid
         const row = input.closest('[data-prop]') as HTMLElement;
         if (!row) return;
         const propName = row.getAttribute('data-prop')!;
-        const item = options.properties.find(p => p.name === propName);
+        const item = options.properties.find((p) => p.name === propName);
         if (!item) return;
 
         let value: unknown;
@@ -113,7 +113,9 @@ export function propertyGrid(target: string | HTMLElement, options: PropertyGrid
 
   return {
     el: el.querySelector(`#${id}`) || el,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
   };
 }
 
@@ -204,7 +206,9 @@ export function descriptions(target: string | HTMLElement, options: Descriptions
 
   return {
     el: el.querySelector(`#${id}`) || el,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
   };
 }
 

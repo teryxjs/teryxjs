@@ -98,7 +98,9 @@ export function card(target: string | HTMLElement, options: CardOptions): Widget
 
   return {
     el: cardEl,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
   };
 }
 

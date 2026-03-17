@@ -45,7 +45,7 @@ export interface RowOptions {
 }
 
 export interface ColOptions {
-  span?: number;           // 1-12
+  span?: number; // 1-12
   sm?: number;
   md?: number;
   lg?: number;
@@ -240,11 +240,30 @@ export interface TreeInstance extends WidgetInstance {
 //  Form
 // ----------------------------------------------------------
 export type FieldType =
-  | 'text' | 'email' | 'password' | 'number' | 'tel' | 'url'
-  | 'textarea' | 'select' | 'multiselect' | 'checkbox' | 'radio'
-  | 'switch' | 'hidden' | 'date' | 'time' | 'datetime'
-  | 'file' | 'color' | 'range' | 'combobox' | 'tag'
-  | 'richtext' | 'code' | 'display';
+  | 'text'
+  | 'email'
+  | 'password'
+  | 'number'
+  | 'tel'
+  | 'url'
+  | 'textarea'
+  | 'select'
+  | 'multiselect'
+  | 'checkbox'
+  | 'radio'
+  | 'switch'
+  | 'hidden'
+  | 'date'
+  | 'time'
+  | 'datetime'
+  | 'file'
+  | 'color'
+  | 'range'
+  | 'combobox'
+  | 'tag'
+  | 'richtext'
+  | 'code'
+  | 'display';
 
 export interface FormField {
   name: string;
@@ -469,8 +488,12 @@ export interface ToolbarButton {
   menu?: MenuItem[];
 }
 
-export interface ToolbarSeparator { type: 'separator'; }
-export interface ToolbarSpacer { type: 'spacer'; }
+export interface ToolbarSeparator {
+  type: 'separator';
+}
+export interface ToolbarSpacer {
+  type: 'spacer';
+}
 export interface ToolbarSearch {
   type: 'search';
   placeholder?: string;
@@ -551,9 +574,7 @@ export interface DropdownInstance extends WidgetInstance {
 // ----------------------------------------------------------
 //  Toast / Notification
 // ----------------------------------------------------------
-export type ToastPosition =
-  | 'top-right' | 'top-left' | 'top-center'
-  | 'bottom-right' | 'bottom-left' | 'bottom-center';
+export type ToastPosition = 'top-right' | 'top-left' | 'top-center' | 'bottom-right' | 'bottom-left' | 'bottom-center';
 
 export type ToastType = 'info' | 'success' | 'warning' | 'danger';
 
@@ -593,10 +614,20 @@ export interface MessageBoxButton {
 //  Button
 // ----------------------------------------------------------
 export type ButtonVariant =
-  | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info'
-  | 'outline-primary' | 'outline-secondary' | 'outline-success'
-  | 'outline-warning' | 'outline-danger' | 'outline-info'
-  | 'ghost' | 'link';
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'info'
+  | 'outline-primary'
+  | 'outline-secondary'
+  | 'outline-success'
+  | 'outline-warning'
+  | 'outline-danger'
+  | 'outline-info'
+  | 'ghost'
+  | 'link';
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 

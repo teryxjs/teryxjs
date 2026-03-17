@@ -25,7 +25,7 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
 
   for (const [groupName, fields] of groups) {
     if (groupName && groupName !== '__default') {
-      const groupDef = options.fieldGroups?.find(g => g.name === groupName);
+      const groupDef = options.fieldGroups?.find((g) => g.name === groupName);
       html += `<fieldset class="tx-form-fieldset${groupDef?.collapsible ? ' tx-form-fieldset-collapsible' : ''}">`;
       html += `<legend class="tx-form-legend">${esc(groupDef?.title || groupName)}</legend>`;
       html += `<div class="tx-form-fieldset-body">`;
@@ -64,7 +64,7 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
   if (options.liveValidation) {
     formEl.addEventListener('input', (e) => {
       const input = e.target as HTMLInputElement;
-      const fieldDef = options.fields.find(f => f.name === input.name);
+      const fieldDef = options.fields.find((f) => f.name === input.name);
       if (fieldDef) {
         validateField(input, fieldDef);
       }
@@ -73,8 +73,13 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
 
   const instance: FormInstance = {
     el: formEl,
-    destroy() { el.innerHTML = ''; },
-    reset() { formEl.reset(); instance.clearErrors(); },
+    destroy() {
+      el.innerHTML = '';
+    },
+    reset() {
+      formEl.reset();
+      instance.clearErrors();
+    },
     validate(): boolean {
       let valid = true;
       for (const field of options.fields) {
@@ -117,10 +122,14 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
       }
     },
     clearErrors() {
-      formEl.querySelectorAll('.tx-form-error').forEach(g => g.classList.remove('tx-form-error'));
-      formEl.querySelectorAll('.tx-form-feedback').forEach(e => { e.textContent = ''; });
+      formEl.querySelectorAll('.tx-form-error').forEach((g) => g.classList.remove('tx-form-error'));
+      formEl.querySelectorAll('.tx-form-feedback').forEach((e) => {
+        e.textContent = '';
+      });
     },
-    submit() { formEl.requestSubmit(); },
+    submit() {
+      formEl.requestSubmit();
+    },
     isValid(): boolean {
       return formEl.checkValidity();
     },

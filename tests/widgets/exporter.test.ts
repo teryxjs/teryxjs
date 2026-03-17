@@ -13,13 +13,11 @@ describe('Exporter', () => {
 
     // Mock Blob to capture the content string
     const OriginalBlob = globalThis.Blob;
-    vi.spyOn(globalThis, 'Blob' as any).mockImplementation(
-      (parts: BlobPart[], options?: BlobPropertyBag) => {
-        capturedContent = parts.map(p => String(p)).join('');
-        const blob = new OriginalBlob(parts, options);
-        return blob;
-      }
-    );
+    vi.spyOn(globalThis, 'Blob' as any).mockImplementation((parts: BlobPart[], options?: BlobPropertyBag) => {
+      capturedContent = parts.map((p) => String(p)).join('');
+      const blob = new OriginalBlob(parts, options);
+      return blob;
+    });
 
     createObjectURLSpy = vi.fn(() => 'blob:mock-url');
     revokeObjectURLSpy = vi.fn();
@@ -79,7 +77,10 @@ describe('Exporter', () => {
 
     it('should generate CSV without headers when includeHeader is false', () => {
       exportCSV(sampleData, {
-        columns: [{ field: 'name', label: 'Name' }, { field: 'age', label: 'Age' }],
+        columns: [
+          { field: 'name', label: 'Name' },
+          { field: 'age', label: 'Age' },
+        ],
         includeHeader: false,
       });
       const lines = capturedContent.split('\r\n');
@@ -96,8 +97,16 @@ describe('Exporter', () => {
 
     it('should escape CSV special characters', () => {
       exportCSV(
-        [{ name: 'Alice, Jr.', note: 'She said "hello"' }, { name: 'Bob\nSmith', note: 'normal' }],
-        { columns: [{ field: 'name', label: 'Name' }, { field: 'note', label: 'Note' }] },
+        [
+          { name: 'Alice, Jr.', note: 'She said "hello"' },
+          { name: 'Bob\nSmith', note: 'normal' },
+        ],
+        {
+          columns: [
+            { field: 'name', label: 'Name' },
+            { field: 'note', label: 'Note' },
+          ],
+        },
       );
       expect(capturedContent).toContain('"Alice, Jr."');
       expect(capturedContent).toContain('"She said ""hello"""');
@@ -106,7 +115,10 @@ describe('Exporter', () => {
 
     it('should use custom delimiter', () => {
       exportCSV(sampleData, {
-        columns: [{ field: 'name', label: 'Name' }, { field: 'age', label: 'Age' }],
+        columns: [
+          { field: 'name', label: 'Name' },
+          { field: 'age', label: 'Age' },
+        ],
         delimiter: ';',
       });
       const lines = capturedContent.split('\r\n');
@@ -149,7 +161,7 @@ describe('Exporter', () => {
       ];
       const result = gridColumnsToExport(columns);
       expect(result.length).toBe(2);
-      expect(result.map(c => c.field)).toEqual(['name', 'age']);
+      expect(result.map((c) => c.field)).toEqual(['name', 'age']);
     });
 
     it('should return empty array for empty columns', () => {
@@ -157,7 +169,10 @@ describe('Exporter', () => {
     });
 
     it('should include all columns when none are hidden', () => {
-      const columns: GridColumn[] = [{ field: 'a', label: 'A' }, { field: 'b', label: 'B' }];
+      const columns: GridColumn[] = [
+        { field: 'a', label: 'A' },
+        { field: 'b', label: 'B' },
+      ];
       expect(gridColumnsToExport(columns).length).toBe(2);
     });
 

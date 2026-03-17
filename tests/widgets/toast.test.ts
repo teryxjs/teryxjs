@@ -4,7 +4,7 @@ import toast from '../../src/widgets/toast';
 describe('Toast widget', () => {
   afterEach(() => {
     // Only remove individual toasts, NOT the containers (they're cached in a module-level Map)
-    document.querySelectorAll('.tx-toast').forEach(el => el.remove());
+    document.querySelectorAll('.tx-toast').forEach((el) => el.remove());
   });
 
   it('should create container element', () => {

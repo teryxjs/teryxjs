@@ -96,7 +96,7 @@ export function pagination(target: string | HTMLElement, options: PaginationOpti
     el.innerHTML = html;
 
     // Attach event listeners
-    el.querySelectorAll('.tx-pagination-btn:not([disabled])').forEach(btn => {
+    el.querySelectorAll('.tx-pagination-btn:not([disabled])').forEach((btn) => {
       btn.addEventListener('click', () => {
         const page = parseInt(btn.getAttribute('data-page') || '1', 10);
         if (page !== currentPage) {
@@ -129,7 +129,9 @@ export function pagination(target: string | HTMLElement, options: PaginationOpti
 
   const instance: PaginationInstance = {
     el: el.querySelector(`#${id}`) || el,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
     goTo(page: number) {
       const pages = totalPages();
       if (page < 1 || page > pages || page === currentPage) return;
@@ -138,7 +140,9 @@ export function pagination(target: string | HTMLElement, options: PaginationOpti
       options.onChange?.(currentPage, pageSize);
       emit('pagination:change', { id, page: currentPage, pageSize });
     },
-    current() { return currentPage; },
+    current() {
+      return currentPage;
+    },
     setTotal(total: number) {
       totalItems = total;
       if (currentPage > totalPages()) currentPage = totalPages();
@@ -170,7 +174,7 @@ function getPageRange(current: number, total: number, maxVisible: number): numbe
 
   const half = Math.floor(maxVisible / 2);
   let start = Math.max(1, current - half);
-  let end = Math.min(total, start + maxVisible - 1);
+  const end = Math.min(total, start + maxVisible - 1);
 
   if (end - start < maxVisible - 1) {
     start = Math.max(1, end - maxVisible + 1);

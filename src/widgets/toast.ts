@@ -103,7 +103,10 @@ export function toast(options: ToastOptions): { dismiss: () => void } {
 
     // Pause on hover
     toastNode.addEventListener('mouseenter', () => {
-      if (timer) { clearTimeout(timer); timer = null; }
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
       const progressBar = toastNode.querySelector('.tx-toast-progress-bar') as HTMLElement;
       if (progressBar) progressBar.style.animationPlayState = 'paused';
     });

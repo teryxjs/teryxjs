@@ -65,7 +65,7 @@ export function steps(target: string | HTMLElement, options: StepsOptions): Step
 
     // Click handlers
     if (options.clickable) {
-      el.querySelectorAll('.tx-step-clickable').forEach(stepEl => {
+      el.querySelectorAll('.tx-step-clickable').forEach((stepEl) => {
         stepEl.addEventListener('click', () => {
           const step = parseInt(stepEl.getAttribute('data-step') || '0', 10);
           instance.goTo(step);
@@ -83,7 +83,9 @@ export function steps(target: string | HTMLElement, options: StepsOptions): Step
 
   const instance: StepsInstance = {
     el: el.querySelector(`#${id}`) || el,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
     next() {
       if (currentStep < options.items.length - 1) {
         currentStep++;

@@ -88,7 +88,8 @@ describe('core', () => {
       const factory = vi.fn((_el: HTMLElement, opts: Record<string, unknown>) => opts);
       registerWidget('opts-widget', factory);
 
-      container.innerHTML = '<div data-tx-widget="opts-widget" data-tx-name="hello" data-tx-count="42" data-tx-active="true"></div>';
+      container.innerHTML =
+        '<div data-tx-widget="opts-widget" data-tx-name="hello" data-tx-count="42" data-tx-active="true"></div>';
       initWidgets(container);
 
       expect(factory).toHaveBeenCalledTimes(1);
@@ -169,7 +170,9 @@ describe('core', () => {
     });
 
     it('should continue calling other handlers if one throws', () => {
-      const bad = vi.fn(() => { throw new Error('oops'); });
+      const bad = vi.fn(() => {
+        throw new Error('oops');
+      });
       const good = vi.fn();
       const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 

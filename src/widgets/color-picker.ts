@@ -25,10 +25,30 @@ export interface ColorPickerInstance extends WidgetInstance {
 }
 
 const DEFAULT_PRESETS = [
-  '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e',
-  '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1',
-  '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#78716c',
-  '#000000', '#374151', '#6b7280', '#9ca3af', '#d1d5db', '#ffffff',
+  '#ef4444',
+  '#f97316',
+  '#f59e0b',
+  '#eab308',
+  '#84cc16',
+  '#22c55e',
+  '#10b981',
+  '#14b8a6',
+  '#06b6d4',
+  '#0ea5e9',
+  '#3b82f6',
+  '#6366f1',
+  '#8b5cf6',
+  '#a855f7',
+  '#d946ef',
+  '#ec4899',
+  '#f43f5e',
+  '#78716c',
+  '#000000',
+  '#374151',
+  '#6b7280',
+  '#9ca3af',
+  '#d1d5db',
+  '#ffffff',
 ];
 
 export function colorPicker(target: string | HTMLElement, options: ColorPickerOptions = {}): ColorPickerInstance {
@@ -40,7 +60,9 @@ export function colorPicker(target: string | HTMLElement, options: ColorPickerOp
   const showPresets = options.showPresets !== false;
   let currentColor = options.value || '#3b82f6';
   let isOpen = false;
-  let hue = 0, sat = 100, light = 50;
+  let hue = 0,
+    sat = 100,
+    light = 50;
 
   // Parse initial color
   parseColor(currentColor);
@@ -105,10 +127,13 @@ export function colorPicker(target: string | HTMLElement, options: ColorPickerOp
     const r = parseInt(hex.slice(1, 3), 16) / 255;
     const g = parseInt(hex.slice(3, 5), 16) / 255;
     const b = parseInt(hex.slice(5, 7), 16) / 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const max = Math.max(r, g, b),
+      min = Math.min(r, g, b);
     light = ((max + min) / 2) * 100;
-    if (max === min) { hue = 0; sat = 0; }
-    else {
+    if (max === min) {
+      hue = 0;
+      sat = 0;
+    } else {
       const d = max - min;
       sat = light > 50 ? (d / (2 - max - min)) * 100 : (d / (max + min)) * 100;
       if (max === r) hue = ((g - b) / d + (g < b ? 6 : 0)) * 60;
@@ -118,12 +143,15 @@ export function colorPicker(target: string | HTMLElement, options: ColorPickerOp
   }
 
   function hslToHex(h: number, s: number, l: number): string {
-    s /= 100; l /= 100;
+    s /= 100;
+    l /= 100;
     const a = s * Math.min(l, 1 - l);
     const f = (n: number) => {
       const k = (n + h / 30) % 12;
       const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-      return Math.round(255 * color).toString(16).padStart(2, '0');
+      return Math.round(255 * color)
+        .toString(16)
+        .padStart(2, '0');
     };
     return `#${f(0)}${f(8)}${f(4)}`;
   }
@@ -141,7 +169,9 @@ export function colorPicker(target: string | HTMLElement, options: ColorPickerOp
   }
 
   // Toggle panel
-  trigger.addEventListener('click', () => { isOpen ? instance.close() : instance.open(); });
+  trigger.addEventListener('click', () => {
+    isOpen ? instance.close() : instance.open();
+  });
 
   // Hue slider
   hueSlider?.addEventListener('input', () => {
@@ -160,15 +190,37 @@ export function colorPicker(target: string | HTMLElement, options: ColorPickerOp
     updateColor();
   }
 
-  satBox.addEventListener('mousedown', (e) => { dragging = true; pickSatLight(e); });
-  satBox.addEventListener('touchstart', (e) => { dragging = true; pickSatLight(e); }, { passive: true });
-  document.addEventListener('mousemove', (e) => { if (dragging) pickSatLight(e); });
-  document.addEventListener('touchmove', (e) => { if (dragging) pickSatLight(e); }, { passive: true });
-  document.addEventListener('mouseup', () => { dragging = false; });
-  document.addEventListener('touchend', () => { dragging = false; });
+  satBox.addEventListener('mousedown', (e) => {
+    dragging = true;
+    pickSatLight(e);
+  });
+  satBox.addEventListener(
+    'touchstart',
+    (e) => {
+      dragging = true;
+      pickSatLight(e);
+    },
+    { passive: true },
+  );
+  document.addEventListener('mousemove', (e) => {
+    if (dragging) pickSatLight(e);
+  });
+  document.addEventListener(
+    'touchmove',
+    (e) => {
+      if (dragging) pickSatLight(e);
+    },
+    { passive: true },
+  );
+  document.addEventListener('mouseup', () => {
+    dragging = false;
+  });
+  document.addEventListener('touchend', () => {
+    dragging = false;
+  });
 
   // Preset clicks
-  container.querySelectorAll('.tx-colorpicker-preset').forEach(btn => {
+  container.querySelectorAll('.tx-colorpicker-preset').forEach((btn) => {
     btn.addEventListener('click', () => {
       const color = btn.getAttribute('data-color')!;
       parseColor(color);
@@ -194,8 +246,12 @@ export function colorPicker(target: string | HTMLElement, options: ColorPickerOp
 
   const instance: ColorPickerInstance = {
     el: container,
-    destroy() { el.innerHTML = ''; },
-    getValue() { return currentColor; },
+    destroy() {
+      el.innerHTML = '';
+    },
+    getValue() {
+      return currentColor;
+    },
     setValue(color: string) {
       parseColor(color);
       hueSlider.value = String(Math.round(hue));

@@ -28,7 +28,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     html += `<button class="tx-tabs-scroll-btn tx-tabs-scroll-left">${icon('chevronLeft')}</button>`;
   }
 
-  const hasExplicitActive = options.items.some(i => i.active);
+  const hasExplicitActive = options.items.some((i) => i.active);
 
   html += '<div class="tx-tabs-nav-inner">';
   for (let idx = 0; idx < options.items.length; idx++) {
@@ -87,7 +87,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
   el.innerHTML = html;
 
   const container = el.querySelector(`#${id}`) as HTMLElement;
-  let activeTabId = options.items.find(i => i.active)?.id || options.items[0]?.id || '';
+  let activeTabId = options.items.find((i) => i.active)?.id || options.items[0]?.id || '';
 
   function activate(tabId: string): void {
     if (tabId === activeTabId) return;
@@ -169,9 +169,13 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
 
   const instance: TabsInstance = {
     el: container,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
     activate,
-    activeTab() { return activeTabId; },
+    activeTab() {
+      return activeTabId;
+    },
     addTab(item: TabItem) {
       // Add tab button
       const nav = container.querySelector('.tx-tabs-nav-inner');
@@ -208,7 +212,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
       emit('tabs:remove', { id, tabId });
     },
     getTabs() {
-      return Array.from(container.querySelectorAll('.tx-tab:not(.tx-tab-add)')).map(t => t.getAttribute('data-tab')!);
+      return Array.from(container.querySelectorAll('.tx-tab:not(.tx-tab-add)')).map((t) => t.getAttribute('data-tab')!);
     },
   };
 

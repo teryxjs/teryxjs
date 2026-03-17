@@ -40,15 +40,17 @@ describe('Form widget', () => {
     it('should render select fields with options', () => {
       form(container, {
         action: '/api/save',
-        fields: [{
-          name: 'country',
-          label: 'Country',
-          type: 'select',
-          options: [
-            { label: 'USA', value: 'us' },
-            { label: 'UK', value: 'uk' },
-          ],
-        }],
+        fields: [
+          {
+            name: 'country',
+            label: 'Country',
+            type: 'select',
+            options: [
+              { label: 'USA', value: 'us' },
+              { label: 'UK', value: 'uk' },
+            ],
+          },
+        ],
       });
 
       const select = container.querySelector('select[name="country"]') as HTMLSelectElement;
@@ -72,15 +74,17 @@ describe('Form widget', () => {
     it('should render radio fields', () => {
       form(container, {
         action: '/api/save',
-        fields: [{
-          name: 'gender',
-          label: 'Gender',
-          type: 'radio',
-          options: [
-            { label: 'Male', value: 'male' },
-            { label: 'Female', value: 'female' },
-          ],
-        }],
+        fields: [
+          {
+            name: 'gender',
+            label: 'Gender',
+            type: 'radio',
+            options: [
+              { label: 'Male', value: 'male' },
+              { label: 'Female', value: 'female' },
+            ],
+          },
+        ],
       });
 
       const radios = container.querySelectorAll('input[name="gender"]');
@@ -319,7 +323,10 @@ describe('Form widget', () => {
     it('should apply multi-column grid class', () => {
       form(container, {
         action: '/api/save',
-        fields: [{ name: 'a', label: 'A' }, { name: 'b', label: 'B' }],
+        fields: [
+          { name: 'a', label: 'A' },
+          { name: 'b', label: 'B' },
+        ],
         columns: 2,
       });
 

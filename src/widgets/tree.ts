@@ -72,7 +72,7 @@ export function tree(target: string | HTMLElement, options: TreeOptions): TreeIn
       const node = content.closest('.tx-tree-node') as HTMLElement;
       if (node) {
         const nodeId = node.getAttribute('data-id')!;
-        container.querySelectorAll('.tx-tree-selected').forEach(n => n.classList.remove('tx-tree-selected'));
+        container.querySelectorAll('.tx-tree-selected').forEach((n) => n.classList.remove('tx-tree-selected'));
         content.classList.add('tx-tree-selected');
         selectedNode = nodeId;
 
@@ -113,18 +113,24 @@ export function tree(target: string | HTMLElement, options: TreeOptions): TreeIn
 
   const instance: TreeInstance = {
     el: container,
-    destroy() { el.innerHTML = ''; },
-    expand(nodeId) { setExpanded(nodeId, true); },
-    collapse(nodeId) { setExpanded(nodeId, false); },
+    destroy() {
+      el.innerHTML = '';
+    },
+    expand(nodeId) {
+      setExpanded(nodeId, true);
+    },
+    collapse(nodeId) {
+      setExpanded(nodeId, false);
+    },
     expandAll() {
-      container.querySelectorAll('.tx-tree-node').forEach(n => {
+      container.querySelectorAll('.tx-tree-node').forEach((n) => {
         n.classList.add('tx-tree-expanded');
         const ch = n.querySelector(':scope > .tx-tree-children') as HTMLElement;
         if (ch) ch.style.display = '';
       });
     },
     collapseAll() {
-      container.querySelectorAll('.tx-tree-node').forEach(n => {
+      container.querySelectorAll('.tx-tree-node').forEach((n) => {
         n.classList.remove('tx-tree-expanded');
         const ch = n.querySelector(':scope > .tx-tree-children') as HTMLElement;
         if (ch) ch.style.display = 'none';
@@ -132,9 +138,9 @@ export function tree(target: string | HTMLElement, options: TreeOptions): TreeIn
     },
     getChecked(): TreeNode[] {
       const ids = Array.from(container.querySelectorAll('.tx-tree-checkbox:checked'))
-        .map(cb => (cb.closest('.tx-tree-node') as HTMLElement)?.getAttribute('data-id'))
+        .map((cb) => (cb.closest('.tx-tree-node') as HTMLElement)?.getAttribute('data-id'))
         .filter(Boolean) as string[];
-      return ids.map(nid => findNode(options.nodes || [], nid)).filter(Boolean) as TreeNode[];
+      return ids.map((nid) => findNode(options.nodes || [], nid)).filter(Boolean) as TreeNode[];
     },
     getSelected(): TreeNode | null {
       if (!selectedNode) return null;

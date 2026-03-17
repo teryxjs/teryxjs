@@ -57,7 +57,9 @@ export function timeline(target: string | HTMLElement, options: TimelineOptions)
 
   return {
     el: el.querySelector(`#${id}`) || el,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
   };
 }
 

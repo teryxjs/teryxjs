@@ -63,8 +63,12 @@ export function carousel(target: string | HTMLElement, options: CarouselOptions)
     }
     if (index === current) return;
 
-    container.querySelectorAll('.tx-carousel-slide-active').forEach(s => s.classList.remove('tx-carousel-slide-active'));
-    container.querySelectorAll('.tx-carousel-indicator-active').forEach(i => i.classList.remove('tx-carousel-indicator-active'));
+    container
+      .querySelectorAll('.tx-carousel-slide-active')
+      .forEach((s) => s.classList.remove('tx-carousel-slide-active'));
+    container
+      .querySelectorAll('.tx-carousel-indicator-active')
+      .forEach((i) => i.classList.remove('tx-carousel-indicator-active'));
 
     const slide = container.querySelector(`[data-index="${index}"].tx-carousel-slide`);
     slide?.classList.add('tx-carousel-slide-active');
@@ -84,7 +88,7 @@ export function carousel(target: string | HTMLElement, options: CarouselOptions)
   container.querySelector('.tx-carousel-next')?.addEventListener('click', () => goTo(current + 1));
 
   // Indicator clicks
-  container.querySelectorAll('.tx-carousel-indicator').forEach(ind => {
+  container.querySelectorAll('.tx-carousel-indicator').forEach((ind) => {
     ind.addEventListener('click', () => {
       const idx = parseInt(ind.getAttribute('data-index') || '0', 10);
       goTo(idx);
@@ -98,7 +102,10 @@ export function carousel(target: string | HTMLElement, options: CarouselOptions)
   }
 
   function stopAutoplay(): void {
-    if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; }
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
   }
 
   if (options.autoplay) {
@@ -109,22 +116,43 @@ export function carousel(target: string | HTMLElement, options: CarouselOptions)
 
   // Touch/swipe support
   let touchStartX = 0;
-  container.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  container.addEventListener('touchend', (e) => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? goTo(current + 1) : goTo(current - 1);
-    }
-  }, { passive: true });
+  container.addEventListener(
+    'touchstart',
+    (e) => {
+      touchStartX = e.touches[0].clientX;
+    },
+    { passive: true },
+  );
+  container.addEventListener(
+    'touchend',
+    (e) => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? goTo(current + 1) : goTo(current - 1);
+      }
+    },
+    { passive: true },
+  );
 
   const instance: CarouselInstance = {
     el: container,
-    destroy() { stopAutoplay(); el.innerHTML = ''; },
-    next() { goTo(current + 1); },
-    prev() { goTo(current - 1); },
+    destroy() {
+      stopAutoplay();
+      el.innerHTML = '';
+    },
+    next() {
+      goTo(current + 1);
+    },
+    prev() {
+      goTo(current - 1);
+    },
     goTo,
-    pause() { stopAutoplay(); },
-    play() { startAutoplay(); },
+    pause() {
+      stopAutoplay();
+    },
+    play() {
+      startAutoplay();
+    },
   };
 
   return instance;

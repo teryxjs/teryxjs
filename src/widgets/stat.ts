@@ -14,7 +14,12 @@ export function stat(target: string | HTMLElement, options: StatOptions): Widget
   // Static stat
   if (!options.source) {
     el.innerHTML = renderStat(options, id, color);
-    return { el: el.querySelector(`#${id}`) || el, destroy() { el.innerHTML = ''; } };
+    return {
+      el: el.querySelector(`#${id}`) || el,
+      destroy() {
+        el.innerHTML = '';
+      },
+    };
   }
 
   // Dynamic stat via xhtmlx
@@ -38,7 +43,12 @@ export function stat(target: string | HTMLElement, options: StatOptions): Widget
   html += '</div>';
 
   el.innerHTML = html;
-  return { el: el.querySelector(`#${id}-wrap`) || el, destroy() { el.innerHTML = ''; } };
+  return {
+    el: el.querySelector(`#${id}-wrap`) || el,
+    destroy() {
+      el.innerHTML = '';
+    },
+  };
 }
 
 function renderStat(options: StatOptions, id: string, color: string): string {
@@ -82,11 +92,13 @@ function renderSparkline(data: number[], color: string): string {
   const h = 32;
   const step = w / (data.length - 1);
 
-  const points = data.map((v, i) => {
-    const x = i * step;
-    const y = h - ((v - min) / range) * h;
-    return `${x},${y}`;
-  }).join(' ');
+  const points = data
+    .map((v, i) => {
+      const x = i * step;
+      const y = h - ((v - min) / range) * h;
+      return `${x},${y}`;
+    })
+    .join(' ');
 
   return `<div class="tx-stat-sparkline"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline points="${points}" fill="none" stroke="var(--tx-${color})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
 }

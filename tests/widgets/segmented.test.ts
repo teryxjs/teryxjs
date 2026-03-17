@@ -25,7 +25,7 @@ describe('Segmented widget', () => {
     const buttons = container.querySelectorAll('.tx-segmented-item');
     expect(buttons.length).toBe(3);
 
-    const labels = Array.from(buttons).map(b => b.querySelector('.tx-segmented-label')!.textContent);
+    const labels = Array.from(buttons).map((b) => b.querySelector('.tx-segmented-label')!.textContent);
     expect(labels).toEqual(['Day', 'Week', 'Month']);
   });
 
@@ -143,7 +143,7 @@ describe('Segmented widget', () => {
     segmented(container, { items: basicItems, value: 'week' });
 
     const buttons = container.querySelectorAll('.tx-segmented-item');
-    buttons.forEach(btn => {
+    buttons.forEach((btn) => {
       expect(btn.getAttribute('role')).toBe('radio');
     });
 

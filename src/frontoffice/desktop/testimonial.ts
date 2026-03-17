@@ -52,9 +52,10 @@ export interface TestimonialOptions {
 function renderStars(rating: number): string {
   let html = '<div class="tx-testimonial-stars">';
   for (let i = 1; i <= 5; i++) {
-    html += i <= rating
-      ? `<span class="tx-testimonial-star tx-testimonial-star-filled">${icon('starFilled')}</span>`
-      : `<span class="tx-testimonial-star">${icon('star')}</span>`;
+    html +=
+      i <= rating
+        ? `<span class="tx-testimonial-star tx-testimonial-star-filled">${icon('starFilled')}</span>`
+        : `<span class="tx-testimonial-star">${icon('star')}</span>`;
   }
   html += '</div>';
   return html;
@@ -69,7 +70,8 @@ function renderQuoteCard(quote: TestimonialQuote, index: number, isActive: boole
 
   // Quote icon
   html += '<div class="tx-testimonial-quote-icon">';
-  html += '<svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" opacity="0.15"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>';
+  html +=
+    '<svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" opacity="0.15"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>';
   html += '</div>';
 
   // Rating
@@ -88,7 +90,7 @@ function renderQuoteCard(quote: TestimonialQuote, index: number, isActive: boole
     // Generate initials avatar
     const initials = quote.author
       .split(' ')
-      .map(w => w[0])
+      .map((w) => w[0])
       .slice(0, 2)
       .join('')
       .toUpperCase();
@@ -124,11 +126,7 @@ export function testimonial(
   const layout = options.layout || 'grid';
   const columns = options.columns || 3;
 
-  let html = `<section class="${cls(
-    'tx-testimonial',
-    `tx-testimonial-${layout}`,
-    options.class,
-  )}" id="${esc(id)}">`;
+  let html = `<section class="${cls('tx-testimonial', `tx-testimonial-${layout}`, options.class)}" id="${esc(id)}">`;
 
   // Section header
   if (options.title || options.subtitle) {
@@ -195,10 +193,10 @@ export function testimonial(
 
       sectionEl
         .querySelectorAll('.tx-testimonial-slide-active')
-        .forEach(s => s.classList.remove('tx-testimonial-slide-active'));
+        .forEach((s) => s.classList.remove('tx-testimonial-slide-active'));
       sectionEl
         .querySelectorAll('.tx-testimonial-dot-active')
-        .forEach(d => d.classList.remove('tx-testimonial-dot-active'));
+        .forEach((d) => d.classList.remove('tx-testimonial-dot-active'));
 
       const slide = sectionEl.querySelector(`.tx-testimonial-slide[data-index="${index}"]`);
       slide?.classList.add('tx-testimonial-slide-active');
@@ -218,7 +216,7 @@ export function testimonial(
     sectionEl.querySelector('.tx-testimonial-next')?.addEventListener('click', () => goTo(current + 1));
 
     // Dot clicks
-    sectionEl.querySelectorAll('.tx-testimonial-dot').forEach(dot => {
+    sectionEl.querySelectorAll('.tx-testimonial-dot').forEach((dot) => {
       dot.addEventListener('click', () => {
         const idx = parseInt(dot.getAttribute('data-index') || '0', 10);
         goTo(idx);

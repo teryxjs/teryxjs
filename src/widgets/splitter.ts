@@ -17,7 +17,7 @@ export function splitter(target: string | HTMLElement, options: SplitterOptions)
   container.id = id;
   container.classList.add('tx-splitter', `tx-splitter-${orientation}`, ...(options.class ? [options.class] : []));
 
-  const panels = Array.from(container.children).filter(c => c instanceof HTMLElement) as HTMLElement[];
+  const panels = Array.from(container.children).filter((c) => c instanceof HTMLElement) as HTMLElement[];
   if (panels.length < 2) return { el: container, destroy() {} };
 
   const sizes = options.sizes || panels.map(() => 100 / panels.length);
@@ -27,7 +27,8 @@ export function splitter(target: string | HTMLElement, options: SplitterOptions)
   const gutters: HTMLElement[] = [];
   panels.forEach((panel, i) => {
     panel.classList.add('tx-splitter-panel');
-    panel.style[isHorizontal ? 'width' : 'height'] = `calc(${sizes[i]}% - ${(gutterSize * (panels.length - 1)) / panels.length}px)`;
+    panel.style[isHorizontal ? 'width' : 'height'] =
+      `calc(${sizes[i]}% - ${(gutterSize * (panels.length - 1)) / panels.length}px)`;
     panel.style.flexShrink = '0';
 
     if (i < panels.length - 1) {
@@ -81,9 +82,9 @@ export function splitter(target: string | HTMLElement, options: SplitterOptions)
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
 
-        const currentSizes = panels.map(p => isHorizontal ? p.offsetWidth : p.offsetHeight);
+        const currentSizes = panels.map((p) => (isHorizontal ? p.offsetWidth : p.offsetHeight));
         const total = currentSizes.reduce((a, b) => a + b, 0);
-        const pctSizes = currentSizes.map(s => (s / total) * 100);
+        const pctSizes = currentSizes.map((s) => (s / total) * 100);
         options.onResize?.(pctSizes);
         emit('splitter:resize', { id, sizes: pctSizes });
       };
@@ -98,8 +99,8 @@ export function splitter(target: string | HTMLElement, options: SplitterOptions)
   return {
     el: container,
     destroy() {
-      gutters.forEach(g => g.remove());
-      panels.forEach(p => {
+      gutters.forEach((g) => g.remove());
+      panels.forEach((p) => {
         p.classList.remove('tx-splitter-panel');
         p.style.width = '';
         p.style.height = '';
