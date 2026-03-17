@@ -1,0 +1,5 @@
+[
+  { "path": "dist/index.js", "limit": "300 KB" },
+  { "path": "dist/index.global.js", "limit": "320 KB" },
+  { "path": "dist/teryx.css", "limit": "100 KB" }
+]
