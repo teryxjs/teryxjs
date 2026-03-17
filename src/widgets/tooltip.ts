@@ -94,7 +94,6 @@ export function tooltip(target: string | HTMLElement, options: TooltipOptions): 
   let visible = false;
   let floatingEl: HTMLElement | null = null;
   let showTimer: ReturnType<typeof setTimeout> | undefined;
-  let hideTimer: ReturnType<typeof setTimeout> | undefined;
 
   function createFloating(): HTMLElement {
     const div = document.createElement('div');
@@ -125,7 +124,6 @@ export function tooltip(target: string | HTMLElement, options: TooltipOptions): 
   }
 
   function show(): void {
-    clearTimeout(hideTimer);
     if (visible) return;
     floatingEl = createFloating();
     positionFloating();
@@ -298,7 +296,8 @@ export function popover(target: string | HTMLElement, options: PopoverOptions): 
     });
     triggerEl.addEventListener('mouseleave', () => {
       clearTimeout(showTimer);
-      hideTimer = setTimeout(hide, 100);
+      hide();
+      hideTimer = undefined;
     });
   } else if (trigger === 'click') {
     triggerEl.addEventListener('click', (e) => {
