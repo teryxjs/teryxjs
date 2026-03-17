@@ -58,13 +58,20 @@ interface CompiledRoute {
  */
 export function compilePath(path: string): { regex: RegExp; paramNames: string[] } {
   const paramNames: string[] = [];
+
+  // Split on param placeholders, escape regex-special chars in static segments
   const regexStr = path
-    .replace(/:[a-zA-Z_][a-zA-Z0-9_]*/g, (match) => {
-      paramNames.push(match.slice(1));
-      return '([^/]+)';
-    })
-    // Escape forward slashes for regex
-    .replace(/\//g, '\\/');
+    .replace(/:[a-zA-Z_][a-zA-Z0-9_]*/g, '\0PARAM\0')
+    .replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&')
+    .replace(/\0PARAM\0/g, () => '([^/]+)');
+
+  // Collect param names separately
+  const paramPattern = /:[a-zA-Z_][a-zA-Z0-9_]*/g;
+  let m: RegExpExecArray | null;
+  while ((m = paramPattern.exec(path)) !== null) {
+    paramNames.push(m[0].slice(1));
+  }
+
   return { regex: new RegExp(`^${regexStr}$`), paramNames };
 }
 
