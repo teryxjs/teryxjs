@@ -5,6 +5,7 @@
 import type { FormOptions, FormField, FormInstance, SelectOption } from '../types';
 import { uid, esc, cls, icon, resolveTarget } from '../utils';
 import { registerWidget, emit } from '../core';
+import { t } from '../i18n';
 
 export function form(target: string | HTMLElement, options: FormOptions): FormInstance {
   const el = resolveTarget(target);
@@ -48,9 +49,9 @@ export function form(target: string | HTMLElement, options: FormOptions): FormIn
   html += '<div class="tx-form-actions">';
   html += `<button type="submit" class="tx-btn tx-btn-primary"`;
   if (options.indicator) html += ` xh-indicator="${esc(options.indicator)}"`;
-  html += `>${esc(options.submitLabel || 'Submit')}</button>`;
-  if (options.cancelLabel) {
-    html += `<button type="button" class="tx-btn tx-btn-secondary tx-form-cancel">${esc(options.cancelLabel)}</button>`;
+  html += `>${esc(options.submitLabel || t('form.submit'))}</button>`;
+  if (options.cancelLabel !== undefined) {
+    html += `<button type="button" class="tx-btn tx-btn-secondary tx-form-cancel">${esc(options.cancelLabel || t('form.cancel'))}</button>`;
   }
   html += '</div>';
 
