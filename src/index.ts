@@ -75,6 +75,7 @@ export {
   richEditor,
   tooltip,
   popover,
+  transferList,
 } from './widgets';
 
 // Category imports

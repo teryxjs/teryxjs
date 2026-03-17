@@ -5214,3 +5214,142 @@ body.tx-drawer-open {
 .tx-datepicker-day-range-end {
   border-radius: 0 var(--tx-radius) var(--tx-radius) 0;
 }
+
+/* === Transfer List === */
+.tx-transfer {
+  display: flex;
+  align-items: stretch;
+  gap: var(--tx-space-3);
+  font-family: var(--tx-font);
+  font-size: var(--tx-font-size);
+}
+.tx-transfer-list {
+  flex: 1;
+  border: 1px solid var(--tx-border);
+  border-radius: var(--tx-radius);
+  background: var(--tx-bg);
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  max-height: 400px;
+}
+.tx-transfer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--tx-space-2) var(--tx-space-3);
+  border-bottom: 1px solid var(--tx-border);
+  background: var(--tx-bg-secondary);
+  border-radius: var(--tx-radius) var(--tx-radius) 0 0;
+}
+.tx-transfer-title {
+  font-weight: 600;
+  color: var(--tx-text);
+}
+.tx-transfer-count {
+  font-size: 0.75rem;
+  color: var(--tx-text-muted);
+  background: var(--tx-bg-tertiary);
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--tx-radius-full);
+}
+.tx-transfer-search {
+  position: relative;
+  padding: var(--tx-space-2);
+  border-bottom: 1px solid var(--tx-border);
+}
+.tx-transfer-search-input {
+  width: 100%;
+  padding: var(--tx-space-1) var(--tx-space-2) var(--tx-space-1) calc(var(--tx-space-6) + 4px);
+  border: 1px solid var(--tx-border);
+  border-radius: var(--tx-radius-sm);
+  font-size: var(--tx-font-size);
+  background: var(--tx-bg);
+  color: var(--tx-text);
+  outline: none;
+  box-sizing: border-box;
+}
+.tx-transfer-search-input:focus {
+  border-color: var(--tx-border-focus);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--tx-primary) 20%, transparent);
+}
+.tx-transfer-search-icon {
+  position: absolute;
+  left: calc(var(--tx-space-2) + var(--tx-space-2));
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tx-text-muted);
+  pointer-events: none;
+  display: flex;
+}
+.tx-transfer-list-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--tx-space-1) 0;
+}
+.tx-transfer-item {
+  display: flex;
+  align-items: center;
+  gap: var(--tx-space-2);
+  padding: var(--tx-space-1) var(--tx-space-3);
+  cursor: pointer;
+  transition: background var(--tx-transition);
+  color: var(--tx-text);
+}
+.tx-transfer-item:hover {
+  background: var(--tx-bg-secondary);
+}
+.tx-transfer-item-selected {
+  background: var(--tx-primary-light);
+}
+.tx-transfer-item-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.tx-transfer-checkbox {
+  accent-color: var(--tx-primary);
+  cursor: pointer;
+}
+.tx-transfer-item-label {
+  flex: 1;
+  user-select: none;
+}
+.tx-transfer-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tx-space-6);
+  color: var(--tx-text-muted);
+  font-style: italic;
+}
+.tx-transfer-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tx-space-2);
+}
+.tx-transfer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tx-space-1) var(--tx-space-2);
+  border: 1px solid var(--tx-border);
+  border-radius: var(--tx-radius-sm);
+  background: var(--tx-bg);
+  cursor: pointer;
+  color: var(--tx-text-secondary);
+  transition:
+    background var(--tx-transition),
+    color var(--tx-transition),
+    border-color var(--tx-transition);
+}
+.tx-transfer-btn:hover:not([disabled]) {
+  background: var(--tx-primary);
+  color: var(--tx-text-inverse);
+  border-color: var(--tx-primary);
+}
+.tx-transfer-btn[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
