@@ -71,7 +71,7 @@ export {
   exportHTML,
   gridColumnsToExport,
   chart,
-  tagInput,
+  skeleton,
 } from './widgets';
 
 // Category imports

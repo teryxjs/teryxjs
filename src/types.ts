@@ -1272,6 +1272,7 @@ export interface SkeletonOptions {
   height?: string;
   animated?: boolean;
   class?: string;
+  id?: string;
 }
 
 // ----------------------------------------------------------
