@@ -7,36 +7,45 @@ test.describe('Card Widget', () => {
   });
 
   test('title renders in card header', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         title: 'My Card Title',
         content: '<p>Body</p>'
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-card')).toBeVisible();
     await expect(page.locator('.tx-card-title')).toHaveText('My Card Title');
   });
 
   test('body content renders', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         content: '<p class="test-content">Hello World</p>'
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-card-body')).toBeVisible();
     await expect(page.locator('.test-content')).toHaveText('Hello World');
   });
 
   test('collapsible toggle hides and shows body', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         title: 'Card',
         content: '<p>Collapsible content</p>',
         collapsible: true
       });
-    `);
+    `,
+    );
 
     const body = page.locator('.tx-card-body');
     const collapseBtn = page.locator('.tx-card-collapse-btn');
@@ -56,14 +65,17 @@ test.describe('Card Widget', () => {
   });
 
   test('collapsed initial state hides body', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         title: 'Card',
         content: '<p>Hidden content</p>',
         collapsible: true,
         collapsed: true
       });
-    `);
+    `,
+    );
 
     const body = page.locator('.tx-card-body');
     await expect(body).toBeHidden();
@@ -75,13 +87,16 @@ test.describe('Card Widget', () => {
   });
 
   test('closable hides the entire card', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         title: 'Closable Card',
         content: '<p>Content</p>',
         closable: true
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-card')).toBeVisible();
     await expect(page.locator('.tx-card-close-btn')).toBeVisible();
@@ -93,7 +108,9 @@ test.describe('Card Widget', () => {
   });
 
   test('tools render and click handler fires', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__toolClicked = false;
       Teryx.card('#target', {
         title: 'Card with Tools',
@@ -103,7 +120,8 @@ test.describe('Card Widget', () => {
           { icon: 'refresh', tooltip: 'Refresh' },
         ]
       });
-    `);
+    `,
+    );
 
     // Tools should render (excluding collapse/close btns)
     const toolBtns = page.locator('.tx-card-tool:not(.tx-card-collapse-btn):not(.tx-card-close-btn)');
@@ -121,25 +139,31 @@ test.describe('Card Widget', () => {
   });
 
   test('footer renders', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         title: 'Card',
         content: '<p>Body</p>',
         footer: '<span class="footer-text">Footer content</span>'
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-card-footer')).toBeVisible();
     await expect(page.locator('.footer-text')).toHaveText('Footer content');
   });
 
   test('source generates xh-get attribute', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         title: 'Remote Card',
         source: '/api/card-content'
       });
-    `);
+    `,
+    );
 
     const xhEl = page.locator('.tx-card-body [xh-get]');
     await expect(xhEl).toHaveAttribute('xh-get', '/api/card-content');
@@ -147,14 +171,17 @@ test.describe('Card Widget', () => {
   });
 
   test('image top renders image before header', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         title: 'Card with Image',
         content: '<p>Content</p>',
         image: '/img/test.jpg',
         imagePosition: 'top'
       });
-    `);
+    `,
+    );
 
     const img = page.locator('.tx-card-img-top');
     await expect(img).toHaveCount(1);
@@ -163,24 +190,30 @@ test.describe('Card Widget', () => {
   });
 
   test('custom class is applied to the card', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.card('#target', {
         title: 'Custom',
         content: '<p>Content</p>',
         class: 'my-custom-card'
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-card')).toHaveClass(/my-custom-card/);
   });
 
   test('destroy removes all card DOM content', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__card = Teryx.card('#target', {
         title: 'Destroy Me',
         content: '<p>Content</p>'
       });
-    `);
+    `,
+    );
 
     await assertExists(page, '.tx-card');
 

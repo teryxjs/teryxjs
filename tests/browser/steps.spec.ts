@@ -14,11 +14,14 @@ test.describe('Steps Widget', () => {
   ]`;
 
   test('renders step indicators with numbers', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.steps('#target', {
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-steps')).toBeVisible();
     expect(await count(page, '.tx-step')).toBe(4);
@@ -34,12 +37,15 @@ test.describe('Steps Widget', () => {
   });
 
   test('current step is highlighted with process status', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.steps('#target', {
         current: 1,
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     // Step 0 should be "finish", step 1 "process", rest "wait"
     const steps = page.locator('.tx-step');
@@ -50,12 +56,15 @@ test.describe('Steps Widget', () => {
   });
 
   test('next advances to the next step', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__steps = Teryx.steps('#target', {
         current: 0,
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     // Initially at step 0
     let current = await page.evaluate(() => (window as any).__steps.current());
@@ -73,12 +82,15 @@ test.describe('Steps Widget', () => {
   });
 
   test('prev goes back to the previous step', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__steps = Teryx.steps('#target', {
         current: 2,
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     let current = await page.evaluate(() => (window as any).__steps.current());
     expect(current).toBe(2);
@@ -93,12 +105,15 @@ test.describe('Steps Widget', () => {
   });
 
   test('goTo jumps to a specific step', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__steps = Teryx.steps('#target', {
         current: 0,
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     await page.evaluate(() => (window as any).__steps.goTo(3));
     await page.waitForTimeout(100);
@@ -114,12 +129,15 @@ test.describe('Steps Widget', () => {
   });
 
   test('boundary: cannot go past last step or before first', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__steps = Teryx.steps('#target', {
         current: 3,
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     // Try to go past last
     await page.evaluate(() => (window as any).__steps.next());
@@ -139,12 +157,15 @@ test.describe('Steps Widget', () => {
   });
 
   test('finished steps show check icon', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.steps('#target', {
         current: 2,
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     // Steps 0 and 1 are "finish" and should have check icon
     const finishedSteps = page.locator('.tx-step-finish');
@@ -160,28 +181,29 @@ test.describe('Steps Widget', () => {
   });
 
   test('step descriptions render', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.steps('#target', {
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     const descriptions = await texts(page, '.tx-step-description');
-    expect(descriptions).toEqual([
-      'Create your account',
-      'Fill your profile',
-      'Review your info',
-      'Complete',
-    ]);
+    expect(descriptions).toEqual(['Create your account', 'Fill your profile', 'Review your info', 'Complete']);
   });
 
   test('step content renders for current step', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__steps = Teryx.steps('#target', {
         current: 0,
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-steps-content')).toBeVisible();
     await expect(page.locator('.tx-steps-content p')).toHaveText('Step 1 content');
@@ -194,13 +216,16 @@ test.describe('Steps Widget', () => {
   });
 
   test('clickable steps navigate on click', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__steps = Teryx.steps('#target', {
         current: 0,
         clickable: true,
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     // All steps should have clickable class
     const clickableSteps = page.locator('.tx-step-clickable');
@@ -216,14 +241,17 @@ test.describe('Steps Widget', () => {
   });
 
   test('onChange callback fires on step change', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__changedTo = null;
       window.__steps = Teryx.steps('#target', {
         current: 0,
         items: ${stepItems},
         onChange: (step) => { window.__changedTo = step; }
       });
-    `);
+    `,
+    );
 
     await page.evaluate(() => (window as any).__steps.next());
     await page.waitForTimeout(100);
@@ -239,43 +267,55 @@ test.describe('Steps Widget', () => {
   });
 
   test('horizontal direction class is applied by default', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.steps('#target', {
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-steps')).toHaveClass(/tx-steps-horizontal/);
   });
 
   test('vertical direction class is applied', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.steps('#target', {
         direction: 'vertical',
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-steps')).toHaveClass(/tx-steps-vertical/);
   });
 
   test('connectors render between steps', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.steps('#target', {
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     // Connectors between steps: should be items.length - 1
     expect(await count(page, '.tx-step-connector')).toBe(3);
   });
 
   test('destroy removes all steps DOM content', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__steps = Teryx.steps('#target', {
         items: ${stepItems}
       });
-    `);
+    `,
+    );
 
     await assertExists(page, '.tx-steps');
 

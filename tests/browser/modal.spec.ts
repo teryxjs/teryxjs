@@ -7,12 +7,15 @@ test.describe('Modal', () => {
   });
 
   test('open makes modal visible, close hides it', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Test Modal',
         content: '<p>Hello modal</p>',
       });
-    `);
+    `,
+    );
     // Modal should be hidden initially
     const overlay = page.locator('.tx-modal-overlay');
     await expect(overlay).toHaveCSS('display', 'none');
@@ -30,12 +33,15 @@ test.describe('Modal', () => {
   });
 
   test('renders title correctly', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'My Dialog',
         content: '<p>Content here</p>',
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
     const title = page.locator('.tx-modal-title');
@@ -43,12 +49,15 @@ test.describe('Modal', () => {
   });
 
   test('renders content inside modal body', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Content Test',
         content: '<p class="custom-content">Modal body text</p>',
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
     const content = page.locator('.tx-modal-body .custom-content');
@@ -56,12 +65,15 @@ test.describe('Modal', () => {
   });
 
   test('close button click closes the modal', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Close Test',
         content: '<p>Content</p>',
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 
@@ -75,12 +87,15 @@ test.describe('Modal', () => {
   });
 
   test('escape key closes the modal', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Escape Test',
         content: '<p>Content</p>',
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 
@@ -92,12 +107,15 @@ test.describe('Modal', () => {
   });
 
   test('backdrop click closes the modal', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Backdrop Test',
         content: '<p>Content</p>',
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 
@@ -110,13 +128,16 @@ test.describe('Modal', () => {
   });
 
   test('static backdrop does not close on backdrop click', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Static Backdrop',
         content: '<p>Content</p>',
         backdrop: 'static',
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 
@@ -130,12 +151,15 @@ test.describe('Modal', () => {
   });
 
   test('setContent updates modal body', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Update Content',
         content: '<p>Original</p>',
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 
@@ -148,30 +172,38 @@ test.describe('Modal', () => {
 
   test('size classes are applied correctly', async ({ page }) => {
     // Small
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modalSm = Teryx.modal({
         title: 'Small',
         content: '<p>Small modal</p>',
         size: 'sm',
       });
-    `);
+    `,
+    );
     const smDialog = page.locator('.tx-modal-sm');
     await expect(smDialog).toHaveCount(1);
 
     // Large
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modalLg = Teryx.modal({
         title: 'Large',
         content: '<p>Large modal</p>',
         size: 'lg',
       });
-    `);
+    `,
+    );
     const lgDialog = page.locator('.tx-modal-lg');
     await expect(lgDialog).toHaveCount(1);
   });
 
   test('footer buttons are rendered', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'With Buttons',
         content: '<p>Content</p>',
@@ -180,7 +212,8 @@ test.describe('Modal', () => {
           { label: 'Save', variant: 'primary' },
         ],
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 
@@ -194,7 +227,9 @@ test.describe('Modal', () => {
   });
 
   test('footer button with action close closes the modal', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Button Close',
         content: '<p>Content</p>',
@@ -202,7 +237,8 @@ test.describe('Modal', () => {
           { label: 'Cancel', variant: 'secondary', action: 'close' },
         ],
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 
@@ -214,13 +250,16 @@ test.describe('Modal', () => {
   });
 
   test('draggable modal gets draggable class and cursor', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Draggable',
         content: '<p>Drag me</p>',
         draggable: true,
       });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-modal-draggable')).toHaveCount(1);
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
@@ -230,13 +269,16 @@ test.describe('Modal', () => {
   });
 
   test('maximize and restore toggle maximized class', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Maximize Test',
         content: '<p>Content</p>',
         maximizable: true,
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 
@@ -252,12 +294,15 @@ test.describe('Modal', () => {
   });
 
   test('isOpen returns correct state', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'State Test',
         content: '<p>Content</p>',
       });
-    `);
+    `,
+    );
 
     let isOpen = await page.evaluate(() => (window as any).__modal.isOpen());
     expect(isOpen).toBe(false);
@@ -276,12 +321,15 @@ test.describe('Modal', () => {
   });
 
   test('setTitle updates modal title', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__modal = Teryx.modal({
         title: 'Original Title',
         content: '<p>Content</p>',
       });
-    `);
+    `,
+    );
     await page.evaluate(() => (window as any).__modal.open());
     await page.waitForTimeout(200);
 

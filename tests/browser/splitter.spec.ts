@@ -12,7 +12,7 @@ test.describe('Splitter Widget', () => {
       el.innerHTML = '<div>Panel A</div><div>Panel B</div>';
       (window as any).Teryx.splitter('#target', {
         orientation: 'horizontal',
-        sizes: [50, 50]
+        sizes: [50, 50],
       });
     });
     await page.waitForTimeout(200);
@@ -28,7 +28,7 @@ test.describe('Splitter Widget', () => {
       el.innerHTML = '<div>Left</div><div>Right</div>';
       (window as any).Teryx.splitter('#target', {
         orientation: 'horizontal',
-        sizes: [50, 50]
+        sizes: [50, 50],
       });
     });
     await page.waitForTimeout(200);
@@ -44,7 +44,7 @@ test.describe('Splitter Widget', () => {
       el.innerHTML = '<div>Left</div><div>Right</div>';
       (window as any).Teryx.splitter('#target', {
         orientation: 'horizontal',
-        sizes: [30, 70]
+        sizes: [30, 70],
       });
     });
     await page.waitForTimeout(200);
@@ -54,8 +54,8 @@ test.describe('Splitter Widget', () => {
     expect(panelCount).toBe(2);
 
     // Both panels should have non-zero widths
-    const leftWidth = await panels.nth(0).evaluate(el => el.offsetWidth);
-    const rightWidth = await panels.nth(1).evaluate(el => el.offsetWidth);
+    const leftWidth = await panels.nth(0).evaluate((el) => el.offsetWidth);
+    const rightWidth = await panels.nth(1).evaluate((el) => el.offsetWidth);
     expect(leftWidth).toBeGreaterThan(0);
     expect(rightWidth).toBeGreaterThan(0);
     // Right panel should be wider than left based on 30/70 split
@@ -70,12 +70,15 @@ test.describe('Splitter Widget', () => {
       el.innerHTML = '<div>Left</div><div>Right</div>';
       (window as any).Teryx.splitter('#target', {
         orientation: 'horizontal',
-        sizes: [50, 50]
+        sizes: [50, 50],
       });
     });
     await page.waitForTimeout(200);
 
-    const leftBefore = await page.locator('.tx-splitter-panel').nth(0).evaluate(el => el.offsetWidth);
+    const leftBefore = await page
+      .locator('.tx-splitter-panel')
+      .nth(0)
+      .evaluate((el) => el.offsetWidth);
 
     const gutter = page.locator('.tx-splitter-gutter');
     const gutterBox = await gutter.boundingBox();
@@ -84,11 +87,16 @@ test.describe('Splitter Widget', () => {
     // Drag gutter to the right by 100px
     await page.mouse.move(gutterBox!.x + gutterBox!.width / 2, gutterBox!.y + gutterBox!.height / 2);
     await page.mouse.down();
-    await page.mouse.move(gutterBox!.x + gutterBox!.width / 2 + 100, gutterBox!.y + gutterBox!.height / 2, { steps: 10 });
+    await page.mouse.move(gutterBox!.x + gutterBox!.width / 2 + 100, gutterBox!.y + gutterBox!.height / 2, {
+      steps: 10,
+    });
     await page.mouse.up();
     await page.waitForTimeout(200);
 
-    const leftAfter = await page.locator('.tx-splitter-panel').nth(0).evaluate(el => el.offsetWidth);
+    const leftAfter = await page
+      .locator('.tx-splitter-panel')
+      .nth(0)
+      .evaluate((el) => el.offsetWidth);
     expect(leftAfter).toBeGreaterThan(leftBefore);
   });
 
@@ -98,7 +106,7 @@ test.describe('Splitter Widget', () => {
       el.innerHTML = '<div>Top</div><div>Bottom</div>';
       (window as any).Teryx.splitter('#target', {
         orientation: 'vertical',
-        sizes: [50, 50]
+        sizes: [50, 50],
       });
     });
     await page.waitForTimeout(200);

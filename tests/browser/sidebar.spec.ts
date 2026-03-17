@@ -13,13 +13,16 @@ test.describe('Sidebar Widget', () => {
   ]`;
 
   test('brand renders with text and link', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         brand: 'My App',
         brandHref: '/home',
         items: ${sidebarItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-sidebar')).toBeVisible();
     await expect(page.locator('.tx-sidebar-brand')).toBeVisible();
@@ -28,22 +31,28 @@ test.describe('Sidebar Widget', () => {
   });
 
   test('items render with labels', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         items: ${sidebarItems}
       });
-    `);
+    `,
+    );
 
     const itemTexts = await texts(page, '.tx-sidebar-item .tx-sidebar-text');
     expect(itemTexts).toEqual(['Dashboard', 'Users', 'Settings']);
   });
 
   test('active item is highlighted', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         items: ${sidebarItems}
       });
-    `);
+    `,
+    );
 
     const activeItems = page.locator('.tx-sidebar-item-active');
     expect(await activeItems.count()).toBe(1);
@@ -51,13 +60,16 @@ test.describe('Sidebar Widget', () => {
   });
 
   test('collapse and expand toggle via programmatic methods', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__sidebar = Teryx.sidebar('#target', {
         brand: 'App',
         collapsible: true,
         items: ${sidebarItems}
       });
-    `);
+    `,
+    );
 
     // Initially not collapsed
     await expect(page.locator('.tx-sidebar')).not.toHaveClass(/tx-sidebar-collapsed/);
@@ -80,21 +92,26 @@ test.describe('Sidebar Widget', () => {
   });
 
   test('collapsed state hides text via collapsed class', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         brand: 'App',
         collapsed: true,
         collapsible: true,
         items: ${sidebarItems}
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-sidebar')).toHaveClass(/tx-sidebar-collapsed/);
     await expect(page.locator('.tx-sidebar-collapsible')).toBeVisible();
   });
 
   test('submenu toggle opens children items', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         items: [
           {
@@ -108,7 +125,8 @@ test.describe('Sidebar Widget', () => {
           { label: 'Home', href: '/' },
         ]
       });
-    `);
+    `,
+    );
 
     const submenu = page.locator('.tx-sidebar-submenu');
     const group = page.locator('.tx-sidebar-item-group');
@@ -137,7 +155,9 @@ test.describe('Sidebar Widget', () => {
   });
 
   test('section headers render', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         items: [
           { label: 'Main', section: true },
@@ -146,43 +166,53 @@ test.describe('Sidebar Widget', () => {
           { label: 'Users', href: '/users' },
         ]
       });
-    `);
+    `,
+    );
 
     const sections = await texts(page, '.tx-sidebar-section');
     expect(sections).toEqual(['Main', 'Admin']);
   });
 
   test('dark variant applies dark class', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         variant: 'dark',
         items: [{ label: 'Home', href: '/' }]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-sidebar')).toHaveClass(/tx-sidebar-dark/);
   });
 
   test('light variant applies light class', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         variant: 'light',
         items: [{ label: 'Home', href: '/' }]
       });
-    `);
+    `,
+    );
 
     await expect(page.locator('.tx-sidebar')).toHaveClass(/tx-sidebar-light/);
   });
 
   test('badge renders on items', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         items: [
           { label: 'Inbox', href: '/inbox', badge: '42', badgeType: 'primary' },
           { label: 'Home', href: '/' },
         ]
       });
-    `);
+    `,
+    );
 
     const badge = page.locator('.tx-badge');
     expect(await badge.count()).toBe(1);
@@ -191,26 +221,32 @@ test.describe('Sidebar Widget', () => {
   });
 
   test('icons render on items', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         items: [
           { label: 'Dashboard', icon: 'home', href: '/' },
           { label: 'Settings', icon: 'settings', href: '/settings' },
         ]
       });
-    `);
+    `,
+    );
 
     expect(await count(page, '.tx-sidebar-icon')).toBe(2);
   });
 
   test('toggle method toggles collapsed state', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__sidebar = Teryx.sidebar('#target', {
         brand: 'App',
         collapsible: true,
         items: [{ label: 'Home', href: '/' }]
       });
-    `);
+    `,
+    );
 
     // Toggle to collapsed
     await page.evaluate(() => (window as any).__sidebar.toggle());
@@ -224,7 +260,9 @@ test.describe('Sidebar Widget', () => {
   });
 
   test('nested items render at correct depth', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.sidebar('#target', {
         items: [
           {
@@ -236,7 +274,8 @@ test.describe('Sidebar Widget', () => {
           }
         ]
       });
-    `);
+    `,
+    );
 
     // Parent item at depth 0
     const parentItem = page.locator('.tx-sidebar-item-group > .tx-sidebar-item');
@@ -244,18 +283,21 @@ test.describe('Sidebar Widget', () => {
 
     // Children at depth 1
     const childItems = page.locator('.tx-sidebar-submenu .tx-sidebar-item');
-    for (let i = 0; i < await childItems.count(); i++) {
+    for (let i = 0; i < (await childItems.count()); i++) {
       await expect(childItems.nth(i)).toHaveAttribute('style', /--depth:\s*1/);
     }
   });
 
   test('destroy removes all sidebar DOM content', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__sidebar = Teryx.sidebar('#target', {
         brand: 'App',
         items: [{ label: 'Home', href: '/' }]
       });
-    `);
+    `,
+    );
 
     await assertExists(page, '.tx-sidebar');
 

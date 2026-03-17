@@ -10,7 +10,7 @@ test.describe('Drawer Widget', () => {
     await page.evaluate(() => {
       (window as any).__dr = (window as any).Teryx.drawer({
         title: 'My Drawer',
-        content: '<p>Drawer content</p>'
+        content: '<p>Drawer content</p>',
       });
     });
     await page.evaluate(() => (window as any).__dr.open());
@@ -24,7 +24,7 @@ test.describe('Drawer Widget', () => {
     await page.evaluate(() => {
       (window as any).__dr = (window as any).Teryx.drawer({
         title: 'My Drawer',
-        content: '<p>Content</p>'
+        content: '<p>Content</p>',
       });
       (window as any).__dr.open();
     });
@@ -41,7 +41,7 @@ test.describe('Drawer Widget', () => {
     await page.evaluate(() => {
       (window as any).__dr = (window as any).Teryx.drawer({
         title: 'Backdrop Test',
-        content: '<p>Content</p>'
+        content: '<p>Content</p>',
       });
       (window as any).__dr.open();
     });
@@ -58,7 +58,7 @@ test.describe('Drawer Widget', () => {
     await page.evaluate(() => {
       (window as any).__dr = (window as any).Teryx.drawer({
         title: 'Escape Test',
-        content: '<p>Content</p>'
+        content: '<p>Content</p>',
       });
       (window as any).__dr.open();
     });
@@ -76,7 +76,7 @@ test.describe('Drawer Widget', () => {
       (window as any).__dr = (window as any).Teryx.drawer({
         title: 'Right Drawer',
         position: 'right',
-        content: '<p>Right</p>'
+        content: '<p>Right</p>',
       });
       (window as any).__dr.open();
     });
@@ -90,7 +90,7 @@ test.describe('Drawer Widget', () => {
       (window as any).__dr = (window as any).Teryx.drawer({
         title: 'Left Drawer',
         position: 'left',
-        content: '<p>Left</p>'
+        content: '<p>Left</p>',
       });
       (window as any).__dr.open();
     });
@@ -103,7 +103,7 @@ test.describe('Drawer Widget', () => {
     await page.evaluate(() => {
       (window as any).__dr = (window as any).Teryx.drawer({
         title: 'Drawer Title',
-        content: '<p>Content</p>'
+        content: '<p>Content</p>',
       });
       (window as any).__dr.open();
     });
@@ -116,7 +116,7 @@ test.describe('Drawer Widget', () => {
     await page.evaluate(() => {
       (window as any).__dr = (window as any).Teryx.drawer({
         title: 'Close Btn Test',
-        content: '<p>Content</p>'
+        content: '<p>Content</p>',
       });
       (window as any).__dr.open();
     });

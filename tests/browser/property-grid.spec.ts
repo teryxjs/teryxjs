@@ -7,7 +7,9 @@ test.describe('PropertyGrid Widget', () => {
   });
 
   test('renders all properties as rows', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.propertyGrid('#target', {
         properties: [
           { name: 'firstName', value: 'John' },
@@ -15,13 +17,16 @@ test.describe('PropertyGrid Widget', () => {
           { name: 'age', value: 30, type: 'number' }
         ]
       });
-    `);
+    `,
+    );
     const rows = await count(page, '.tx-propgrid-row');
     expect(rows).toBe(3);
   });
 
   test('editable mode renders input fields', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.propertyGrid('#target', {
         editable: true,
         properties: [
@@ -29,7 +34,8 @@ test.describe('PropertyGrid Widget', () => {
           { name: 'count', value: 5, type: 'number' }
         ]
       });
-    `);
+    `,
+    );
     const textInput = page.locator('.tx-propgrid-row[data-prop="name"] input[type="text"]');
     await expect(textInput).toBeVisible();
     await expect(textInput).toHaveValue('Alice');
@@ -40,7 +46,9 @@ test.describe('PropertyGrid Widget', () => {
   });
 
   test('boolean properties render checkboxes in editable mode', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.propertyGrid('#target', {
         editable: true,
         properties: [
@@ -48,7 +56,8 @@ test.describe('PropertyGrid Widget', () => {
           { name: 'visible', value: false, type: 'boolean' }
         ]
       });
-    `);
+    `,
+    );
     const activeCheckbox = page.locator('.tx-propgrid-row[data-prop="active"] input[type="checkbox"]');
     await expect(activeCheckbox).toBeChecked();
 
@@ -57,19 +66,24 @@ test.describe('PropertyGrid Widget', () => {
   });
 
   test('name and value columns are rendered correctly', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.propertyGrid('#target', {
         properties: [
           { name: 'color', label: 'Favorite Color', value: 'Blue' }
         ]
       });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-propgrid-name')).toHaveText('Favorite Color');
     await expect(page.locator('.tx-propgrid-value')).toHaveText('Blue');
   });
 
   test('grouped mode renders group headers', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.propertyGrid('#target', {
         grouped: true,
         properties: [
@@ -78,7 +92,8 @@ test.describe('PropertyGrid Widget', () => {
           { name: 'company', value: 'Acme', group: 'Work' }
         ]
       });
-    `);
+    `,
+    );
     const groupHeaders = await count(page, '.tx-propgrid-group-header');
     expect(groupHeaders).toBe(2);
     await expect(page.locator('.tx-propgrid-group-header').first()).toContainText('Personal');
@@ -90,12 +105,10 @@ test.describe('PropertyGrid Widget', () => {
       (window as any).__changed = null;
       (window as any).Teryx.propertyGrid('#target', {
         editable: true,
-        properties: [
-          { name: 'email', value: 'old@test.com', type: 'string' }
-        ],
+        properties: [{ name: 'email', value: 'old@test.com', type: 'string' }],
         onChange: (name: string, value: unknown) => {
           (window as any).__changed = { name, value };
-        }
+        },
       });
     });
     await page.waitForTimeout(100);

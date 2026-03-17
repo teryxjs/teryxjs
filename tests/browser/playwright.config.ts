@@ -11,9 +11,7 @@ export default defineConfig({
     headless: true,
     viewport: { width: 1280, height: 720 },
   },
-  projects: [
-    { name: 'chromium', use: { browserName: 'chromium' } },
-  ],
+  projects: [{ name: 'chromium', use: { browserName: 'chromium' } }],
   webServer: {
     command: 'node ../../examples/server.cjs',
     port: 3111,

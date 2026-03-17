@@ -11,14 +11,14 @@ test.describe('DataList Widget', () => {
       items: [
         { name: 'Item 1', desc: 'Description 1' },
         { name: 'Item 2', desc: 'Description 2' },
-        { name: 'Item 3', desc: 'Description 3' }
-      ]
+        { name: 'Item 3', desc: 'Description 3' },
+      ],
     });
 
     await page.evaluate(() => {
       (window as any).Teryx.datalist('#target', {
         source: '/api/items',
-        itemTemplate: '<strong xh-text="name"></strong><span xh-text="desc"></span>'
+        itemTemplate: '<strong xh-text="name"></strong><span xh-text="desc"></span>',
       });
     });
     await page.waitForTimeout(500);
@@ -35,7 +35,7 @@ test.describe('DataList Widget', () => {
       (window as any).Teryx.datalist('#target', {
         source: '/api/empty',
         itemTemplate: '<span xh-text="name"></span>',
-        emptyMessage: 'Nothing here'
+        emptyMessage: 'Nothing here',
       });
     });
     await page.waitForTimeout(500);
@@ -49,7 +49,7 @@ test.describe('DataList Widget', () => {
 
   test('grid layout applies the grid class', async ({ page }) => {
     await mockAPI(page, '/api/grid-items', {
-      items: [{ name: 'A' }, { name: 'B' }]
+      items: [{ name: 'A' }, { name: 'B' }],
     });
 
     await page.evaluate(() => {
@@ -57,7 +57,7 @@ test.describe('DataList Widget', () => {
         source: '/api/grid-items',
         layout: 'grid',
         gridColumns: 3,
-        itemTemplate: '<span xh-text="name"></span>'
+        itemTemplate: '<span xh-text="name"></span>',
       });
     });
     await page.waitForTimeout(500);
@@ -68,13 +68,13 @@ test.describe('DataList Widget', () => {
 
   test('list layout is the default', async ({ page }) => {
     await mockAPI(page, '/api/list-items', {
-      items: [{ name: 'X' }]
+      items: [{ name: 'X' }],
     });
 
     await page.evaluate(() => {
       (window as any).Teryx.datalist('#target', {
         source: '/api/list-items',
-        itemTemplate: '<span xh-text="name"></span>'
+        itemTemplate: '<span xh-text="name"></span>',
       });
     });
     await page.waitForTimeout(500);
@@ -84,19 +84,19 @@ test.describe('DataList Widget', () => {
 
   test('loading indicator is present before data loads', async ({ page }) => {
     // Delay the API response to observe the loading state
-    await page.route('**/api/slow*', async route => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    await page.route('**/api/slow*', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ items: [{ name: 'Loaded' }] })
+        body: JSON.stringify({ items: [{ name: 'Loaded' }] }),
       });
     });
 
     await page.evaluate(() => {
       (window as any).Teryx.datalist('#target', {
         source: '/api/slow',
-        itemTemplate: '<span xh-text="name"></span>'
+        itemTemplate: '<span xh-text="name"></span>',
       });
     });
 

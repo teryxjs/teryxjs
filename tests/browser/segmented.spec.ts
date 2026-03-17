@@ -7,7 +7,9 @@ test.describe('Segmented Widget', () => {
   });
 
   test('renders all segment items', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.segmented('#target', {
         items: [
           { label: 'Day', value: 'day' },
@@ -15,7 +17,8 @@ test.describe('Segmented Widget', () => {
           { label: 'Month', value: 'month' }
         ]
       });
-    `);
+    `,
+    );
     const items = await count(page, '.tx-segmented-item');
     expect(items).toBe(3);
     await expect(page.locator('.tx-segmented-label').nth(0)).toHaveText('Day');
@@ -30,8 +33,8 @@ test.describe('Segmented Widget', () => {
         items: [
           { label: 'Day', value: 'day' },
           { label: 'Week', value: 'week' },
-          { label: 'Month', value: 'month' }
-        ]
+          { label: 'Month', value: 'month' },
+        ],
       });
     });
     await expect(page.locator('.tx-segmented-active .tx-segmented-label')).toHaveText('Day');
@@ -51,8 +54,8 @@ test.describe('Segmented Widget', () => {
         items: [
           { label: 'Day', value: 'day' },
           { label: 'Week', value: 'week' },
-          { label: 'Month', value: 'month' }
-        ]
+          { label: 'Month', value: 'month' },
+        ],
       });
     });
     const val = await page.evaluate(() => (window as any).__seg.getValue());
@@ -66,8 +69,8 @@ test.describe('Segmented Widget', () => {
         items: [
           { label: 'Day', value: 'day' },
           { label: 'Week', value: 'week' },
-          { label: 'Month', value: 'month' }
-        ]
+          { label: 'Month', value: 'month' },
+        ],
       });
     });
     await page.evaluate(() => (window as any).__seg.setValue('month'));
@@ -83,8 +86,8 @@ test.describe('Segmented Widget', () => {
         items: [
           { label: 'Day', value: 'day' },
           { label: 'Week', value: 'week', disabled: true },
-          { label: 'Month', value: 'month' }
-        ]
+          { label: 'Month', value: 'month' },
+        ],
       });
     });
     const disabledBtn = page.locator('.tx-segmented-item[data-value="week"]');
@@ -98,7 +101,9 @@ test.describe('Segmented Widget', () => {
   });
 
   test('block option applies block class', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.segmented('#target', {
         block: true,
         items: [
@@ -106,7 +111,8 @@ test.describe('Segmented Widget', () => {
           { label: 'B', value: 'b' }
         ]
       });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-segmented-block')).toBeVisible();
   });
 });

@@ -56,8 +56,8 @@ test.describe('MessageBox Widget', () => {
         buttons: [
           { text: 'Save', value: 'save', variant: 'primary' },
           { text: 'Discard', value: 'discard', variant: 'danger' },
-          { text: 'Cancel', value: 'cancel', variant: 'secondary' }
-        ]
+          { text: 'Cancel', value: 'cancel', variant: 'secondary' },
+        ],
       });
     });
     await page.waitForTimeout(300);
@@ -84,7 +84,7 @@ test.describe('MessageBox Widget', () => {
         message: 'Close me',
         title: 'Test',
         closable: true,
-        buttons: [{ text: 'OK', value: 'ok', variant: 'primary' }]
+        buttons: [{ text: 'OK', value: 'ok', variant: 'primary' }],
       }).then((v: string) => {
         (window as any).__closeResult = v;
       });
@@ -106,8 +106,8 @@ test.describe('MessageBox Widget', () => {
         message: 'Pick one',
         buttons: [
           { text: 'Yes', value: 'yes', variant: 'success' },
-          { text: 'No', value: 'no', variant: 'danger' }
-        ]
+          { text: 'No', value: 'no', variant: 'danger' },
+        ],
       }).then((v: string) => {
         (window as any).__btnResult = v;
       });

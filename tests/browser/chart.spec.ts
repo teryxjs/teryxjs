@@ -7,7 +7,9 @@ test.describe('Chart', () => {
   });
 
   test('bar chart renders SVG with bar elements', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'bar',
         width: 500,
@@ -18,7 +20,8 @@ test.describe('Chart', () => {
           { x: 'Mar', y: 15 },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
     await assertExists(page, '.tx-chart');
     await assertExists(page, '.tx-chart svg');
@@ -28,7 +31,9 @@ test.describe('Chart', () => {
   });
 
   test('line chart renders SVG with path and dots', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'line',
         width: 500,
@@ -40,7 +45,8 @@ test.describe('Chart', () => {
           { x: 'Thu', y: 20 },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
     await assertExists(page, '.tx-chart');
 
@@ -52,7 +58,9 @@ test.describe('Chart', () => {
   });
 
   test('pie chart renders SVG with slice paths', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'pie',
         width: 400,
@@ -63,7 +71,8 @@ test.describe('Chart', () => {
           { x: 'Safari', y: 15, label: 'Safari' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
     await assertExists(page, '.tx-chart');
 
@@ -72,7 +81,9 @@ test.describe('Chart', () => {
   });
 
   test('donut chart renders slices (with inner radius path)', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'donut',
         width: 400,
@@ -83,7 +94,8 @@ test.describe('Chart', () => {
           { x: 'C', y: 30, label: 'C' },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
     await assertExists(page, '.tx-chart');
 
@@ -102,7 +114,9 @@ test.describe('Chart', () => {
   });
 
   test('gauge chart renders arc path', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'gauge',
         width: 400,
@@ -112,7 +126,8 @@ test.describe('Chart', () => {
         gaugeValue: 72,
         gaugeLabel: 'CPU Usage',
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
     await assertExists(page, '.tx-chart');
     await assertExists(page, '.tx-chart svg');
@@ -124,11 +139,13 @@ test.describe('Chart', () => {
     // The gauge value text should be rendered
     const svgTexts = page.locator('.tx-chart svg text');
     const allTexts = await svgTexts.allTextContents();
-    expect(allTexts.some(t => t.includes('72'))).toBe(true);
+    expect(allTexts.some((t) => t.includes('72'))).toBe(true);
   });
 
   test('legend renders for multi-series charts', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'bar',
         width: 500,
@@ -139,18 +156,21 @@ test.describe('Chart', () => {
         ],
         legend: { show: true },
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
 
     // Legend should render text labels for each series
     const svgTexts = page.locator('.tx-chart svg text');
     const allTexts = await svgTexts.allTextContents();
-    expect(allTexts.some(t => t.includes('Revenue'))).toBe(true);
-    expect(allTexts.some(t => t.includes('Expenses'))).toBe(true);
+    expect(allTexts.some((t) => t.includes('Revenue'))).toBe(true);
+    expect(allTexts.some((t) => t.includes('Expenses'))).toBe(true);
   });
 
   test('correct number of bars for multiple series', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'bar',
         width: 500,
@@ -160,7 +180,8 @@ test.describe('Chart', () => {
           { name: 'Series B', data: [{ x: 'X1', y: 15 }, { x: 'X2', y: 25 }] },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
 
     // 2 series x 2 data points = 4 bars
@@ -169,7 +190,9 @@ test.describe('Chart', () => {
   });
 
   test('chart with static data renders without source', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'line',
         width: 500,
@@ -179,7 +202,8 @@ test.describe('Chart', () => {
           { x: 'B', y: 2 },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
     await assertExists(page, '.tx-chart');
     await assertExists(page, '.tx-chart svg');
@@ -196,14 +220,17 @@ test.describe('Chart', () => {
         { x: 'Mar', y: 150 },
       ],
     });
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'bar',
         width: 500,
         height: 350,
         source: '/api/chart-data',
       });
-    `);
+    `,
+    );
     // Wait for the fetch to resolve and re-render
     await page.waitForTimeout(500);
 
@@ -212,7 +239,9 @@ test.describe('Chart', () => {
   });
 
   test('height option controls SVG height', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'bar',
         width: 600,
@@ -221,7 +250,8 @@ test.describe('Chart', () => {
           { x: 'A', y: 10 },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
 
     const svg = page.locator('.tx-chart svg');
@@ -230,7 +260,9 @@ test.describe('Chart', () => {
   });
 
   test('chart title renders in SVG', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.chart('#target', {
         type: 'bar',
         width: 500,
@@ -240,16 +272,19 @@ test.describe('Chart', () => {
           { x: 'Jan', y: 100 },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
 
     const svgTexts = page.locator('.tx-chart svg text');
     const allTexts = await svgTexts.allTextContents();
-    expect(allTexts.some(t => t.includes('Monthly Revenue'))).toBe(true);
+    expect(allTexts.some((t) => t.includes('Monthly Revenue'))).toBe(true);
   });
 
   test('destroy clears chart content', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__chart = Teryx.chart('#target', {
         type: 'bar',
         width: 500,
@@ -258,7 +293,8 @@ test.describe('Chart', () => {
           { x: 'A', y: 10 },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
     await assertExists(page, '.tx-chart');
 
@@ -268,7 +304,9 @@ test.describe('Chart', () => {
   });
 
   test('update method re-renders with new data', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       window.__chart = Teryx.chart('#target', {
         type: 'bar',
         width: 500,
@@ -278,7 +316,8 @@ test.describe('Chart', () => {
           { x: 'B', y: 20 },
         ],
       });
-    `);
+    `,
+    );
     await page.waitForTimeout(200);
     let bars = await count(page, '.tx-chart-bar');
     expect(bars).toBe(2);

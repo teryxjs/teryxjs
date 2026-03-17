@@ -15,34 +15,46 @@ test.describe('Carousel Widget', () => {
   }`;
 
   test('renders all slides', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.carousel('#target', ${slidesConfig});
-    `);
+    `,
+    );
     const slides = await count(page, '.tx-carousel-slide');
     expect(slides).toBe(3);
   });
 
   test('renders next and prev arrow buttons', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.carousel('#target', ${slidesConfig});
-    `);
+    `,
+    );
     await expect(page.locator('.tx-carousel-prev')).toBeVisible();
     await expect(page.locator('.tx-carousel-next')).toBeVisible();
   });
 
   test('renders dot indicators for each slide', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.carousel('#target', ${slidesConfig});
-    `);
+    `,
+    );
     const indicators = await count(page, '.tx-carousel-indicator');
     expect(indicators).toBe(3);
     await expect(page.locator('.tx-carousel-indicator-active')).toHaveCount(1);
   });
 
   test('clicking a dot indicator changes the active slide', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.carousel('#target', ${slidesConfig});
-    `);
+    `,
+    );
     await expect(page.locator('.tx-carousel-slide-active')).toHaveAttribute('data-index', '0');
 
     await page.locator('.tx-carousel-indicator[data-index="2"]').click();
@@ -53,9 +65,12 @@ test.describe('Carousel Widget', () => {
   });
 
   test('next button advances to the next slide', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.carousel('#target', ${slidesConfig});
-    `);
+    `,
+    );
     await page.locator('.tx-carousel-next').click();
     await page.waitForTimeout(200);
 
@@ -63,9 +78,12 @@ test.describe('Carousel Widget', () => {
   });
 
   test('prev button goes to the previous slide (with loop)', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.carousel('#target', ${slidesConfig});
-    `);
+    `,
+    );
     // On the first slide, prev should loop to the last slide
     await page.locator('.tx-carousel-prev').click();
     await page.waitForTimeout(200);
@@ -79,8 +97,8 @@ test.describe('Carousel Widget', () => {
         slides: [
           { title: 'Slide 1', content: '<p>1</p>' },
           { title: 'Slide 2', content: '<p>2</p>' },
-          { title: 'Slide 3', content: '<p>3</p>' }
-        ]
+          { title: 'Slide 3', content: '<p>3</p>' },
+        ],
       });
     });
     // Go to last slide

@@ -7,9 +7,12 @@ test.describe('Calendar Widget', () => {
   });
 
   test('month view renders a table grid', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.calendar('#target', { view: 'month', date: '2024-06-01' });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-calendar')).toBeVisible();
     await expect(page.locator('.tx-calendar-month')).toBeVisible();
     // Should have 7 column headers for days of week
@@ -18,24 +21,33 @@ test.describe('Calendar Widget', () => {
   });
 
   test('day numbers are rendered in cells', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.calendar('#target', { view: 'month', date: '2024-06-01' });
-    `);
+    `,
+    );
     const dayNums = await count(page, '.tx-calendar-day-num');
     expect(dayNums).toBeGreaterThan(28);
   });
 
   test('today is highlighted with a special class', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.calendar('#target', { view: 'month' });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-calendar-day-today')).toBeVisible();
   });
 
   test('prev/next buttons navigate months', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.calendar('#target', { view: 'month', date: '2024-06-01' });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-calendar-toolbar-center')).toContainText('June 2024');
 
     await page.locator('[data-action="next"]').click();
@@ -48,9 +60,12 @@ test.describe('Calendar Widget', () => {
   });
 
   test('view switcher buttons change the view', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.calendar('#target', { view: 'month', date: '2024-06-01' });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-calendar-month')).toBeVisible();
 
     await page.locator('[data-view="week"]').click();
@@ -60,9 +75,12 @@ test.describe('Calendar Widget', () => {
   });
 
   test('week view renders time slots', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.calendar('#target', { view: 'week', date: '2024-06-10' });
-    `);
+    `,
+    );
     await expect(page.locator('.tx-calendar-timed')).toBeVisible();
     await expect(page.locator('.tx-calendar-timegrid')).toBeVisible();
     const timeSlots = await count(page, '.tx-calendar-time-slot-label');
@@ -70,7 +88,9 @@ test.describe('Calendar Widget', () => {
   });
 
   test('events render in the month view', async ({ page }) => {
-    await createWidget(page, `
+    await createWidget(
+      page,
+      `
       Teryx.calendar('#target', {
         view: 'month',
         date: '2024-06-01',
@@ -79,7 +99,8 @@ test.describe('Calendar Widget', () => {
           { id: 'e2', title: 'Lunch', start: '2024-06-15' }
         ]
       });
-    `);
+    `,
+    );
     const events = await count(page, '.tx-calendar-event');
     expect(events).toBeGreaterThanOrEqual(2);
     await expect(page.locator('.tx-calendar-event').first()).toBeVisible();
@@ -90,7 +111,7 @@ test.describe('Calendar Widget', () => {
       (window as any).__cal = (window as any).Teryx.calendar('#target', {
         view: 'month',
         date: '2024-06-01',
-        events: []
+        events: [],
       });
     });
     let events = await count(page, '.tx-calendar-event');
