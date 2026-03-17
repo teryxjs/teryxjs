@@ -53,11 +53,9 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
 
   html += `</div>`; // #id-data
 
-  // Infinite scroll sentinel
-  if (options.infiniteScroll) {
-    html += `<div id="${esc(id)}-sentinel" class="tx-grid-infinite-loader" style="display:none;">`;
-    html += `<div class="tx-spinner"></div>`;
-    html += `</div>`;
+  // Drop indicator for column reorder
+  if (options.columnReorder) {
+    html += `<div id="${esc(id)}-drop-indicator" class="tx-grid-drop-indicator" style="display:none;"></div>`;
   }
 
   html += `</div>`; // .tx-grid-body
@@ -69,9 +67,9 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
   // --- Post-render: attach sort click handlers ---
   requestAnimationFrame(() => attachSortHandlers(el, id, options));
 
-  // --- Post-render: attach infinite scroll ---
-  if (options.infiniteScroll) {
-    requestAnimationFrame(() => attachInfiniteScroll(el, id, options, pageSize, pageParam, rowsField, totalField));
+  // --- Post-render: attach column reorder ---
+  if (options.columnReorder) {
+    requestAnimationFrame(() => attachColumnReorder(el, id, options));
   }
 
   const instance: GridInstance = {
@@ -444,120 +442,131 @@ function attachSortHandlers(root: HTMLElement, id: string, options: GridOptions)
 }
 
 // ----------------------------------------------------------
-// Infinite scroll handling (post-render)
+// Column drag reorder (post-render)
 // ----------------------------------------------------------
-function attachInfiniteScroll(
-  root: HTMLElement,
-  id: string,
-  options: GridOptions,
-  pageSize: number,
-  pageParam: string,
-  rowsField: string,
-  totalField: string,
-): void {
-  const gridBody = root.querySelector('.tx-grid-body') as HTMLElement | null;
-  if (!gridBody) return;
+function attachColumnReorder(root: HTMLElement, id: string, options: GridOptions): void {
+  const thead = root.querySelector('thead tr') as HTMLElement | null;
+  if (!thead) return;
 
-  let currentPage = 1;
-  let totalRows = 0;
-  let loadedRows = 0;
-  let loading = false;
-  let allLoaded = false;
+  const indicator = document.getElementById(`${id}-drop-indicator`);
+  let draggedTh: HTMLElement | null = null;
+  let ghost: HTMLElement | null = null;
+  let startX = 0;
+  let startY = 0;
 
-  const sentinel = document.getElementById(`${id}-sentinel`);
-
-  // Listen for the initial data load to capture totals
-  const dataEl = document.getElementById(`${id}-data`);
-  if (dataEl) {
-    const observer = new MutationObserver(() => {
-      const rows = gridBody.querySelectorAll('.tx-grid-row');
-      if (rows.length > 0 && loadedRows === 0) {
-        loadedRows = rows.length;
-        const totalEl = gridBody.querySelector('.tx-grid-total');
-        if (totalEl) {
-          const match = totalEl.textContent?.match(/of\s+(\d+)/);
-          if (match) totalRows = parseInt(match[1], 10);
-        }
-        if (!totalRows) totalRows = loadedRows + pageSize;
-        if (loadedRows >= totalRows) {
-          allLoaded = true;
-        }
-      }
-    });
-    observer.observe(dataEl, { childList: true, subtree: true });
+  // Get only data-column th elements (skip rownum/select columns)
+  function getDataHeaders(): HTMLElement[] {
+    return Array.from(thead!.querySelectorAll<HTMLElement>('th[data-field]'));
   }
 
-  gridBody.addEventListener('scroll', () => {
-    if (loading || allLoaded) return;
+  thead.addEventListener('mousedown', (e: MouseEvent) => {
+    const th = (e.target as HTMLElement).closest('th[data-field]') as HTMLElement | null;
+    if (!th) return;
 
-    const scrollBottom = gridBody.scrollHeight - gridBody.scrollTop - gridBody.clientHeight;
-    if (scrollBottom > 200) return;
+    e.preventDefault();
+    draggedTh = th;
+    startX = e.clientX;
+    startY = e.clientY;
 
-    loading = true;
-    if (sentinel) sentinel.style.display = '';
+    // Create ghost clone
+    ghost = th.cloneNode(true) as HTMLElement;
+    ghost.classList.add('tx-grid-header-dragging');
+    ghost.style.position = 'fixed';
+    ghost.style.left = `${e.clientX}px`;
+    ghost.style.top = `${e.clientY}px`;
+    ghost.style.width = `${th.offsetWidth}px`;
+    ghost.style.pointerEvents = 'none';
+    ghost.style.zIndex = '9999';
+    document.body.appendChild(ghost);
 
-    currentPage++;
+    th.style.opacity = '0.4';
 
-    const url = new URL(options.source, window.location.origin);
-    url.searchParams.set(pageParam, String(currentPage));
-    url.searchParams.set(options.pageSizeParam || 'pageSize', String(pageSize));
+    const onMouseMove = (me: MouseEvent) => {
+      if (!ghost || !draggedTh) return;
 
-    fetch(url.toString())
-      .then((res) => res.json())
-      .then((data: Record<string, unknown>) => {
-        const newRows = data[rowsField];
-        const total = data[totalField];
-        if (typeof total === 'number') totalRows = total;
+      ghost.style.left = `${me.clientX}px`;
+      ghost.style.top = `${me.clientY}px`;
 
-        if (Array.isArray(newRows) && newRows.length > 0) {
-          const tbody = gridBody.querySelector('tbody');
-          if (tbody) {
-            const visibleCols = options.columns.filter((c) => !c.hidden);
-            for (const row of newRows) {
-              const record = row as Record<string, unknown>;
-              const tr = document.createElement('tr');
-              tr.className = 'tx-grid-row';
-              if (options.rowClass) tr.classList.add(options.rowClass);
+      // Find drop target
+      const headers = getDataHeaders();
+      if (indicator) indicator.style.display = 'none';
 
-              if (options.rowNumbers) {
-                const td = document.createElement('td');
-                td.className = 'tx-grid-rownum-col';
-                td.textContent = String(loadedRows + 1);
-                tr.appendChild(td);
-              }
+      for (const header of headers) {
+        if (header === draggedTh) continue;
+        const rect = header.getBoundingClientRect();
+        const midX = rect.left + rect.width / 2;
 
-              if (options.selectable) {
-                const td = document.createElement('td');
-                td.className = 'tx-grid-select-col';
-                td.innerHTML = '<input type="checkbox" class="tx-checkbox tx-grid-row-select">';
-                tr.appendChild(td);
-              }
-
-              for (const col of visibleCols) {
-                const td = document.createElement('td');
-                if (col.class) td.className = col.class;
-                if (col.align) td.classList.add(`tx-text-${col.align}`);
-                td.textContent = String(record[col.field] ?? '');
-                tr.appendChild(td);
-              }
-
-              tbody.appendChild(tr);
-              loadedRows++;
+        if (me.clientX > rect.left && me.clientX < rect.right) {
+          if (indicator) {
+            const gridRect = root.querySelector('.tx-grid')?.getBoundingClientRect();
+            const parentRect = root.getBoundingClientRect();
+            indicator.style.display = '';
+            indicator.style.position = 'absolute';
+            indicator.style.top = `${rect.top - parentRect.top}px`;
+            indicator.style.height = `${rect.height}px`;
+            if (me.clientX < midX) {
+              indicator.style.left = `${rect.left - parentRect.left}px`;
+            } else {
+              indicator.style.left = `${rect.right - parentRect.left}px`;
             }
+          }
+          break;
+        }
+      }
+    };
+
+    const onMouseUp = (me: MouseEvent) => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      if (ghost) {
+        ghost.remove();
+        ghost = null;
+      }
+      if (indicator) indicator.style.display = 'none';
+      if (draggedTh) {
+        draggedTh.style.opacity = '';
+
+        // Determine drop position and reorder
+        const headers = getDataHeaders();
+        const dragIndex = headers.indexOf(draggedTh);
+        let dropIndex = dragIndex;
+
+        for (let i = 0; i < headers.length; i++) {
+          if (headers[i] === draggedTh) continue;
+          const rect = headers[i].getBoundingClientRect();
+          const midX = rect.left + rect.width / 2;
+
+          if (me.clientX > rect.left && me.clientX < rect.right) {
+            dropIndex = me.clientX < midX ? i : i + 1;
+            if (dropIndex > dragIndex) dropIndex--;
+            break;
           }
         }
 
-        if (!Array.isArray(newRows) || newRows.length === 0 || loadedRows >= totalRows) {
-          allLoaded = true;
+        if (dropIndex !== dragIndex && dropIndex >= 0 && dropIndex < headers.length) {
+          // Reorder columns array
+          const visibleCols = options.columns.filter((c) => !c.hidden);
+          const [moved] = visibleCols.splice(dragIndex, 1);
+          visibleCols.splice(dropIndex, 0, moved);
+
+          // Rebuild options.columns preserving hidden ones
+          const hidden = options.columns.filter((c) => c.hidden);
+          options.columns = [...visibleCols, ...hidden];
+
+          // Re-render the grid
+          const gridEl = root.querySelector(`#${id}`) || root;
+          const parentEl = gridEl.parentElement || root;
+          parentEl.innerHTML = '';
+          grid(parentEl, options);
         }
 
-        loading = false;
-        if (sentinel) sentinel.style.display = 'none';
-      })
-      .catch(() => {
-        loading = false;
-        if (sentinel) sentinel.style.display = 'none';
-      });
+        draggedTh = null;
+      }
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
 }
 
