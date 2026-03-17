@@ -52,25 +52,19 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
   html += `</div>`;
 
   html += `</div>`; // #id-data
-
-  // Row drop line indicator
-  if (options.reorderable) {
-    html += `<div id="${esc(id)}-row-drop-line" class="tx-grid-row-drop-line" style="display:none;"></div>`;
-  }
-
   html += `</div>`; // .tx-grid-body
 
   html += `</div>`; // .tx-grid
 
   el.innerHTML = html;
 
-  // --- Post-render: attach sort click handlers ---
-  requestAnimationFrame(() => attachSortHandlers(el, id, options));
-
-  // --- Post-render: attach row reorder ---
-  if (options.reorderable) {
-    requestAnimationFrame(() => attachRowReorder(el, id, options));
-  }
+  // --- Post-render: attach sort click handlers + cell editing ---
+  requestAnimationFrame(() => {
+    attachSortHandlers(el, id, options);
+    if (options.editable) {
+      attachCellEditHandlers(el, id, options);
+    }
+  });
 
   const instance: GridInstance = {
     el: el.querySelector(`#${id}`) || el,
@@ -221,11 +215,6 @@ function renderTableTemplate(
   // --- <thead> ---
   html += '<thead><tr>';
 
-  // Grip column header for reorderable rows
-  if (options.reorderable) {
-    html += '<th class="tx-grid-grip-col"></th>';
-  }
-
   if (options.rowNumbers) {
     html += '<th class="tx-grid-rownum-col">#</th>';
   }
@@ -254,7 +243,6 @@ function renderTableTemplate(
   // Column filters row
   if (cols.some((c) => c.filterable)) {
     html += '<tr class="tx-grid-filter-row">';
-    if (options.reorderable) html += '<th></th>';
     if (options.rowNumbers) html += '<th></th>';
     if (options.selectable) html += '<th></th>';
     for (const col of cols) {
@@ -275,11 +263,6 @@ function renderTableTemplate(
   const trCls = cls('tx-grid-row', options.rowClass);
   html += `<tr xh-each="${esc(rowsField)}" class="${trCls}">`;
 
-  // Grip handle for reorderable rows
-  if (options.reorderable) {
-    html += `<td class="tx-grid-grip">${icon('grip')}</td>`;
-  }
-
   if (options.rowNumbers) {
     html += '<td class="tx-grid-rownum-col" xh-text="$index"></td>';
   }
@@ -290,7 +273,11 @@ function renderTableTemplate(
 
   for (const col of cols) {
     const tdCls = cls(col.class, col.align && `tx-text-${col.align}`);
-    html += `<td class="${tdCls}">`;
+    const editAttr =
+      options.editable && col.editable
+        ? ` data-editable="true" data-field="${esc(col.field)}" data-editor-type="${esc(col.editorType || 'text')}"`
+        : '';
+    html += `<td class="${tdCls}"${editAttr}>`;
 
     if (col.template) {
       html += col.template;
@@ -316,7 +303,6 @@ function renderTableTemplate(
   // --- <tfoot> summary ---
   if (options.showSummary) {
     html += '<tfoot><tr class="tx-grid-summary">';
-    if (options.reorderable) html += '<td></td>';
     if (options.rowNumbers) html += '<td></td>';
     if (options.selectable) html += '<td></td>';
     for (const col of cols) {
@@ -454,137 +440,135 @@ function attachSortHandlers(root: HTMLElement, id: string, options: GridOptions)
 }
 
 // ----------------------------------------------------------
-// Row drag reorder (post-render)
+// Cell inline editing (post-render)
 // ----------------------------------------------------------
-function attachRowReorder(root: HTMLElement, id: string, options: GridOptions): void {
-  const gridBody = root.querySelector('.tx-grid-body') as HTMLElement | null;
-  if (!gridBody) return;
+function attachCellEditHandlers(root: HTMLElement, _id: string, options: GridOptions): void {
+  root.addEventListener('click', (e) => {
+    const td = (e.target as HTMLElement).closest('td[data-editable="true"]') as HTMLElement | null;
+    if (!td || td.classList.contains('tx-grid-cell-editing')) return;
 
-  const dropLine = document.getElementById(`${id}-row-drop-line`);
-  let draggedRow: HTMLElement | null = null;
-  let ghostRow: HTMLElement | null = null;
-  let dragStartIndex = -1;
+    const field = td.getAttribute('data-field');
+    if (!field) return;
 
-  // Use event delegation for grip handle mousedown
-  gridBody.addEventListener('mousedown', (e: MouseEvent) => {
-    const grip = (e.target as HTMLElement).closest('.tx-grid-grip') as HTMLElement | null;
-    if (!grip) return;
+    const editorType = td.getAttribute('data-editor-type') || 'text';
+    const oldValue = td.textContent?.trim() || '';
 
-    const tr = grip.closest('tr.tx-grid-row') as HTMLElement | null;
-    if (!tr) return;
+    td.classList.add('tx-grid-cell-editing');
 
-    e.preventDefault();
-    draggedRow = tr;
+    const editor = createCellEditor(editorType, oldValue, options, field);
+    editor.classList.add('tx-grid-cell-editor');
 
-    // Determine the index of the dragged row among siblings
-    const tbody = tr.parentElement;
-    if (tbody) {
-      const rows = Array.from(tbody.querySelectorAll<HTMLElement>('tr.tx-grid-row'));
-      dragStartIndex = rows.indexOf(tr);
+    const originalHTML = td.innerHTML;
+    td.innerHTML = '';
+    td.appendChild(editor);
+
+    if (editor instanceof HTMLInputElement || editor instanceof HTMLSelectElement) {
+      editor.focus();
+      if (editor instanceof HTMLInputElement && editor.type !== 'checkbox') {
+        editor.select();
+      }
     }
 
-    // Create ghost row
-    ghostRow = tr.cloneNode(true) as HTMLElement;
-    ghostRow.classList.add('tx-grid-row-dragging');
-    ghostRow.style.position = 'fixed';
-    ghostRow.style.left = `${tr.getBoundingClientRect().left}px`;
-    ghostRow.style.top = `${e.clientY}px`;
-    ghostRow.style.width = `${tr.offsetWidth}px`;
-    ghostRow.style.pointerEvents = 'none';
-    ghostRow.style.zIndex = '9999';
-    document.body.appendChild(ghostRow);
+    const save = () => {
+      let newValue: string;
+      if (editor instanceof HTMLInputElement && editor.type === 'checkbox') {
+        newValue = String(editor.checked);
+      } else if (editor instanceof HTMLInputElement || editor instanceof HTMLSelectElement) {
+        newValue = editor.value;
+      } else {
+        newValue = oldValue;
+      }
 
-    tr.style.opacity = '0.4';
+      td.classList.remove('tx-grid-cell-editing');
 
-    const onMouseMove = (me: MouseEvent) => {
-      if (!ghostRow || !draggedRow) return;
+      if (newValue !== oldValue) {
+        td.innerHTML = `<span>${newValue}</span>`;
 
-      ghostRow.style.top = `${me.clientY}px`;
+        const detail = { field, oldValue, newValue };
+        root.dispatchEvent(new CustomEvent('tx:cell-edit', { detail, bubbles: true }));
 
-      // Determine drop position
-      const tbody = draggedRow.parentElement;
-      if (!tbody) return;
-
-      const rows = Array.from(tbody.querySelectorAll<HTMLElement>('tr.tx-grid-row'));
-      if (dropLine) dropLine.style.display = 'none';
-
-      for (const row of rows) {
-        if (row === draggedRow) continue;
-        const rect = row.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
-
-        if (me.clientY > rect.top && me.clientY < rect.bottom) {
-          if (dropLine) {
-            const parentRect = gridBody.getBoundingClientRect();
-            dropLine.style.display = '';
-            dropLine.style.position = 'absolute';
-            dropLine.style.left = '0';
-            dropLine.style.right = '0';
-            if (me.clientY < midY) {
-              dropLine.style.top = `${rect.top - parentRect.top}px`;
-            } else {
-              dropLine.style.top = `${rect.bottom - parentRect.top}px`;
-            }
-          }
-          break;
+        if (options.editUrl) {
+          const body: Record<string, string> = {};
+          body[field] = newValue;
+          fetch(options.editUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          }).catch(() => {
+            td.innerHTML = originalHTML;
+          });
         }
+      } else {
+        td.innerHTML = originalHTML;
       }
     };
 
-    const onMouseUp = (me: MouseEvent) => {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-
-      if (ghostRow) {
-        ghostRow.remove();
-        ghostRow = null;
+    editor.addEventListener('blur', save);
+    editor.addEventListener('keydown', (ke: Event) => {
+      const keyEvent = ke as KeyboardEvent;
+      if (keyEvent.key === 'Enter') {
+        editor.removeEventListener('blur', save);
+        save();
+      } else if (keyEvent.key === 'Escape') {
+        editor.removeEventListener('blur', save);
+        td.classList.remove('tx-grid-cell-editing');
+        td.innerHTML = originalHTML;
       }
-      if (dropLine) dropLine.style.display = 'none';
-
-      if (draggedRow) {
-        draggedRow.style.opacity = '';
-
-        const tbody = draggedRow.parentElement;
-        if (tbody) {
-          const rows = Array.from(tbody.querySelectorAll<HTMLElement>('tr.tx-grid-row'));
-          let dropIndex = dragStartIndex;
-
-          for (let i = 0; i < rows.length; i++) {
-            if (rows[i] === draggedRow) continue;
-            const rect = rows[i].getBoundingClientRect();
-            const midY = rect.top + rect.height / 2;
-
-            if (me.clientY > rect.top && me.clientY < rect.bottom) {
-              dropIndex = me.clientY < midY ? i : i + 1;
-              if (dropIndex > dragStartIndex) dropIndex--;
-              break;
-            }
-          }
-
-          if (dropIndex !== dragStartIndex && dropIndex >= 0 && dropIndex < rows.length) {
-            // Move the DOM row
-            const targetRow = rows[dropIndex];
-            if (dropIndex > dragStartIndex) {
-              targetRow.after(draggedRow);
-            } else {
-              targetRow.before(draggedRow);
-            }
-
-            // Fire callback
-            if (options.onReorder) {
-              options.onReorder(dragStartIndex, dropIndex);
-            }
-          }
-        }
-
-        draggedRow = null;
-        dragStartIndex = -1;
-      }
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    });
   });
+}
+
+function createCellEditor(
+  editorType: string,
+  currentValue: string,
+  _options: GridOptions,
+  _field: string,
+): HTMLInputElement | HTMLSelectElement {
+  switch (editorType) {
+    case 'number': {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'tx-input tx-input-sm';
+      input.value = currentValue;
+      return input;
+    }
+    case 'date': {
+      const input = document.createElement('input');
+      input.type = 'date';
+      input.className = 'tx-input tx-input-sm';
+      input.value = currentValue;
+      return input;
+    }
+    case 'checkbox': {
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.className = 'tx-checkbox';
+      input.checked = currentValue === 'true';
+      return input;
+    }
+    case 'select': {
+      const select = document.createElement('select');
+      select.className = 'tx-select tx-select-sm';
+      const col = _options.columns.find((c) => c.field === _field);
+      if (col && col.filterOptions) {
+        for (const opt of col.filterOptions) {
+          const option = document.createElement('option');
+          option.value = opt.value;
+          option.textContent = opt.label;
+          if (opt.value === currentValue) option.selected = true;
+          select.appendChild(option);
+        }
+      }
+      return select;
+    }
+    default: {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'tx-input tx-input-sm';
+      input.value = currentValue;
+      return input;
+    }
+  }
 }
 
 // Declarative registration
