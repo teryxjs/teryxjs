@@ -60,7 +60,7 @@ export function accordion(target: string | HTMLElement, options: AccordionOption
 
     if (shouldOpen && !multiple) {
       // Close others
-      container.querySelectorAll('.tx-accordion-open').forEach(other => {
+      container.querySelectorAll('.tx-accordion-open').forEach((other) => {
         if (other !== item) closeItem(other as HTMLElement);
       });
     }
@@ -86,7 +86,9 @@ export function accordion(target: string | HTMLElement, options: AccordionOption
         panel.style.maxHeight = '0';
         requestAnimationFrame(() => {
           panel.style.maxHeight = panel.scrollHeight + 'px';
-          setTimeout(() => { panel.style.maxHeight = ''; }, 300);
+          setTimeout(() => {
+            panel.style.maxHeight = '';
+          }, 300);
         });
       }
 
@@ -135,15 +137,23 @@ export function accordion(target: string | HTMLElement, options: AccordionOption
 
   const instance: AccordionInstance = {
     el: container,
-    destroy() { el.innerHTML = ''; },
-    toggle(itemId) { toggleItem(itemId); },
-    open(itemId) { toggleItem(itemId, true); },
-    close(itemId) { toggleItem(itemId, false); },
+    destroy() {
+      el.innerHTML = '';
+    },
+    toggle(itemId) {
+      toggleItem(itemId);
+    },
+    open(itemId) {
+      toggleItem(itemId, true);
+    },
+    close(itemId) {
+      toggleItem(itemId, false);
+    },
     openAll() {
-      options.items.forEach(i => toggleItem(i.id, true));
+      options.items.forEach((i) => toggleItem(i.id, true));
     },
     closeAll() {
-      options.items.forEach(i => toggleItem(i.id, false));
+      options.items.forEach((i) => toggleItem(i.id, false));
     },
   };
 

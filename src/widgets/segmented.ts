@@ -58,8 +58,12 @@ export function segmented(target: string | HTMLElement, options: SegmentedOption
 
   return {
     el: el.querySelector(`#${id}`) || el,
-    destroy() { el.innerHTML = ''; },
-    getValue() { return currentValue; },
+    destroy() {
+      el.innerHTML = '';
+    },
+    getValue() {
+      return currentValue;
+    },
     setValue(value: string) {
       currentValue = value;
       render();

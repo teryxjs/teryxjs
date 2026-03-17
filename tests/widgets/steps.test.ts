@@ -124,7 +124,7 @@ describe('Steps widget', () => {
     expect(finishSteps.length).toBe(2);
 
     // Check icons contain SVG
-    finishSteps.forEach(s => {
+    finishSteps.forEach((s) => {
       const icon = s.querySelector('.tx-step-icon');
       expect(icon).not.toBeNull();
       expect(icon!.innerHTML).toContain('<svg');
@@ -192,10 +192,7 @@ describe('Steps widget', () => {
   });
 
   it('should respect custom status on items', () => {
-    const items = [
-      { title: 'S1', status: 'error' as const },
-      { title: 'S2' },
-    ];
+    const items = [{ title: 'S1', status: 'error' as const }, { title: 'S2' }];
     steps(container, { items, current: 1 });
 
     const errorStep = container.querySelector('.tx-step-error');

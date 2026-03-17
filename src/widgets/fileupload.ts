@@ -77,7 +77,8 @@ export function fileupload(target: string | HTMLElement, options: FileUploadOpti
     itemHtml += `<div class="tx-upload-item-size">${formatSize(file.size)}</div>`;
     itemHtml += '</div>';
     itemHtml += '<div class="tx-upload-item-status">';
-    itemHtml += '<div class="tx-progress tx-progress-xs"><div class="tx-progress-bar tx-upload-progress" style="width:0%"></div></div>';
+    itemHtml +=
+      '<div class="tx-progress tx-progress-xs"><div class="tx-progress-bar tx-upload-progress" style="width:0%"></div></div>';
     itemHtml += '</div>';
     itemHtml += `<button class="tx-upload-item-remove">${icon('x')}</button>`;
     itemHtml += '</div>';
@@ -105,9 +106,10 @@ export function fileupload(target: string | HTMLElement, options: FileUploadOpti
       itemEl.classList.add(entry.status === 'done' ? 'tx-upload-item-done' : 'tx-upload-item-error');
       const statusEl = itemEl.querySelector('.tx-upload-item-status');
       if (statusEl) {
-        statusEl.innerHTML = entry.status === 'done'
-          ? `<span class="tx-text-success">${icon('check')} Uploaded</span>`
-          : `<span class="tx-text-danger">${icon('x')} Failed</span>`;
+        statusEl.innerHTML =
+          entry.status === 'done'
+            ? `<span class="tx-text-success">${icon('check')} Uploaded</span>`
+            : `<span class="tx-text-danger">${icon('x')} Failed</span>`;
       }
 
       try {
@@ -184,7 +186,9 @@ export function fileupload(target: string | HTMLElement, options: FileUploadOpti
 
   return {
     el: container,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
   };
 }
 

@@ -347,29 +347,41 @@ export function sheet(options: SheetOptions): SheetInstance {
     let currentY = 0;
     let dragging = false;
 
-    handle.addEventListener('touchstart', (e: TouchEvent) => {
-      if (!instance.isOpen()) return;
-      startY = e.touches[0].clientY;
-      currentY = 0;
-      dragging = true;
-      panel.style.transition = 'none';
-    }, { passive: true });
+    handle.addEventListener(
+      'touchstart',
+      (e: TouchEvent) => {
+        if (!instance.isOpen()) return;
+        startY = e.touches[0].clientY;
+        currentY = 0;
+        dragging = true;
+        panel.style.transition = 'none';
+      },
+      { passive: true },
+    );
 
-    handle.addEventListener('touchmove', (e: TouchEvent) => {
-      if (!dragging) return;
-      currentY = Math.max(0, e.touches[0].clientY - startY);
-      panel.style.transform = `translateY(${currentY}px)`;
-    }, { passive: true });
+    handle.addEventListener(
+      'touchmove',
+      (e: TouchEvent) => {
+        if (!dragging) return;
+        currentY = Math.max(0, e.touches[0].clientY - startY);
+        panel.style.transform = `translateY(${currentY}px)`;
+      },
+      { passive: true },
+    );
 
-    handle.addEventListener('touchend', () => {
-      if (!dragging) return;
-      dragging = false;
-      panel.style.transition = '';
-      panel.style.transform = '';
-      if (currentY > 100) {
-        instance.close();
-      }
-    }, { passive: true });
+    handle.addEventListener(
+      'touchend',
+      () => {
+        if (!dragging) return;
+        dragging = false;
+        panel.style.transition = '';
+        panel.style.transform = '';
+        if (currentY > 100) {
+          instance.close();
+        }
+      },
+      { passive: true },
+    );
   }
 
   // --- Instance ---

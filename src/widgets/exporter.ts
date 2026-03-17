@@ -12,10 +12,7 @@ export interface ExportOptions {
 }
 
 /** Export rows to CSV and trigger download. */
-export function exportCSV(
-  rows: Record<string, unknown>[],
-  options: ExportOptions = {},
-): void {
+export function exportCSV(rows: Record<string, unknown>[], options: ExportOptions = {}): void {
   const filename = options.filename || 'export.csv';
   const delimiter = options.delimiter || ',';
   const includeHeader = options.includeHeader !== false;
@@ -24,11 +21,11 @@ export function exportCSV(
   const lines: string[] = [];
 
   if (includeHeader) {
-    lines.push(columns.map(c => csvEscape(c.label, delimiter)).join(delimiter));
+    lines.push(columns.map((c) => csvEscape(c.label, delimiter)).join(delimiter));
   }
 
   for (const row of rows) {
-    const cells = columns.map(c => csvEscape(String(row[c.field] ?? ''), delimiter));
+    const cells = columns.map((c) => csvEscape(String(row[c.field] ?? ''), delimiter));
     lines.push(cells.join(delimiter));
   }
 
@@ -37,10 +34,7 @@ export function exportCSV(
 }
 
 /** Export rows to Excel XML (basic .xls format). */
-export function exportExcel(
-  rows: Record<string, unknown>[],
-  options: ExportOptions = {},
-): void {
+export function exportExcel(rows: Record<string, unknown>[], options: ExportOptions = {}): void {
   const filename = options.filename || 'export.xls';
   const includeHeader = options.includeHeader !== false;
   const columns = options.columns || inferColumns(rows);
@@ -85,20 +79,14 @@ export function exportExcel(
 }
 
 /** Export rows to JSON and trigger download. */
-export function exportJSON(
-  rows: Record<string, unknown>[],
-  options: { filename?: string } = {},
-): void {
+export function exportJSON(rows: Record<string, unknown>[], options: { filename?: string } = {}): void {
   const filename = options.filename || 'export.json';
   const json = JSON.stringify(rows, null, 2);
   downloadBlob(json, filename, 'application/json');
 }
 
 /** Export rows to HTML table and trigger download. */
-export function exportHTML(
-  rows: Record<string, unknown>[],
-  options: ExportOptions = {},
-): void {
+export function exportHTML(rows: Record<string, unknown>[], options: ExportOptions = {}): void {
   const filename = options.filename || 'export.html';
   const columns = options.columns || inferColumns(rows);
 
@@ -129,16 +117,14 @@ export function exportHTML(
 
 /** Convert GridColumn[] to export column format. */
 export function gridColumnsToExport(columns: GridColumn[]): { field: string; label: string }[] {
-  return columns
-    .filter(c => !c.hidden)
-    .map(c => ({ field: c.field, label: c.label }));
+  return columns.filter((c) => !c.hidden).map((c) => ({ field: c.field, label: c.label }));
 }
 
 // ── Helpers ─────────────────────────────────────────────────
 
 function inferColumns(rows: Record<string, unknown>[]): { field: string; label: string }[] {
   if (rows.length === 0) return [];
-  return Object.keys(rows[0]).map(k => ({ field: k, label: k }));
+  return Object.keys(rows[0]).map((k) => ({ field: k, label: k }));
 }
 
 function csvEscape(value: string, delimiter: string): string {

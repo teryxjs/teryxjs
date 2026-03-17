@@ -287,10 +287,7 @@ function injectStyles(): void {
 //  Widget implementation
 // ----------------------------------------------------------
 
-export function pullList(
-  target: string | HTMLElement,
-  options: PullListOptions,
-): PullListInstance {
+export function pullList(target: string | HTMLElement, options: PullListOptions): PullListInstance {
   injectStyles();
 
   const el = resolveTarget(target);
@@ -325,7 +322,7 @@ export function pullList(
              <span class="tx-pull-list-sentinel-spinner">${icon('spinner', 20)}</span>
            </div>`
         : '') +
-    `</div>`,
+      `</div>`,
   );
   el.innerHTML = '';
   el.appendChild(container);
@@ -387,7 +384,7 @@ export function pullList(
 
   function renderItem(item: Record<string, unknown>, idx: number): string {
     // Interpolate the template with item fields
-    let rendered = options.itemTemplate.replace(/\{\{(\w+)\}\}/g, (_: string, key: string) => {
+    const rendered = options.itemTemplate.replace(/\{\{(\w+)\}\}/g, (_: string, key: string) => {
       const val = item[key];
       return val !== undefined && val !== null ? esc(String(val)) : '';
     });
@@ -459,9 +456,10 @@ export function pullList(
   // --- Swipe gesture ---
 
   function attachSwipeListeners(): void {
-    const hasSwipe = options.swipeActions &&
+    const hasSwipe =
+      options.swipeActions &&
       ((options.swipeActions.left && options.swipeActions.left.length > 0) ||
-       (options.swipeActions.right && options.swipeActions.right.length > 0));
+        (options.swipeActions.right && options.swipeActions.right.length > 0));
     if (!hasSwipe) return;
 
     const leftActions = options.swipeActions?.left ?? [];
@@ -476,37 +474,47 @@ export function pullList(
       let swiping = false;
       const maxSwipe = 72 * Math.max(leftActions.length, rightActions.length, 1);
 
-      contentEl.addEventListener('touchstart', (e: TouchEvent) => {
-        startX = e.touches[0].clientX;
-        swiping = true;
-        contentEl.style.transition = 'none';
-      }, { passive: true });
+      contentEl.addEventListener(
+        'touchstart',
+        (e: TouchEvent) => {
+          startX = e.touches[0].clientX;
+          swiping = true;
+          contentEl.style.transition = 'none';
+        },
+        { passive: true },
+      );
 
-      contentEl.addEventListener('touchmove', (e: TouchEvent) => {
-        if (!swiping) return;
-        const dx = e.touches[0].clientX - startX;
-        // Clamp: left-actions reveal on right-swipe (dx>0), right-actions on left-swipe (dx<0)
-        if (dx > 0 && leftActions.length === 0) return;
-        if (dx < 0 && rightActions.length === 0) return;
-        currentX = Math.max(-maxSwipe, Math.min(maxSwipe, dx));
-        contentEl.style.transform = `translateX(${currentX}px)`;
-      }, { passive: true });
+      contentEl.addEventListener(
+        'touchmove',
+        (e: TouchEvent) => {
+          if (!swiping) return;
+          const dx = e.touches[0].clientX - startX;
+          // Clamp: left-actions reveal on right-swipe (dx>0), right-actions on left-swipe (dx<0)
+          if (dx > 0 && leftActions.length === 0) return;
+          if (dx < 0 && rightActions.length === 0) return;
+          currentX = Math.max(-maxSwipe, Math.min(maxSwipe, dx));
+          contentEl.style.transform = `translateX(${currentX}px)`;
+        },
+        { passive: true },
+      );
 
-      contentEl.addEventListener('touchend', () => {
-        swiping = false;
-        contentEl.style.transition = 'transform 200ms ease';
-        // Snap: if dragged more than half the action width, stay open; otherwise close
-        const threshold = 36;
-        if (Math.abs(currentX) > threshold) {
-          const snap = currentX > 0
-            ? 72 * leftActions.length
-            : -(72 * rightActions.length);
-          contentEl.style.transform = `translateX(${snap}px)`;
-        } else {
-          contentEl.style.transform = 'translateX(0)';
-        }
-        currentX = 0;
-      }, { passive: true });
+      contentEl.addEventListener(
+        'touchend',
+        () => {
+          swiping = false;
+          contentEl.style.transition = 'transform 200ms ease';
+          // Snap: if dragged more than half the action width, stay open; otherwise close
+          const threshold = 36;
+          if (Math.abs(currentX) > threshold) {
+            const snap = currentX > 0 ? 72 * leftActions.length : -(72 * rightActions.length);
+            contentEl.style.transform = `translateX(${snap}px)`;
+          } else {
+            contentEl.style.transform = 'translateX(0)';
+          }
+          currentX = 0;
+        },
+        { passive: true },
+      );
     });
 
     // Action button taps
@@ -563,44 +571,56 @@ export function pullList(
     let ptrDelta = 0;
     let ptrActive = false;
 
-    container.addEventListener('touchstart', (e: TouchEvent) => {
-      if (container.scrollTop > 0 || refreshing || loading) return;
-      ptrStartY = e.touches[0].clientY;
-      ptrActive = true;
-    }, { passive: true });
+    container.addEventListener(
+      'touchstart',
+      (e: TouchEvent) => {
+        if (container.scrollTop > 0 || refreshing || loading) return;
+        ptrStartY = e.touches[0].clientY;
+        ptrActive = true;
+      },
+      { passive: true },
+    );
 
-    container.addEventListener('touchmove', (e: TouchEvent) => {
-      if (!ptrActive) return;
-      ptrDelta = Math.max(0, e.touches[0].clientY - ptrStartY);
-      const displayHeight = Math.min(ptrDelta * 0.5, 60);
-      ptrEl!.style.height = `${displayHeight}px`;
+    container.addEventListener(
+      'touchmove',
+      (e: TouchEvent) => {
+        if (!ptrActive) return;
+        ptrDelta = Math.max(0, e.touches[0].clientY - ptrStartY);
+        const displayHeight = Math.min(ptrDelta * 0.5, 60);
+        ptrEl!.style.height = `${displayHeight}px`;
 
-      const textEl = ptrEl!.querySelector('.tx-pull-list-ptr-text') as HTMLElement;
-      if (textEl) {
-        textEl.textContent = displayHeight >= 50 ? 'Release to refresh' : 'Pull to refresh';
-      }
-    }, { passive: true });
-
-    container.addEventListener('touchend', async () => {
-      if (!ptrActive) return;
-      ptrActive = false;
-      const reached = ptrDelta * 0.5 >= 50;
-
-      if (reached && !refreshing) {
-        refreshing = true;
         const textEl = ptrEl!.querySelector('.tx-pull-list-ptr-text') as HTMLElement;
-        if (textEl) textEl.textContent = 'Refreshing...';
-        ptrEl!.style.height = '50px';
+        if (textEl) {
+          textEl.textContent = displayHeight >= 50 ? 'Release to refresh' : 'Pull to refresh';
+        }
+      },
+      { passive: true },
+    );
 
-        await fetchData(1, false);
+    container.addEventListener(
+      'touchend',
+      async () => {
+        if (!ptrActive) return;
+        ptrActive = false;
+        const reached = ptrDelta * 0.5 >= 50;
 
-        refreshing = false;
-        emit('pull-list:refresh', { id: widgetId });
-      }
+        if (reached && !refreshing) {
+          refreshing = true;
+          const textEl = ptrEl!.querySelector('.tx-pull-list-ptr-text') as HTMLElement;
+          if (textEl) textEl.textContent = 'Refreshing...';
+          ptrEl!.style.height = '50px';
 
-      ptrEl!.style.height = '0';
-      ptrDelta = 0;
-    }, { passive: true });
+          await fetchData(1, false);
+
+          refreshing = false;
+          emit('pull-list:refresh', { id: widgetId });
+        }
+
+        ptrEl!.style.height = '0';
+        ptrDelta = 0;
+      },
+      { passive: true },
+    );
   }
 
   // --- Infinite scroll ---
@@ -649,8 +669,6 @@ export function pullList(
 // ----------------------------------------------------------
 //  Declarative registration
 // ----------------------------------------------------------
-registerWidget('pull-list', (el, opts) =>
-  pullList(el, opts as unknown as PullListOptions),
-);
+registerWidget('pull-list', (el, opts) => pullList(el, opts as unknown as PullListOptions));
 
 export default pullList;

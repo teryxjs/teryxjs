@@ -234,10 +234,7 @@ function injectStyles(): void {
 //  Widget implementation
 // ----------------------------------------------------------
 
-export function bottomTabs(
-  target: string | HTMLElement,
-  options: BottomTabsOptions,
-): BottomTabsInstance {
+export function bottomTabs(target: string | HTMLElement, options: BottomTabsOptions): BottomTabsInstance {
   injectStyles();
 
   const el = resolveTarget(target);
@@ -245,7 +242,7 @@ export function bottomTabs(
   const showLabels = options.showLabels !== false;
   const animated = options.animated !== false;
 
-  let activeId = options.items.find(i => i.active)?.id || options.items[0]?.id || '';
+  let activeId = options.items.find((i) => i.active)?.id || options.items[0]?.id || '';
 
   // --- Build HTML ---
   let html = `<div class="${cls(
@@ -254,7 +251,8 @@ export function bottomTabs(
     !animated && 'tx-bottom-tabs-no-anim',
     options.class,
   )}" id="${esc(id)}"`;
-  if (options.activeColor) html += ` style="--tx-btabs-active:${esc(options.activeColor)};${options.inactiveColor ? `--tx-btabs-inactive:${esc(options.inactiveColor)}` : ''}"`;
+  if (options.activeColor)
+    html += ` style="--tx-btabs-active:${esc(options.activeColor)};${options.inactiveColor ? `--tx-btabs-inactive:${esc(options.inactiveColor)}` : ''}"`;
   else if (options.inactiveColor) html += ` style="--tx-btabs-inactive:${esc(options.inactiveColor)}"`;
   html += '>';
 
@@ -396,8 +394,6 @@ export function bottomTabs(
 // ----------------------------------------------------------
 //  Declarative registration
 // ----------------------------------------------------------
-registerWidget('bottom-tabs', (el, opts) =>
-  bottomTabs(el, opts as unknown as BottomTabsOptions),
-);
+registerWidget('bottom-tabs', (el, opts) => bottomTabs(el, opts as unknown as BottomTabsOptions));
 
 export default bottomTabs;

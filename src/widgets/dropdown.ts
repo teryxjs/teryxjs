@@ -36,7 +36,9 @@ export function dropdown(options: DropdownOptions): DropdownInstance {
 
   function close(): void {
     menuEl.classList.remove('tx-dropdown-open');
-    setTimeout(() => { menuEl.style.display = 'none'; }, 150);
+    setTimeout(() => {
+      menuEl.style.display = 'none';
+    }, 150);
     isOpen = false;
     emit('dropdown:close', { id });
   }
@@ -79,7 +81,9 @@ export function dropdown(options: DropdownOptions): DropdownInstance {
 
   const instance: DropdownInstance = {
     el: menuEl,
-    destroy() { menuEl.remove(); },
+    destroy() {
+      menuEl.remove();
+    },
     open,
     close,
     toggle,
@@ -112,7 +116,9 @@ export function contextMenu(options: MenuOptions): MenuInstance {
 
   function close(): void {
     menuEl.classList.remove('tx-dropdown-open');
-    setTimeout(() => { menuEl.style.display = 'none'; }, 150);
+    setTimeout(() => {
+      menuEl.style.display = 'none';
+    }, 150);
     isOpen = false;
   }
 
@@ -149,10 +155,14 @@ export function contextMenu(options: MenuOptions): MenuInstance {
 
   return {
     el: menuEl,
-    destroy() { menuEl.remove(); },
+    destroy() {
+      menuEl.remove();
+    },
     open,
     close,
-    toggle() { isOpen ? close() : open(); },
+    toggle() {
+      isOpen ? close() : open();
+    },
   };
 }
 

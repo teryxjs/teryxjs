@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import {
-  uid, esc, cls, attr, icon, debounce, throttle, clamp,
-  resolveTarget, createElement,
-} from '../src/utils';
+import { uid, esc, cls, attr, icon, debounce, throttle, clamp, resolveTarget, createElement } from '../src/utils';
 
 describe('utils', () => {
   // ---- uid() ----
@@ -51,9 +48,7 @@ describe('utils', () => {
     });
 
     it('should escape all special chars in one string', () => {
-      expect(esc('<a href="x">&\'</a>')).toBe(
-        '&lt;a href=&quot;x&quot;&gt;&amp;&#39;&lt;/a&gt;'
-      );
+      expect(esc('<a href="x">&\'</a>')).toBe('&lt;a href=&quot;x&quot;&gt;&amp;&#39;&lt;/a&gt;');
     });
 
     it('should return string unchanged if no special chars', () => {

@@ -209,7 +209,10 @@ function renderModalButton(btn: ModalButton, _id: string): string {
 
 function makeDraggable(el: HTMLElement, handle: HTMLElement | null): void {
   if (!handle) return;
-  let startX = 0, startY = 0, origX = 0, origY = 0;
+  let startX = 0,
+    startY = 0,
+    origX = 0,
+    origY = 0;
 
   handle.style.cursor = 'move';
 

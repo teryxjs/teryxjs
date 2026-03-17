@@ -41,40 +41,71 @@ export function registerWidget(name: string, factory: WidgetFactory): void {
 
 /** Map of child tag name → parent options key. */
 const childTagMap: Record<string, string> = {
-  'tx-column':    'columns',
-  'tx-col':       'columns',
-  'tx-field':     'fields',
-  'tx-tab':       'items',
-  'tx-item':      'items',
-  'tx-step':      'items',
-  'tx-slide':     'slides',
-  'tx-tier':      'tiers',
-  'tx-quote':     'quotes',
-  'tx-node':      'nodes',
-  'tx-button':    'buttons',
-  'tx-action':    'items',
-  'tx-nav-item':  'items',
-  'tx-link':      'links',
-  'tx-social':    'social',
-  'tx-feature':   'items',
-  'tx-event':     'events',
-  'tx-series':    'series',
-  'tx-segment':   'segments',
-  'tx-option':    'options',
-  'tx-toolbar':   'toolbar',
-  'tx-tool':      'tools',
+  'tx-column': 'columns',
+  'tx-col': 'columns',
+  'tx-field': 'fields',
+  'tx-tab': 'items',
+  'tx-item': 'items',
+  'tx-step': 'items',
+  'tx-slide': 'slides',
+  'tx-tier': 'tiers',
+  'tx-quote': 'quotes',
+  'tx-node': 'nodes',
+  'tx-button': 'buttons',
+  'tx-action': 'items',
+  'tx-nav-item': 'items',
+  'tx-link': 'links',
+  'tx-social': 'social',
+  'tx-feature': 'items',
+  'tx-event': 'events',
+  'tx-series': 'series',
+  'tx-segment': 'segments',
+  'tx-option': 'options',
+  'tx-toolbar': 'toolbar',
+  'tx-tool': 'tools',
   'tx-menu-item': 'contextMenu',
 };
 
 /** Attributes that should be parsed as boolean (true if present, even without value). */
 const boolAttrs = new Set([
-  'sortable', 'required', 'disabled', 'readonly', 'hidden', 'checked',
-  'multiple', 'closable', 'active', 'open', 'expanded', 'leaf',
-  'collapsible', 'collapsed', 'recommended', 'included', 'searchable',
-  'paginated', 'striped', 'hoverable', 'bordered', 'compact', 'selectable',
-  'filterable', 'editable', 'resizable', 'draggable', 'sticky',
-  'animated', 'dismissible', 'pill', 'outline', 'block', 'loading',
-  'external', 'section', 'divider', 'allDay',
+  'sortable',
+  'required',
+  'disabled',
+  'readonly',
+  'hidden',
+  'checked',
+  'multiple',
+  'closable',
+  'active',
+  'open',
+  'expanded',
+  'leaf',
+  'collapsible',
+  'collapsed',
+  'recommended',
+  'included',
+  'searchable',
+  'paginated',
+  'striped',
+  'hoverable',
+  'bordered',
+  'compact',
+  'selectable',
+  'filterable',
+  'editable',
+  'resizable',
+  'draggable',
+  'sticky',
+  'animated',
+  'dismissible',
+  'pill',
+  'outline',
+  'block',
+  'loading',
+  'external',
+  'section',
+  'divider',
+  'allDay',
 ]);
 
 /** Parse all attributes of an element into a plain object. */
@@ -91,7 +122,12 @@ function parseElementAttrs(el: Element): Record<string, unknown> {
 
     // Try JSON parse (for arrays/objects like options='[...]')
     if (a.value.startsWith('[') || a.value.startsWith('{')) {
-      try { obj[key] = JSON.parse(a.value); continue; } catch { /* fall through */ }
+      try {
+        obj[key] = JSON.parse(a.value);
+        continue;
+      } catch {
+        /* fall through */
+      }
     }
 
     // Try numeric
@@ -127,9 +163,7 @@ function parseChildren(el: HTMLElement): Record<string, unknown[]> {
     const innerContent = child.innerHTML.trim();
     if (innerContent && !childOpts['content']) {
       // Check if inner content is just more tx-* children (don't treat as content)
-      const hasOnlyTxChildren = Array.from(child.children).every(
-        c => c.tagName.toLowerCase().startsWith('tx-')
-      );
+      const hasOnlyTxChildren = Array.from(child.children).every((c) => c.tagName.toLowerCase().startsWith('tx-'));
       if (!hasOnlyTxChildren || child.children.length === 0) {
         childOpts['content'] = innerContent;
       }
@@ -165,7 +199,9 @@ function parseDataAttrs(el: HTMLElement): Record<string, unknown> {
       try {
         opts[key] = JSON.parse(a.value);
         continue;
-      } catch { /* not JSON */ }
+      } catch {
+        /* not JSON */
+      }
 
       // Numeric
       if (a.value !== '' && !isNaN(Number(a.value))) {
@@ -182,7 +218,7 @@ function parseDataAttrs(el: HTMLElement): Record<string, unknown> {
 /** Discover and instantiate all declarative widgets inside root. */
 export function initWidgets(root: HTMLElement | Document = document): void {
   const elements = root.querySelectorAll<HTMLElement>('[data-tx-widget]');
-  elements.forEach(el => {
+  elements.forEach((el) => {
     if (el.hasAttribute('data-tx-initialized')) return;
     const name = el.getAttribute('data-tx-widget')!;
     const factory = registry.get(name);
@@ -217,8 +253,12 @@ export function off(event: string, handler: Handler): void {
 }
 
 export function emit(event: string, ...args: unknown[]): void {
-  bus.get(event)?.forEach(h => {
-    try { h(...args); } catch (e) { console.error(`Teryx event "${event}" handler error:`, e); }
+  bus.get(event)?.forEach((h) => {
+    try {
+      h(...args);
+    } catch (e) {
+      console.error(`Teryx event "${event}" handler error:`, e);
+    }
   });
 }
 
@@ -236,7 +276,7 @@ if (typeof document !== 'undefined') {
     run();
   }
 
-  const observer = new MutationObserver(mutations => {
+  const observer = new MutationObserver((mutations) => {
     if (!config.autoInit) return;
     for (const m of mutations) {
       for (const node of Array.from(m.addedNodes)) {

@@ -89,9 +89,7 @@ describe('Accordion widget', () => {
   });
 
   it('close() method closes an item', () => {
-    const items = [
-      { id: 'item1', title: 'Item 1', content: 'Content 1', open: true },
-    ];
+    const items = [{ id: 'item1', title: 'Item 1', content: 'Content 1', open: true }];
     const a = accordion(container, { items, animated: false });
 
     const item = container.querySelector('[data-item="item1"]') as HTMLElement;
@@ -122,7 +120,7 @@ describe('Accordion widget', () => {
   });
 
   it('closeAll() closes all items', () => {
-    const items = basicItems.map(i => ({ ...i, open: true }));
+    const items = basicItems.map((i) => ({ ...i, open: true }));
     const a = accordion(container, { items, multiple: true, animated: false });
 
     a.closeAll();
@@ -149,9 +147,7 @@ describe('Accordion widget', () => {
   });
 
   it('should not toggle disabled items', () => {
-    const items = [
-      { id: 'item1', title: 'Item 1', content: 'Content 1', disabled: true },
-    ];
+    const items = [{ id: 'item1', title: 'Item 1', content: 'Content 1', disabled: true }];
     const a = accordion(container, { items, animated: false });
 
     a.open('item1');
@@ -174,9 +170,7 @@ describe('Accordion widget', () => {
   });
 
   it('should render icons in headers when specified', () => {
-    const items = [
-      { id: 'item1', title: 'Item 1', content: 'Content', icon: 'home' },
-    ];
+    const items = [{ id: 'item1', title: 'Item 1', content: 'Content', icon: 'home' }];
     accordion(container, { items });
 
     const iconEl = container.querySelector('.tx-accordion-icon');

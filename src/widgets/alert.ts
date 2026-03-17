@@ -41,12 +41,16 @@ export function alert(target: string | HTMLElement, options: AlertOptions): Widg
   // Dismiss
   alertEl.querySelector('.tx-alert-close')?.addEventListener('click', () => {
     alertEl.classList.add('tx-alert-leaving');
-    setTimeout(() => { alertEl.remove(); }, 200);
+    setTimeout(() => {
+      alertEl.remove();
+    }, 200);
   });
 
   return {
     el: alertEl,
-    destroy() { el.innerHTML = ''; },
+    destroy() {
+      el.innerHTML = '';
+    },
   };
 }
 

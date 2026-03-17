@@ -71,10 +71,7 @@ export interface PricingOptions {
 //  Widget
 // ----------------------------------------------------------
 
-export function pricing(
-  target: string | HTMLElement,
-  options: PricingOptions,
-): { el: HTMLElement; destroy(): void } {
+export function pricing(target: string | HTMLElement, options: PricingOptions): { el: HTMLElement; destroy(): void } {
   const el = resolveTarget(target);
   const id = options.id || uid('tx-pricing');
 
@@ -140,10 +137,7 @@ export function pricing(
     html += '<ul class="tx-pricing-features">';
     for (const feature of tier.features) {
       const included = feature.included !== false;
-      html += `<li class="${cls(
-        'tx-pricing-feature',
-        !included && 'tx-pricing-feature-excluded',
-      )}">`;
+      html += `<li class="${cls('tx-pricing-feature', !included && 'tx-pricing-feature-excluded')}">`;
       html += `<span class="tx-pricing-feature-icon">${included ? icon('check') : icon('x')}</span>`;
       html += `<span class="tx-pricing-feature-text">${esc(feature.text)}</span>`;
       if (feature.tooltip) {

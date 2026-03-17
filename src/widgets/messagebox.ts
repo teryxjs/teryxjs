@@ -25,9 +25,7 @@ const typeColors: Record<string, string> = {
 export function messageBox(options: MessageBoxOptions): Promise<string> {
   return new Promise((resolve) => {
     const type = options.type || 'info';
-    const buttons = options.buttons || [
-      { text: 'OK', value: 'ok', variant: 'primary' as const },
-    ];
+    const buttons = options.buttons || [{ text: 'OK', value: 'ok', variant: 'primary' as const }];
 
     const id = uid('tx-msgbox');
 
@@ -47,7 +45,7 @@ export function messageBox(options: MessageBoxOptions): Promise<string> {
       closable: options.closable !== false,
       backdrop: 'static',
       keyboard: false,
-      buttons: buttons.map(btn => ({
+      buttons: buttons.map((btn) => ({
         label: btn.text,
         variant: btn.variant || 'secondary',
         action: btn.value,
@@ -81,7 +79,7 @@ messageBox.confirm = (message: string, title?: string): Promise<boolean> =>
       { text: 'Cancel', value: 'cancel', variant: 'secondary' },
       { text: 'OK', value: 'ok', variant: 'primary' },
     ],
-  }).then(v => v === 'ok');
+  }).then((v) => v === 'ok');
 
 /** Show a success dialog. */
 messageBox.success = (message: string, title?: string): Promise<string> =>
