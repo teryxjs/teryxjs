@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Explorer — Teryx Showcase</title>
+  <link rel="stylesheet" href="/teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); background: #f8fafc; color: #1f2937; }
+    .showcase-layout { display: flex; min-height: 100vh; }
+    .showcase-main { flex: 1; overflow-y: auto; }
+    .showcase-header { padding: 2rem 2.5rem 1rem; border-bottom: 1px solid #e2e8f0; background: #fff; }
+    .showcase-header h1 { margin: 0 0 0.25rem; font-size: 1.75rem; font-weight: 700; }
+    .showcase-header p { margin: 0; color: #64748b; }
+    .showcase-content { padding: 2rem 2.5rem; max-width: 1400px; }
+
+    /* Explorer layout */
+    .explorer { display: grid; grid-template-columns: 220px 300px 1fr; gap: 1.5rem; }
+    @media (max-width: 1200px) { .explorer { grid-template-columns: 200px 280px 1fr; } }
+    @media (max-width: 900px) { .explorer { grid-template-columns: 1fr; } }
+
+    /* Widget list sidebar */
+    .widget-list { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.75rem; max-height: calc(100vh - 140px); overflow-y: auto; position: sticky; top: 1rem; }
+    .widget-list h3 { margin: 0 0 0.75rem; font-size: 0.875rem; font-weight: 700; color: #0f172a; padding: 0.25rem 0.5rem; }
+    .widget-list-item { display: block; width: 100%; text-align: left; background: none; border: none; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.8125rem; color: #334155; cursor: pointer; transition: all 120ms; font-family: inherit; }
+    .widget-list-item:hover { background: #f1f5f9; color: #1e293b; }
+    .widget-list-item.active { background: #3b82f6; color: #fff; font-weight: 600; }
+    .widget-list-item-icon { display: inline-block; width: 20px; text-align: center; margin-right: 0.25rem; }
+
+    /* Config panel */
+    .config-panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; max-height: calc(100vh - 140px); overflow-y: auto; position: sticky; top: 1rem; }
+    .config-panel h3 { margin: 0 0 1rem; font-size: 1rem; font-weight: 700; color: #0f172a; }
+    .config-section { margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f1f5f9; }
+    .config-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .config-section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 0.75rem; }
+
+    .config-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .config-row label { font-size: 0.8125rem; color: #334155; }
+    .config-toggle { position: relative; width: 36px; height: 20px; }
+    .config-toggle input { opacity: 0; width: 0; height: 0; }
+    .config-toggle .slider { position: absolute; inset: 0; background: #cbd5e1; border-radius: 10px; cursor: pointer; transition: background 150ms; }
+    .config-toggle .slider::after { content: ''; position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform 150ms; }
+    .config-toggle input:checked + .slider { background: #3b82f6; }
+    .config-toggle input:checked + .slider::after { transform: translateX(16px); }
+
+    .config-select { width: 100%; padding: 0.375rem 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8125rem; background: #fff; }
+    .config-input { width: 100%; padding: 0.375rem 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8125rem; }
+    .config-input-row { margin-bottom: 0.5rem; }
+    .config-input-row label { display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 2px; }
+
+    /* Preview area */
+    .preview-area { min-width: 0; }
+    .preview-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+    .preview-card-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.25rem; border-bottom: 1px solid #e2e8f0; background: #fafbfc; }
+    .preview-card-header h3 { margin: 0; font-size: 0.875rem; font-weight: 600; }
+    .preview-card-body { padding: 1.25rem; min-height: 200px; }
+
+    /* Code preview */
+    .code-preview { margin-top: 1.5rem; }
+    .code-preview-header { display: flex; align-items: center; justify-content: space-between; padding: 0.625rem 1rem; background: #1e293b; border-radius: 10px 10px 0 0; }
+    .code-preview-header span { font-size: 0.75rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+    .code-tabs { display: flex; gap: 2px; }
+    .code-tab { background: rgba(255,255,255,.08); border: none; color: #94a3b8; padding: 4px 12px; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 150ms; }
+    .code-tab:hover { color: #e2e8f0; background: rgba(255,255,255,.15); }
+    .code-tab-active { background: rgba(255,255,255,.18); color: #e2e8f0; }
+    .code-preview-header button:not(.code-tab) { background: rgba(255,255,255,.1); border: none; color: #e2e8f0; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+    .code-preview-header button:not(.code-tab):hover { background: rgba(255,255,255,.2); }
+    .code-block { background: #0f172a; color: #e2e8f0; padding: 1rem 1.25rem; border-radius: 0 0 10px 10px; font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace; font-size: 0.8125rem; line-height: 1.7; overflow-x: auto; white-space: pre; margin: 0; }
+    .code-key { color: #7dd3fc; }
+    .code-str { color: #86efac; }
+    .code-bool { color: #fbbf24; }
+    .code-num { color: #c4b5fd; }
+    .code-fn { color: #f0abfc; }
+    .code-comment { color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="showcase-layout">
+    <div id="showcase-sidebar"></div>
+    <div class="showcase-main">
+      <div class="showcase-header">
+        <h1>Component Explorer</h1>
+        <p>Select a widget, configure its properties, and see a live preview with generated code.</p>
+      </div>
+      <div class="showcase-content">
+        <div class="explorer">
+          <!-- Widget List -->
+          <div class="widget-list" id="widget-list">
+            <h3>Widgets</h3>
+          </div>
+
+          <!-- Config Panel -->
+          <div class="config-panel" id="config-panel">
+            <h3 id="config-title">Configuration</h3>
+            <div id="config-body">
+              <p style="color:#94a3b8;font-size:0.875rem;text-align:center;padding:2rem 0">Select a widget to configure it.</p>
+            </div>
+          </div>
+
+          <!-- Preview Area -->
+          <div class="preview-area">
+            <div class="preview-card">
+              <div class="preview-card-header">
+                <h3 id="preview-title">Live Preview</h3>
+              </div>
+              <div class="preview-card-body" id="widget-preview">
+                <div style="text-align:center;padding:3rem;color:#94a3b8;font-style:italic">Select a widget from the list to see a live preview.</div>
+              </div>
+            </div>
+
+            <div class="code-preview">
+              <div class="code-preview-header">
+                <div class="code-tabs">
+                  <button class="code-tab code-tab-active" onclick="switchCodeTab('html')">HTML</button>
+                  <button class="code-tab" onclick="switchCodeTab('js')">JavaScript</button>
+                </div>
+                <button onclick="copyCode()">Copy</button>
+              </div>
+              <pre class="code-block" id="code-output-html"></pre>
+              <pre class="code-block" id="code-output-js" style="display:none"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/xhtmlx.js"></script>
+  <script src="/teryx.js"></script>
+  <script>
+    // ── Sidebar ──
+    Teryx.sidebar('#showcase-sidebar', {
+      brand: 'Teryx', brandHref: '/showcase/', variant: 'dark', collapsible: true,
+      items: [
+        { section: true, label: 'Showcase' },
+        { label: 'Home', href: '/showcase/', icon: 'home' },
+        { section: true, label: 'Widgets' },
+        { label: 'Grids & Tables', href: '/showcase/grids.html', icon: 'file' },
+        { label: 'Forms & Inputs', href: '/showcase/forms.html', icon: 'edit' },
+        { label: 'Charts', href: '/showcase/charts.html', icon: 'eye' },
+        { label: 'Calendar', href: '/showcase/calendar.html', icon: 'calendar' },
+        { label: 'Layout', href: '/showcase/layout.html', icon: 'settings' },
+        { label: 'Feedback', href: '/showcase/feedback.html', icon: 'info' },
+        { label: 'Content', href: '/showcase/content.html', icon: 'star' },
+        { label: 'Data Widgets', href: '/showcase/data.html', icon: 'download' },
+        { label: 'Mobile', href: '/showcase/mobile.html', icon: 'user' },
+        { label: 'Front Office', href: '/showcase/frontoffice.html', icon: 'externalLink' },
+        { section: true, label: 'Tools' },
+        { label: 'Component Explorer', href: '/showcase/explorer.html', icon: 'settings', active: true },
+      ],
+    });
+
+    // ============================================================
+    // Widget Schema Definitions
+    // ============================================================
+    // Each widget schema has:
+    //   name: Display name
+    //   icon: sidebar icon character
+    //   widgetFn: the Teryx function name
+    //   props: array of { key, label, type, default, options? }
+    //     type: 'boolean' | 'string' | 'number' | 'select' | 'text'
+    //   build(values): returns { html, js, opts } — how to build this widget
+    // ============================================================
+
+    const widgetSchemas = {
+
+      // ──────────────────────────── Grid ────────────────────────────
+      grid: {
+        name: 'Grid',
+        icon: '&#9638;',
+        props: [
+          { key: 'source', label: 'Data Source', type: 'select', default: '/api/users', options: ['/api/users', '/api/products'] },
+          { key: 'striped', label: 'Striped Rows', type: 'boolean', default: true },
+          { key: 'hoverable', label: 'Hoverable', type: 'boolean', default: true },
+          { key: 'bordered', label: 'Bordered', type: 'boolean', default: false },
+          { key: 'compact', label: 'Compact', type: 'boolean', default: false },
+          { key: 'searchable', label: 'Searchable', type: 'boolean', default: false },
+          { key: 'paginated', label: 'Paginated', type: 'boolean', default: true },
+          { key: 'pageSize', label: 'Page Size', type: 'select', default: '10', options: ['5', '10', '25', '50'] },
+          { key: 'selectable', label: 'Selectable', type: 'boolean', default: false },
+          { key: 'rowNumbers', label: 'Row Numbers', type: 'boolean', default: false },
+          { key: 'exportable', label: 'Exportable', type: 'boolean', default: false },
+        ],
+        build(v) {
+          const cols = v.source === '/api/products'
+            ? [
+                { field: 'id', label: 'ID', width: '60px', sortable: true },
+                { field: 'name', label: 'Product', sortable: true },
+                { field: 'category', label: 'Category', sortable: true, renderer: 'badge' },
+                { field: 'price', label: 'Price', sortable: true, align: 'right', renderer: 'number' },
+                { field: 'stock', label: 'Stock', sortable: true, align: 'right' },
+              ]
+            : [
+                { field: 'id', label: 'ID', width: '60px', sortable: true },
+                { field: 'name', label: 'Name', sortable: true },
+                { field: 'email', label: 'Email', sortable: true },
+                { field: 'role', label: 'Role', sortable: true },
+                { field: 'status', label: 'Status', sortable: true, renderer: 'badge' },
+              ];
+          const opts = { source: v.source, columns: cols };
+          for (const k of ['striped','hoverable','bordered','compact','searchable','paginated','selectable','rowNumbers','exportable']) {
+            if (v[k]) opts[k] = true;
+          }
+          if (v.paginated) opts.pageSize = parseInt(v.pageSize, 10);
+          return { opts, target: true, fn: 'grid' };
+        },
+      },
+
+      // ──────────────────────────── Form ────────────────────────────
+      form: {
+        name: 'Form',
+        icon: '&#9998;',
+        props: [
+          { key: 'layout', label: 'Layout', type: 'select', default: 'vertical', options: ['vertical', 'horizontal', 'inline'] },
+          { key: 'columns', label: 'Columns', type: 'select', default: '1', options: ['1', '2', '3'] },
+          { key: 'liveValidation', label: 'Live Validation', type: 'boolean', default: false },
+          { key: 'submitLabel', label: 'Submit Label', type: 'string', default: 'Submit' },
+          { key: 'cancelLabel', label: 'Cancel Label', type: 'string', default: '' },
+          { key: 'fieldCount', label: 'Number of Fields', type: 'select', default: '3', options: ['2', '3', '4', '5'] },
+        ],
+        build(v) {
+          const fieldDefs = [
+            { name: 'name', label: 'Full Name', type: 'text', placeholder: 'John Doe', required: true },
+            { name: 'email', label: 'Email', type: 'email', placeholder: 'john@example.com', required: true },
+            { name: 'role', label: 'Role', type: 'select', options: [{ value: 'admin', label: 'Admin' }, { value: 'user', label: 'User' }, { value: 'editor', label: 'Editor' }] },
+            { name: 'bio', label: 'Bio', type: 'textarea', placeholder: 'Tell us about yourself...' },
+            { name: 'active', label: 'Active', type: 'switch' },
+          ];
+          const count = parseInt(v.fieldCount, 10);
+          const fields = fieldDefs.slice(0, count);
+          const opts = {
+            action: '/api/submit',
+            layout: v.layout,
+            columns: parseInt(v.columns, 10),
+            liveValidation: v.liveValidation,
+            fields: fields,
+          };
+          if (v.submitLabel) opts.submitLabel = v.submitLabel;
+          if (v.cancelLabel) opts.cancelLabel = v.cancelLabel;
+          return { opts, target: true, fn: 'form' };
+        },
+      },
+
+      // ──────────────────────────── Tabs ────────────────────────────
+      tabs: {
+        name: 'Tabs',
+        icon: '&#9707;',
+        props: [
+          { key: 'variant', label: 'Variant', type: 'select', default: 'tabs', options: ['tabs', 'pills', 'underline'] },
+          { key: 'tabPosition', label: 'Position', type: 'select', default: 'top', options: ['top', 'left'] },
+          { key: 'scrollable', label: 'Scrollable', type: 'boolean', default: false },
+          { key: 'tabCount', label: 'Number of Tabs', type: 'select', default: '3', options: ['2', '3', '4', '5'] },
+          { key: 'addable', label: 'Addable', type: 'boolean', default: false },
+          { key: 'closable', label: 'Closable Tabs', type: 'boolean', default: false },
+        ],
+        build(v) {
+          const count = parseInt(v.tabCount, 10);
+          const items = [];
+          for (let i = 1; i <= count; i++) {
+            items.push({ id: 'tab' + i, title: 'Tab ' + i, content: '<p style="padding:1rem">Content for tab ' + i + '. Configure this tab panel\'s content as needed.</p>', closable: v.closable });
+          }
+          items[0].active = true;
+          const opts = { items, variant: v.variant, tabPosition: v.tabPosition };
+          if (v.scrollable) opts.scrollable = true;
+          if (v.addable) opts.addable = true;
+          return { opts, target: true, fn: 'tabs' };
+        },
+      },
+
+      // ──────────────────────────── Accordion ────────────────────────────
+      accordion: {
+        name: 'Accordion',
+        icon: '&#9776;',
+        props: [
+          { key: 'multiple', label: 'Multiple Open', type: 'boolean', default: false },
+          { key: 'bordered', label: 'Bordered', type: 'boolean', default: true },
+          { key: 'animated', label: 'Animated', type: 'boolean', default: true },
+          { key: 'itemCount', label: 'Number of Items', type: 'select', default: '3', options: ['2', '3', '4', '5'] },
+        ],
+        build(v) {
+          const count = parseInt(v.itemCount, 10);
+          const items = [];
+          for (let i = 1; i <= count; i++) {
+            items.push({ id: 'item' + i, title: 'Section ' + i, content: '<p>Content for accordion section ' + i + '. This panel can contain any HTML content.</p>', open: i === 1 });
+          }
+          const opts = { items, multiple: v.multiple, bordered: v.bordered, animated: v.animated };
+          return { opts, target: true, fn: 'accordion' };
+        },
+      },
+
+      // ──────────────────────────── Modal ────────────────────────────
+      modal: {
+        name: 'Modal',
+        icon: '&#9744;',
+        props: [
+          { key: 'title', label: 'Title', type: 'string', default: 'Dialog Title' },
+          { key: 'content', label: 'Content', type: 'text', default: 'This is the modal body content. You can put any HTML here.' },
+          { key: 'size', label: 'Size', type: 'select', default: 'md', options: ['sm', 'md', 'lg', 'xl'] },
+          { key: 'closable', label: 'Closable', type: 'boolean', default: true },
+          { key: 'backdrop', label: 'Backdrop', type: 'boolean', default: true },
+          { key: 'draggable', label: 'Draggable', type: 'boolean', default: false },
+          { key: 'maximizable', label: 'Maximizable', type: 'boolean', default: false },
+          { key: 'showButtons', label: 'Show Buttons', type: 'boolean', default: true },
+        ],
+        build(v) {
+          const opts = {
+            title: v.title,
+            content: '<p>' + escHtml(v.content) + '</p>',
+            size: v.size,
+            closable: v.closable,
+            backdrop: v.backdrop,
+            draggable: v.draggable,
+            maximizable: v.maximizable,
+          };
+          if (v.showButtons) {
+            opts.buttons = [
+              { label: 'Cancel', variant: 'secondary', action: 'close' },
+              { label: 'Confirm', variant: 'primary', action: 'close' },
+            ];
+          }
+          return { opts, target: false, fn: 'modal', isModal: true };
+        },
+      },
+
+      // ──────────────────────────── Card ────────────────────────────
+      card: {
+        name: 'Card',
+        icon: '&#9645;',
+        props: [
+          { key: 'title', label: 'Title', type: 'string', default: 'Card Title' },
+          { key: 'content', label: 'Content', type: 'text', default: 'This is the card body. Cards are versatile containers for grouping related content.' },
+          { key: 'footer', label: 'Footer', type: 'string', default: '' },
+          { key: 'collapsible', label: 'Collapsible', type: 'boolean', default: false },
+          { key: 'closable', label: 'Closable', type: 'boolean', default: false },
+        ],
+        build(v) {
+          const opts = { title: v.title, content: '<p>' + escHtml(v.content) + '</p>', collapsible: v.collapsible, closable: v.closable };
+          if (v.footer) opts.footer = '<span>' + escHtml(v.footer) + '</span>';
+          return { opts, target: true, fn: 'card' };
+        },
+      },
+
+      // ──────────────────────────── Alert ────────────────────────────
+      alert: {
+        name: 'Alert',
+        icon: '&#9888;',
+        props: [
+          { key: 'type', label: 'Type', type: 'select', default: 'info', options: ['info', 'success', 'warning', 'danger'] },
+          { key: 'title', label: 'Title', type: 'string', default: 'Heads up!' },
+          { key: 'message', label: 'Message', type: 'string', default: 'This is an alert message to notify the user of something important.' },
+          { key: 'dismissible', label: 'Dismissible', type: 'boolean', default: true },
+          { key: 'showIcon', label: 'Show Icon', type: 'boolean', default: true },
+        ],
+        build(v) {
+          const opts = { type: v.type, title: v.title, message: v.message, dismissible: v.dismissible, icon: v.showIcon };
+          return { opts, target: true, fn: 'alert' };
+        },
+      },
+
+      // ──────────────────────────── Progress ────────────────────────────
+      progress: {
+        name: 'Progress',
+        icon: '&#9608;',
+        props: [
+          { key: 'value', label: 'Value', type: 'number', default: 65 },
+          { key: 'max', label: 'Max', type: 'number', default: 100 },
+          { key: 'color', label: 'Color', type: 'select', default: 'primary', options: ['primary', 'success', 'warning', 'danger', 'info'] },
+          { key: 'size', label: 'Size', type: 'select', default: 'md', options: ['sm', 'md', 'lg'] },
+          { key: 'showValue', label: 'Show Value', type: 'boolean', default: true },
+          { key: 'striped', label: 'Striped', type: 'boolean', default: false },
+          { key: 'animated', label: 'Animated', type: 'boolean', default: false },
+          { key: 'label', label: 'Label', type: 'string', default: 'Progress' },
+        ],
+        build(v) {
+          const opts = {
+            value: parseFloat(v.value) || 0,
+            max: parseFloat(v.max) || 100,
+            color: v.color,
+            size: v.size,
+            showValue: v.showValue,
+            striped: v.striped,
+            animated: v.animated,
+          };
+          if (v.label) opts.label = v.label;
+          return { opts, target: true, fn: 'progress' };
+        },
+      },
+
+      // ──────────────────────────── Rating ────────────────────────────
+      rating: {
+        name: 'Rating',
+        icon: '&#9733;',
+        props: [
+          { key: 'value', label: 'Value', type: 'number', default: 3 },
+          { key: 'max', label: 'Max Stars', type: 'select', default: '5', options: ['3', '4', '5', '7', '10'] },
+          { key: 'size', label: 'Size', type: 'select', default: 'md', options: ['sm', 'md', 'lg'] },
+          { key: 'readonly', label: 'Read Only', type: 'boolean', default: false },
+        ],
+        build(v) {
+          const opts = {
+            value: parseInt(v.value, 10) || 0,
+            max: parseInt(v.max, 10) || 5,
+            size: v.size,
+            readonly: v.readonly,
+          };
+          return { opts, target: true, fn: 'rating' };
+        },
+      },
+
+      // ──────────────────────────── Stat ────────────────────────────
+      stat: {
+        name: 'Stat',
+        icon: '&#9650;',
+        props: [
+          { key: 'label', label: 'Label', type: 'string', default: 'Revenue' },
+          { key: 'value', label: 'Value', type: 'string', default: '24,500' },
+          { key: 'prefix', label: 'Prefix', type: 'string', default: '$' },
+          { key: 'suffix', label: 'Suffix', type: 'string', default: '' },
+          { key: 'change', label: 'Change Text', type: 'string', default: '+12.5% from last month' },
+          { key: 'changeType', label: 'Change Type', type: 'select', default: 'up', options: ['up', 'down', 'neutral'] },
+          { key: 'color', label: 'Color', type: 'select', default: 'primary', options: ['primary', 'success', 'warning', 'danger', 'info'] },
+          { key: 'icon', label: 'Icon', type: 'select', default: 'arrowUp', options: ['', 'arrowUp', 'arrowDown', 'star', 'user', 'home', 'info'] },
+        ],
+        build(v) {
+          const opts = {
+            label: v.label,
+            value: v.value,
+            color: v.color,
+            changeType: v.changeType,
+          };
+          if (v.prefix) opts.prefix = v.prefix;
+          if (v.suffix) opts.suffix = v.suffix;
+          if (v.change) opts.change = v.change;
+          if (v.icon) opts.icon = v.icon;
+          return { opts, target: true, fn: 'stat' };
+        },
+      },
+    };
+
+    // ============================================================
+    // State
+    // ============================================================
+    let activeWidget = null;
+    let currentValues = {};
+    let currentInstance = null;
+    let activeCodeTab = 'html';
+
+    // ============================================================
+    // Build Widget List
+    // ============================================================
+    function buildWidgetList() {
+      const list = document.getElementById('widget-list');
+      let html = '<h3>Widgets</h3>';
+      for (const [key, schema] of Object.entries(widgetSchemas)) {
+        html += '<button class="widget-list-item" data-widget="' + key + '">';
+        html += '<span class="widget-list-item-icon">' + schema.icon + '</span> ';
+        html += schema.name;
+        html += '</button>';
+      }
+      list.innerHTML = html;
+
+      list.addEventListener('click', function(e) {
+        var btn = e.target.closest('.widget-list-item');
+        if (!btn) return;
+        var widgetKey = btn.getAttribute('data-widget');
+        selectWidget(widgetKey);
+      });
+    }
+
+    // ============================================================
+    // Select Widget
+    // ============================================================
+    function selectWidget(key) {
+      activeWidget = key;
+      var schema = widgetSchemas[key];
+      if (!schema) return;
+
+      // Highlight in list
+      document.querySelectorAll('.widget-list-item').forEach(function(b) { b.classList.remove('active'); });
+      var btn = document.querySelector('.widget-list-item[data-widget="' + key + '"]');
+      if (btn) btn.classList.add('active');
+
+      // Build default values
+      currentValues = {};
+      schema.props.forEach(function(prop) {
+        currentValues[prop.key] = prop.default;
+      });
+
+      // Build config panel
+      buildConfigPanel(schema);
+
+      // Update preview
+      updatePreview();
+    }
+
+    // ============================================================
+    // Build Config Panel
+    // ============================================================
+    function buildConfigPanel(schema) {
+      document.getElementById('config-title').textContent = schema.name + ' Configuration';
+      var body = document.getElementById('config-body');
+      var html = '<div class="config-section">';
+      html += '<div class="config-section-title">Properties</div>';
+
+      schema.props.forEach(function(prop) {
+        if (prop.type === 'boolean') {
+          html += '<div class="config-row">';
+          html += '<label>' + escHtml(prop.label) + '</label>';
+          html += '<label class="config-toggle">';
+          html += '<input type="checkbox" data-prop="' + prop.key + '"' + (currentValues[prop.key] ? ' checked' : '') + '>';
+          html += '<span class="slider"></span>';
+          html += '</label></div>';
+        } else if (prop.type === 'select') {
+          html += '<div class="config-input-row">';
+          html += '<label>' + escHtml(prop.label) + '</label>';
+          html += '<select class="config-select" data-prop="' + prop.key + '">';
+          prop.options.forEach(function(opt) {
+            html += '<option value="' + escHtml(opt) + '"' + (String(currentValues[prop.key]) === opt ? ' selected' : '') + '>' + escHtml(opt) + '</option>';
+          });
+          html += '</select></div>';
+        } else if (prop.type === 'text') {
+          html += '<div class="config-input-row">';
+          html += '<label>' + escHtml(prop.label) + '</label>';
+          html += '<textarea class="config-input" data-prop="' + prop.key + '" rows="3">' + escHtml(String(currentValues[prop.key] || '')) + '</textarea>';
+          html += '</div>';
+        } else if (prop.type === 'number') {
+          html += '<div class="config-input-row">';
+          html += '<label>' + escHtml(prop.label) + '</label>';
+          html += '<input type="number" class="config-input" data-prop="' + prop.key + '" value="' + escHtml(String(currentValues[prop.key] || 0)) + '">';
+          html += '</div>';
+        } else {
+          html += '<div class="config-input-row">';
+          html += '<label>' + escHtml(prop.label) + '</label>';
+          html += '<input type="text" class="config-input" data-prop="' + prop.key + '" value="' + escHtml(String(currentValues[prop.key] || '')) + '">';
+          html += '</div>';
+        }
+      });
+
+      html += '</div>';
+      body.innerHTML = html;
+
+      // Attach change listeners
+      body.querySelectorAll('[data-prop]').forEach(function(el) {
+        var eventName = (el.type === 'checkbox') ? 'change' : 'input';
+        el.addEventListener(eventName, function() {
+          var propKey = el.getAttribute('data-prop');
+          if (el.type === 'checkbox') {
+            currentValues[propKey] = el.checked;
+          } else if (el.tagName === 'SELECT') {
+            currentValues[propKey] = el.value;
+          } else {
+            currentValues[propKey] = el.value;
+          }
+          updatePreview();
+        });
+      });
+    }
+
+    // ============================================================
+    // Update Preview
+    // ============================================================
+    function updatePreview() {
+      if (!activeWidget) return;
+      var schema = widgetSchemas[activeWidget];
+      if (!schema) return;
+
+      var result = schema.build(currentValues);
+      var previewEl = document.getElementById('widget-preview');
+      document.getElementById('preview-title').textContent = schema.name + ' — Live Preview';
+
+      // Cleanup previous
+      if (currentInstance) {
+        if (currentInstance.destroy) currentInstance.destroy();
+        currentInstance = null;
+      }
+      previewEl.innerHTML = '';
+
+      try {
+        if (result.isModal) {
+          // Modal is special — add a button to open it
+          var openBtn = document.createElement('button');
+          openBtn.className = 'tx-btn tx-btn-primary';
+          openBtn.textContent = 'Open Modal';
+          previewEl.appendChild(openBtn);
+          currentInstance = Teryx.modal(result.opts);
+          openBtn.addEventListener('click', function() { currentInstance.open(); });
+        } else if (result.target) {
+          currentInstance = Teryx[result.fn](previewEl, result.opts);
+        }
+      } catch (e) {
+        previewEl.innerHTML = '<div style="color:#ef4444;padding:1rem">Error: ' + escHtml(e.message) + '</div>';
+      }
+
+      // Update code
+      updateCode(result);
+    }
+
+    // ============================================================
+    // Code Generation
+    // ============================================================
+    function updateCode(result) {
+      var schema = widgetSchemas[activeWidget];
+      if (!schema) return;
+
+      // JS code
+      var js = [];
+      js.push('<span class="code-fn">Teryx</span>.<span class="code-fn">' + result.fn + '</span>(');
+      if (result.target) {
+        js.push('  <span class="code-str">\'#my-' + result.fn + '\'</span>,');
+      }
+      js.push('  ' + syntaxHighlightObj(result.opts, '  '));
+      js.push(');');
+      document.getElementById('code-output-js').innerHTML = js.join('\n');
+
+      // HTML code
+      var html = [];
+      html.push('<span class="code-comment">&lt;!-- ' + schema.name + ' widget --&gt;</span>');
+      if (result.target) {
+        html.push('<span class="code-key">&lt;div</span> <span class="code-str">id</span>=<span class="code-str">"my-' + result.fn + '"</span><span class="code-key">&gt;&lt;/div&gt;</span>');
+      }
+      html.push('');
+      html.push('<span class="code-key">&lt;script&gt;</span>');
+      html.push('  <span class="code-fn">Teryx</span>.<span class="code-fn">' + result.fn + '</span>(');
+      if (result.target) {
+        html.push('    <span class="code-str">\'#my-' + result.fn + '\'</span>,');
+      }
+      html.push('    ' + syntaxHighlightObj(result.opts, '    '));
+      html.push('  );');
+      html.push('<span class="code-key">&lt;/script&gt;</span>');
+      document.getElementById('code-output-html').innerHTML = html.join('\n');
+    }
+
+    function syntaxHighlightObj(obj, indent) {
+      return formatValue(obj, indent, 0);
+    }
+
+    function formatValue(val, baseIndent, depth) {
+      if (val === null || val === undefined) return '<span class="code-bool">null</span>';
+      if (typeof val === 'boolean') return '<span class="code-bool">' + val + '</span>';
+      if (typeof val === 'number') return '<span class="code-num">' + val + '</span>';
+      if (typeof val === 'string') return '<span class="code-str">\'' + escHtml(val) + '\'</span>';
+
+      var innerIndent = baseIndent + '  ';
+
+      if (Array.isArray(val)) {
+        if (val.length === 0) return '[]';
+        var items = val.map(function(item) {
+          return innerIndent + formatValue(item, innerIndent, depth + 1);
+        });
+        return '[\n' + items.join(',\n') + ',\n' + baseIndent + ']';
+      }
+
+      if (typeof val === 'object') {
+        var keys = Object.keys(val);
+        if (keys.length === 0) return '{}';
+        var pairs = keys.map(function(k) {
+          return innerIndent + '<span class="code-key">' + k + '</span>: ' + formatValue(val[k], innerIndent, depth + 1);
+        });
+        return '{\n' + pairs.join(',\n') + ',\n' + baseIndent + '}';
+      }
+
+      return String(val);
+    }
+
+    // ============================================================
+    // Code Tab Switching
+    // ============================================================
+    function switchCodeTab(tab) {
+      activeCodeTab = tab;
+      document.getElementById('code-output-html').style.display = tab === 'html' ? '' : 'none';
+      document.getElementById('code-output-js').style.display = tab === 'js' ? '' : 'none';
+      document.querySelectorAll('.code-tab').forEach(function(t) { t.classList.remove('code-tab-active'); });
+      var activeBtn = document.querySelector('.code-tab[onclick="switchCodeTab(\'' + tab + '\')"]');
+      if (activeBtn) activeBtn.classList.add('code-tab-active');
+    }
+
+    function copyCode() {
+      var el = activeCodeTab === 'html'
+        ? document.getElementById('code-output-html')
+        : document.getElementById('code-output-js');
+      navigator.clipboard.writeText(el.textContent).then(function() {
+        var btn = document.querySelector('.code-preview-header button:not(.code-tab)');
+        btn.textContent = 'Copied!';
+        setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+
+    // ============================================================
+    // Utilities
+    // ============================================================
+    function escHtml(s) {
+      if (s === undefined || s === null) return '';
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    // ============================================================
+    // Init
+    // ============================================================
+    buildWidgetList();
+    // Auto-select first widget
+    var firstKey = Object.keys(widgetSchemas)[0];
+    if (firstKey) selectWidget(firstKey);
+  </script>
+</body>
+</html>
