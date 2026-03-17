@@ -19,7 +19,8 @@ export function accordion(target: string | HTMLElement, options: AccordionOption
     html += `<div class="${cls('tx-accordion-item', isOpen && 'tx-accordion-open', item.disabled && 'tx-accordion-disabled')}" data-item="${esc(item.id)}">`;
 
     // Header
-    html += `<button class="tx-accordion-header" aria-expanded="${isOpen}" aria-controls="${esc(id)}-panel-${esc(item.id)}"`;
+    html += `<button class="tx-accordion-header" role="button" aria-expanded="${isOpen}" aria-controls="${esc(id)}-panel-${esc(item.id)}"`;
+    html += ` id="${esc(id)}-header-${esc(item.id)}"`;
     if (item.disabled) html += ' disabled';
     html += '>';
     if (item.icon) html += `<span class="tx-accordion-icon">${icon(item.icon)}</span>`;
@@ -28,7 +29,7 @@ export function accordion(target: string | HTMLElement, options: AccordionOption
     html += '</button>';
 
     // Panel
-    html += `<div class="tx-accordion-panel${animated ? ' tx-accordion-animated' : ''}" id="${esc(id)}-panel-${esc(item.id)}"`;
+    html += `<div class="tx-accordion-panel${animated ? ' tx-accordion-animated' : ''}" id="${esc(id)}-panel-${esc(item.id)}" role="region" aria-labelledby="${esc(id)}-header-${esc(item.id)}"`;
     if (!isOpen) html += ' style="display:none"';
     html += '>';
     html += '<div class="tx-accordion-body">';
@@ -132,6 +133,53 @@ export function accordion(target: string | HTMLElement, options: AccordionOption
     if (item) {
       const itemId = item.getAttribute('data-item')!;
       toggleItem(itemId);
+    }
+  });
+
+  // Keyboard navigation: Arrow Up/Down between headers, Home/End, Enter/Space to toggle
+  container.addEventListener('keydown', (e) => {
+    const tgt = e.target as HTMLElement;
+    if (!tgt.classList.contains('tx-accordion-header')) return;
+
+    const allHeaders = Array.from(container.querySelectorAll('.tx-accordion-header:not([disabled])')) as HTMLElement[];
+    if (allHeaders.length === 0) return;
+
+    const currentIdx = allHeaders.indexOf(tgt);
+    let nextIdx = -1;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        nextIdx = (currentIdx + 1) % allHeaders.length;
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        nextIdx = (currentIdx - 1 + allHeaders.length) % allHeaders.length;
+        break;
+      case 'Home':
+        e.preventDefault();
+        nextIdx = 0;
+        break;
+      case 'End':
+        e.preventDefault();
+        nextIdx = allHeaders.length - 1;
+        break;
+      case 'Enter':
+      case ' ': {
+        e.preventDefault();
+        const item = tgt.closest('[data-item]') as HTMLElement;
+        if (item) {
+          const itemId = item.getAttribute('data-item')!;
+          toggleItem(itemId);
+        }
+        return;
+      }
+      default:
+        return;
+    }
+
+    if (nextIdx >= 0 && nextIdx < allHeaders.length) {
+      allHeaders[nextIdx].focus();
     }
   });
 

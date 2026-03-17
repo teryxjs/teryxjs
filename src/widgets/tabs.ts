@@ -36,9 +36,11 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     const isActive = item.active || (!hasExplicitActive && idx === 0);
     html += `<button class="${cls('tx-tab', isActive && 'tx-tab-active', item.disabled && 'tx-tab-disabled')}"`;
     html += ` role="tab"`;
+    html += ` id="${esc(id)}-tab-${esc(item.id)}"`;
     html += ` data-tab="${esc(item.id)}"`;
     html += ` aria-selected="${isActive ? 'true' : 'false'}"`;
     html += ` aria-controls="${esc(id)}-panel-${esc(item.id)}"`;
+    html += ` tabindex="${isActive ? '0' : '-1'}"`;
     if (item.disabled) html += ' disabled';
     html += '>';
     if (item.icon) html += `<span class="tx-tab-icon">${icon(item.icon)}</span>`;
@@ -68,6 +70,8 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     html += ` role="tabpanel"`;
     html += ` id="${esc(id)}-panel-${esc(item.id)}"`;
     html += ` data-tab="${esc(item.id)}"`;
+    html += ` tabindex="0"`;
+    html += ` aria-labelledby="${esc(id)}-tab-${esc(item.id)}"`;
     if (!isActive) html += ' hidden';
     html += '>';
 
@@ -96,6 +100,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     const oldTab = container.querySelector(`.tx-tab-active`);
     oldTab?.classList.remove('tx-tab-active');
     oldTab?.setAttribute('aria-selected', 'false');
+    oldTab?.setAttribute('tabindex', '-1');
     const oldPanel = container.querySelector(`.tx-tab-panel-active`);
     if (oldPanel) {
       oldPanel.classList.remove('tx-tab-panel-active');
@@ -108,6 +113,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     if (newTab) {
       newTab.classList.add('tx-tab-active');
       newTab.setAttribute('aria-selected', 'true');
+      newTab.setAttribute('tabindex', '0');
     }
     if (newPanel) {
       newPanel.classList.add('tx-tab-panel-active');
@@ -158,6 +164,53 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     }
   });
 
+  // Keyboard navigation (roving tabindex with arrow keys, Home/End)
+  container.addEventListener('keydown', (e) => {
+    const tgt = e.target as HTMLElement;
+    if (!tgt.classList.contains('tx-tab') || tgt.classList.contains('tx-tab-add')) return;
+
+    const allTabs = Array.from(
+      container.querySelectorAll('.tx-tab:not(.tx-tab-add):not(.tx-tab-disabled)'),
+    ) as HTMLElement[];
+    if (allTabs.length === 0) return;
+
+    const currentIdx = allTabs.indexOf(tgt);
+    let nextIdx = -1;
+
+    const forward = isVertical ? 'ArrowDown' : 'ArrowRight';
+    const backward = isVertical ? 'ArrowUp' : 'ArrowLeft';
+
+    switch (e.key) {
+      case forward:
+        e.preventDefault();
+        nextIdx = (currentIdx + 1) % allTabs.length;
+        break;
+      case backward:
+        e.preventDefault();
+        nextIdx = (currentIdx - 1 + allTabs.length) % allTabs.length;
+        break;
+      case 'Home':
+        e.preventDefault();
+        nextIdx = 0;
+        break;
+      case 'End':
+        e.preventDefault();
+        nextIdx = allTabs.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    if (nextIdx >= 0 && nextIdx < allTabs.length) {
+      const nextTab = allTabs[nextIdx];
+      const nextTabId = nextTab.getAttribute('data-tab');
+      if (nextTabId) {
+        activate(nextTabId);
+        nextTab.focus();
+      }
+    }
+  });
+
   // Scroll buttons
   if (options.scrollable) {
     const inner = container.querySelector('.tx-tabs-nav-inner') as HTMLElement;
@@ -182,7 +235,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
       // Add tab button
       const nav = container.querySelector('.tx-tabs-nav-inner');
       const addBtn = nav?.querySelector('.tx-tab-add');
-      const tabHtml = `<button class="tx-tab" role="tab" data-tab="${esc(item.id)}">${item.icon ? `<span class="tx-tab-icon">${icon(item.icon)}</span>` : ''}<span class="tx-tab-text">${esc(item.title)}</span>${item.closable ? `<span class="tx-tab-close">${icon('x')}</span>` : ''}</button>`;
+      const tabHtml = `<button class="tx-tab" role="tab" id="${esc(id)}-tab-${esc(item.id)}" data-tab="${esc(item.id)}" aria-selected="false" aria-controls="${esc(id)}-panel-${esc(item.id)}" tabindex="-1">${item.icon ? `<span class="tx-tab-icon">${icon(item.icon)}</span>` : ''}<span class="tx-tab-text">${esc(item.title)}</span>${item.closable ? `<span class="tx-tab-close">${icon('x')}</span>` : ''}</button>`;
       const tabEl = document.createElement('div');
       tabEl.innerHTML = tabHtml;
       const btn = tabEl.firstElementChild!;
@@ -191,7 +244,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
 
       // Add panel
       const content = container.querySelector('.tx-tabs-content');
-      const panelHtml = `<div class="tx-tab-panel" role="tabpanel" id="${esc(id)}-panel-${esc(item.id)}" data-tab="${esc(item.id)}" hidden>${item.content || ''}</div>`;
+      const panelHtml = `<div class="tx-tab-panel" role="tabpanel" id="${esc(id)}-panel-${esc(item.id)}" data-tab="${esc(item.id)}" tabindex="0" aria-labelledby="${esc(id)}-tab-${esc(item.id)}" hidden>${item.content || ''}</div>`;
       const panelEl = document.createElement('div');
       panelEl.innerHTML = panelHtml;
       content?.appendChild(panelEl.firstElementChild!);

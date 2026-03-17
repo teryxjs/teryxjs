@@ -8,6 +8,15 @@ import { registerWidget, emit } from '../core';
 
 const openModals: Set<ModalInstance> = new Set();
 
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
 export function modal(options: ModalOptions): ModalInstance {
   const id = options.id || uid('tx-modal');
   const size = options.size || 'md';
@@ -17,7 +26,7 @@ export function modal(options: ModalOptions): ModalInstance {
   const backdropStatic = options.backdrop === 'static';
 
   // Build modal HTML
-  let html = `<div class="${cls('tx-modal-overlay', hasBackdrop && 'tx-modal-backdrop')}" id="${esc(id)}" role="dialog" aria-modal="true" style="display:none">`;
+  let html = `<div class="${cls('tx-modal-overlay', hasBackdrop && 'tx-modal-backdrop')}" id="${esc(id)}" role="dialog" aria-modal="true"${options.title ? ` aria-labelledby="${esc(id)}-title"` : ''} style="display:none">`;
   html += `<div class="${cls('tx-modal', `tx-modal-${size}`, options.draggable && 'tx-modal-draggable', options.class)}"`;
   if (options.width) html += ` style="width:${esc(options.width)}"`;
   html += '>';
@@ -80,10 +89,14 @@ export function modal(options: ModalOptions): ModalInstance {
 
   const dialog = overlay.querySelector('.tx-modal') as HTMLElement;
   let maximized = false;
+  let previouslyFocusedElement: HTMLElement | null = null;
 
   const instance: ModalInstance = {
     el: overlay,
     open() {
+      // Store previously focused element to restore on close
+      previouslyFocusedElement = document.activeElement as HTMLElement;
+
       overlay.style.display = '';
       requestAnimationFrame(() => {
         overlay.classList.add('tx-modal-active');
@@ -96,6 +109,17 @@ export function modal(options: ModalOptions): ModalInstance {
       if (options.source && typeof (window as any).xhtmlx !== 'undefined') {
         (window as any).xhtmlx.process(dialog);
       }
+
+      // Focus first focusable element inside the modal
+      requestAnimationFrame(() => {
+        const focusableEls = dialog.querySelectorAll(FOCUSABLE_SELECTOR) as NodeListOf<HTMLElement>;
+        if (focusableEls.length > 0) {
+          focusableEls[0].focus();
+        } else {
+          dialog.setAttribute('tabindex', '-1');
+          dialog.focus();
+        }
+      });
 
       emit('modal:open', { id, instance });
       options.onOpen?.();
@@ -111,6 +135,12 @@ export function modal(options: ModalOptions): ModalInstance {
         if (openModals.size === 0) {
           document.body.classList.remove('tx-modal-open');
         }
+        // Restore focus to previously focused element
+        if (previouslyFocusedElement && previouslyFocusedElement.focus) {
+          previouslyFocusedElement.focus();
+          previouslyFocusedElement = null;
+        }
+
         emit('modal:close', { id, instance });
         options.onClose?.();
       }, 200);
@@ -146,10 +176,8 @@ export function modal(options: ModalOptions): ModalInstance {
     },
     destroy() {
       if (instance.isOpen()) instance.close();
-      // Remove document-level keydown listener to prevent memory leak
-      if ((overlay as any)._keyHandler) {
-        document.removeEventListener('keydown', (overlay as any)._keyHandler);
-      }
+      // Remove document-level listeners to prevent memory leak
+      document.removeEventListener('keydown', modalKeyHandler);
       setTimeout(() => overlay.remove(), 250);
     },
   };
@@ -170,17 +198,40 @@ export function modal(options: ModalOptions): ModalInstance {
     });
   }
 
-  // Keyboard
-  if (keyboard && closable) {
-    const keyHandler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && instance.isOpen()) {
-        instance.close();
+  // Keyboard: Escape to close + focus trap
+  const modalKeyHandler = (e: KeyboardEvent) => {
+    if (!instance.isOpen()) return;
+
+    if (e.key === 'Escape' && keyboard && closable) {
+      instance.close();
+      return;
+    }
+
+    // Focus trap
+    if (e.key === 'Tab') {
+      const focusableEls = Array.from(dialog.querySelectorAll(FOCUSABLE_SELECTOR)) as HTMLElement[];
+      if (focusableEls.length === 0) {
+        e.preventDefault();
+        return;
       }
-    };
-    document.addEventListener('keydown', keyHandler);
-    // Store for cleanup
-    (overlay as any)._keyHandler = keyHandler;
-  }
+
+      const firstFocusable = focusableEls[0];
+      const lastFocusable = focusableEls[focusableEls.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusable || !dialog.contains(document.activeElement)) {
+          e.preventDefault();
+          lastFocusable.focus();
+        }
+      } else {
+        if (document.activeElement === lastFocusable || !dialog.contains(document.activeElement)) {
+          e.preventDefault();
+          firstFocusable.focus();
+        }
+      }
+    }
+  };
+  document.addEventListener('keydown', modalKeyHandler);
 
   // Button handlers
   if (options.buttons) {

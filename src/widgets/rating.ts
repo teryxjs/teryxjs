@@ -18,7 +18,7 @@ export function rating(
   let value = options.value || 0;
 
   function render(): void {
-    let html = `<div class="${cls('tx-rating', `tx-rating-${size}`, readonly && 'tx-rating-readonly', options.class)}" id="${id}">`;
+    let html = `<div class="${cls('tx-rating', `tx-rating-${size}`, readonly && 'tx-rating-readonly', options.class)}" id="${id}" role="radiogroup" aria-label="Rating" tabindex="0" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="${max}">`;
     for (let i = 1; i <= max; i++) {
       html += `<span class="tx-rating-star${i <= value ? ' tx-rating-star-active' : ''}" data-value="${i}">`;
       html += i <= value ? icon('starFilled') : icon('star');
@@ -56,6 +56,56 @@ export function rating(
         if (i < value) s.classList.add('tx-rating-star-active');
         else s.classList.remove('tx-rating-star-active');
       });
+    });
+
+    // Keyboard navigation: Arrow Left/Right to change value
+    container.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowUp': {
+          e.preventDefault();
+          const newVal = Math.min(max, value + 1);
+          if (newVal !== value) {
+            value = newVal;
+            render();
+            options.onChange?.(value);
+            emit('rating:change', { id, value });
+          }
+          break;
+        }
+        case 'ArrowLeft':
+        case 'ArrowDown': {
+          e.preventDefault();
+          const newVal = Math.max(0, value - 1);
+          if (newVal !== value) {
+            value = newVal;
+            render();
+            options.onChange?.(value);
+            emit('rating:change', { id, value });
+          }
+          break;
+        }
+        case 'Home': {
+          e.preventDefault();
+          if (value !== 0) {
+            value = 0;
+            render();
+            options.onChange?.(value);
+            emit('rating:change', { id, value });
+          }
+          break;
+        }
+        case 'End': {
+          e.preventDefault();
+          if (value !== max) {
+            value = max;
+            render();
+            options.onChange?.(value);
+            emit('rating:change', { id, value });
+          }
+          break;
+        }
+      }
     });
 
     // Click
