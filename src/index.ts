@@ -22,6 +22,10 @@ export type * from './types';
 export { setLocale, getLocale, t } from './i18n';
 export type { TeryxLocale } from './i18n';
 
+// Theme
+export { setTheme, getTheme, registerTheme, getThemeNames } from './theme';
+export type { TeryxTheme } from './theme';
+
 // Utilities
 export { uid, esc, cls, icon, icons, resolveTarget, createElement, debounce, throttle, clamp } from './utils';
 
