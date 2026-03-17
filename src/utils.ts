@@ -87,14 +87,17 @@ export function throttle<T extends (...args: unknown[]) => void>(fn: T, ms: numb
       fn(...args);
     } else {
       lastArgs = args;
-      trailingTimer = setTimeout(() => {
-        last = Date.now();
-        trailingTimer = null;
-        if (lastArgs) {
-          fn(...lastArgs);
-          lastArgs = null;
-        }
-      }, ms - (now - last));
+      trailingTimer = setTimeout(
+        () => {
+          last = Date.now();
+          trailingTimer = null;
+          if (lastArgs) {
+            fn(...lastArgs);
+            lastArgs = null;
+          }
+        },
+        ms - (now - last),
+      );
     }
   }) as unknown as T;
 }
