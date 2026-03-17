@@ -450,6 +450,7 @@ test.describe('Grid', () => {
         columns: [{ field: 'name', label: 'Name' }],
       });
     });
+    await page.waitForTimeout(200);
     const hasEmptyMessage = await page.evaluate(() => {
       const el = document.querySelector('#target');
       return el ? el.innerHTML.includes('No users available') : false;
