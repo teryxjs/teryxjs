@@ -6,6 +6,8 @@ import type { DrawerOptions, DrawerInstance } from '../types';
 import { uid, esc, cls, icon } from '../utils';
 import { registerWidget, emit } from '../core';
 
+const openDrawers = new Set<DrawerInstance>();
+
 export function drawer(options: DrawerOptions): DrawerInstance {
   const id = options.id || uid('tx-drawer');
   const position = options.position || 'right';
@@ -53,6 +55,7 @@ export function drawer(options: DrawerOptions): DrawerInstance {
         overlay.classList.add('tx-drawer-active');
         panel.classList.add('tx-drawer-enter');
       });
+      openDrawers.add(instance);
       document.body.classList.add('tx-drawer-open');
 
       // Trigger xhtmlx lazy load
@@ -76,7 +79,10 @@ export function drawer(options: DrawerOptions): DrawerInstance {
       setTimeout(() => {
         overlay.style.display = 'none';
         panel.classList.remove('tx-drawer-leave');
-        document.body.classList.remove('tx-drawer-open');
+        openDrawers.delete(instance);
+        if (openDrawers.size === 0) {
+          document.body.classList.remove('tx-drawer-open');
+        }
         emit('drawer:close', { id });
         options.onClose?.();
       }, 300);

@@ -114,7 +114,8 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
     setPage(page: number) {
       const dataEl = document.getElementById(`${id}-data`);
       if (dataEl) {
-        const url = new URL(options.source, window.location.origin);
+        const currentGet = dataEl.getAttribute('xh-get') || options.source;
+        const url = new URL(currentGet, window.location.origin);
         url.searchParams.set(pageParam, String(page));
         dataEl.setAttribute('xh-get', url.pathname + url.search);
         instance.reload();

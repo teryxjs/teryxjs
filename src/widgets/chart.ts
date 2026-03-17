@@ -283,6 +283,7 @@ function renderLegend(series: ChartSeries[], colors: string[], w: number, h: num
 function renderBarChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[]): string {
   const categories = series[0]?.data.map((d) => String(d.x)) || [];
   const allValues = series.flatMap((s) => s.data.map((d) => d.y));
+  if (allValues.length === 0) return '';
   const yMin = opts.yAxis?.min ?? Math.min(0, ...allValues);
   const yMax = opts.yAxis?.max ?? Math.max(...allValues);
   const scale = niceScale(yMin, yMax, opts.yAxis?.tickCount || 6);
@@ -335,6 +336,7 @@ function renderHorizontalBarChart(
 ): string {
   const categories = series[0]?.data.map((d) => String(d.x)) || [];
   const allValues = series.flatMap((s) => s.data.map((d) => d.y));
+  if (allValues.length === 0) return '';
   const xMin = opts.yAxis?.min ?? Math.min(0, ...allValues);
   const xMax = opts.yAxis?.max ?? Math.max(...allValues);
   const scale = niceScale(xMin, xMax, opts.yAxis?.tickCount || 6);
@@ -378,6 +380,7 @@ function renderHorizontalBarChart(
 function renderLineChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[]): string {
   const categories = series[0]?.data.map((d) => String(d.x)) || [];
   const allValues = series.flatMap((s) => s.data.map((d) => d.y));
+  if (allValues.length === 0) return '';
   const yMin = opts.yAxis?.min ?? Math.min(...allValues);
   const yMax = opts.yAxis?.max ?? Math.max(...allValues);
   const scale = niceScale(yMin, yMax, opts.yAxis?.tickCount || 6);
@@ -431,6 +434,7 @@ function renderLineChart(series: ChartSeries[], opts: ChartOptions, w: number, h
 function renderAreaChart(series: ChartSeries[], opts: ChartOptions, w: number, h: number, colors: string[]): string {
   const categories = series[0]?.data.map((d) => String(d.x)) || [];
   const allValues = series.flatMap((s) => s.data.map((d) => d.y));
+  if (allValues.length === 0) return '';
   const yMin = opts.yAxis?.min ?? Math.min(0, ...allValues);
   const yMax = opts.yAxis?.max ?? Math.max(...allValues);
   const scale = niceScale(yMin, yMax, opts.yAxis?.tickCount || 6);
@@ -496,6 +500,7 @@ function renderScatterChart(series: ChartSeries[], opts: ChartOptions, w: number
   const allXNumeric = series.every((s) => s.data.every((d) => typeof d.x === 'number'));
   const allX = series.flatMap((s) => s.data.map((d) => Number(d.x)));
   const allY = series.flatMap((s) => s.data.map((d) => d.y));
+  if (allX.length === 0 || allY.length === 0) return '';
 
   const xMin = opts.xAxis?.min ?? Math.min(...allX);
   const xMax = opts.xAxis?.max ?? Math.max(...allX);

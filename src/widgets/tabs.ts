@@ -93,7 +93,9 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     if (tabId === activeTabId) return;
 
     // Deactivate old
-    container.querySelector(`.tx-tab-active`)?.classList.remove('tx-tab-active');
+    const oldTab = container.querySelector(`.tx-tab-active`);
+    oldTab?.classList.remove('tx-tab-active');
+    oldTab?.setAttribute('aria-selected', 'false');
     const oldPanel = container.querySelector(`.tx-tab-panel-active`);
     if (oldPanel) {
       oldPanel.classList.remove('tx-tab-panel-active');
