@@ -81,6 +81,7 @@ export {
   tagInput,
   datePicker,
   transferList,
+  kanban,
 } from './widgets';
 
 // Category imports
