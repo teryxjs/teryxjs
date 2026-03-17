@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — Teryx Documentation</title>
+  <link rel="stylesheet" href="../teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font); color: var(--tx-text); background: var(--tx-bg); }
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--tx-border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; padding: 0 2rem; height: 56px; gap: 2rem; }
+    .nav-brand { font-weight: 800; font-size: 1.25rem; color: var(--tx-text); text-decoration: none; margin-right: auto; }
+    .nav-link { font-size: 0.875rem; color: var(--tx-text-secondary); text-decoration: none; font-weight: 500; }
+    .nav-link:hover { color: var(--tx-text); }
+    .nav-link.active { color: var(--tx-primary); }
+    .layout { display: flex; margin-top: 56px; min-height: calc(100vh - 56px); }
+    .sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 240px; padding: 1.5rem 1rem; border-right: 1px solid var(--tx-border); background: var(--tx-bg-secondary); overflow-y: auto; }
+    .sidebar a { display: block; padding: 0.4rem 0.75rem; margin: 0.15rem 0; color: var(--tx-text-secondary); text-decoration: none; font-size: 0.875rem; border-radius: var(--tx-radius); }
+    .sidebar a:hover { background: var(--tx-bg-tertiary); color: var(--tx-text); }
+    .sidebar a.active { background: var(--tx-primary-light); color: var(--tx-primary); font-weight: 600; }
+    .sidebar .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--tx-text-muted); padding: 1rem 0.75rem 0.25rem; }
+    .content { margin-left: 240px; flex: 1; padding: 2rem 3rem 4rem; max-width: 860px; }
+    .content h1 { font-size: 2rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .content h2 { font-size: 1.375rem; font-weight: 700; margin: 2.5rem 0 0.75rem; padding-top: 1rem; border-top: 1px solid var(--tx-border); }
+    .content h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+    .content p { line-height: 1.7; color: var(--tx-text-secondary); margin: 0.5rem 0 1rem; }
+    pre { background: var(--tx-bg-tertiary); border: 1px solid var(--tx-border); border-radius: var(--tx-radius-lg); padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--tx-font-mono); font-size: 0.8125rem; line-height: 1.6; margin: 0.5rem 0 1.25rem; }
+    code { font-family: var(--tx-font-mono); font-size: 0.85em; background: var(--tx-bg-tertiary); padding: 0.125rem 0.35rem; border-radius: var(--tx-radius-sm); }
+    pre code { background: none; padding: 0; }
+    .lead { font-size: 1.1rem; color: var(--tx-text-secondary); margin-bottom: 2rem; }
+    .callout { background: var(--tx-primary-light); border-left: 4px solid var(--tx-primary); padding: 1rem 1.25rem; border-radius: 0 var(--tx-radius) var(--tx-radius) 0; margin: 1rem 0 1.5rem; }
+    .callout p { margin: 0; color: var(--tx-text); }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <nav class="nav"><div class="nav-inner">
+    <a class="nav-brand" href="../">Teryx</a>
+    <a class="nav-link active" href="./">Docs</a>
+    <a class="nav-link" href="../">Showcase</a>
+    <a class="nav-link" href="https://github.com/teryxjs/teryxjs">GitHub</a>
+  </div></nav>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="section-label">Getting Started</div>
+      <a href="./" class="active">Introduction</a>
+      <div class="section-label">Guides</div>
+      <a href="widgets.html">Widget API Reference</a>
+      <a href="declarative.html">Declarative HTML</a>
+      <a href="theming.html">Theming</a>
+      <div class="section-label">Links</div>
+      <a href="../">Showcase</a>
+      <a href="https://github.com/teryxjs/teryxjs">GitHub</a>
+    </aside>
+    <main class="content">
+      <h1>Getting Started</h1>
+      <p class="lead">Teryx is an enterprise-grade widget framework built on xhtmlx. It provides 30+ TypeScript components with both declarative HTML and imperative JavaScript APIs, zero external dependencies.</p>
+
+      <h2>Installation</h2>
+      <h3>Package Manager</h3>
+      <pre><code>npm install teryx
+# or
+pnpm add teryx
+# or
+yarn add teryx</code></pre>
+
+      <h3>CDN / Script Tag</h3>
+      <p>For quick prototyping, include the global build directly:</p>
+      <pre><code>&lt;link rel="stylesheet" href="https://unpkg.com/teryx/dist/teryx.css"&gt;
+&lt;script src="xhtmlx.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/teryx/dist/index.global.js"&gt;&lt;/script&gt;</code></pre>
+      <p>This exposes all widgets under the global <code>Teryx</code> namespace.</p>
+
+      <h2>Quick Start</h2>
+      <h3>ES Module (Recommended)</h3>
+      <pre><code>import { grid, modal, toast, form } from 'teryx';
+import 'teryx/css';
+
+grid('#my-grid', {
+  source: '/api/users',
+  columns: [
+    { field: 'name', label: 'Name', sortable: true },
+    { field: 'email', label: 'Email' },
+    { field: 'role', label: 'Role', filterable: true },
+  ],
+  paginated: true,
+  searchable: true,
+});</code></pre>
+
+      <h3>Global Script</h3>
+      <pre><code>&lt;script&gt;
+  Teryx.grid('#my-grid', {
+    source: '/api/users',
+    columns: [
+      { field: 'name', label: 'Name', sortable: true },
+      { field: 'email', label: 'Email' },
+    ],
+  });
+&lt;/script&gt;</code></pre>
+
+      <h2>Core Concepts</h2>
+      <h3>Widget Functions</h3>
+      <p>Every widget is a function taking a CSS selector (or DOM element) and an options object. It returns a widget instance with methods for programmatic control.</p>
+      <pre><code>const tabsInstance = Teryx.tabs('#my-tabs', {
+  variant: 'underline',
+  items: [
+    { id: 'tab1', title: 'Overview', content: '&lt;p&gt;Content&lt;/p&gt;' },
+    { id: 'tab2', title: 'Details', content: '&lt;p&gt;More&lt;/p&gt;' },
+  ],
+});
+tabsInstance.activate('tab2');</code></pre>
+
+      <h3>Declarative HTML</h3>
+      <p>Teryx auto-discovers widgets via <code>data-tx-widget</code> attributes. See the <a href="declarative.html">Declarative HTML guide</a>.</p>
+
+      <h3>Configuration</h3>
+      <pre><code>import { configure } from 'teryx';
+configure({
+  prefix: 'tx',
+  autoInit: true,
+  toastPosition: 'top-right',
+  toastDuration: 5000,
+  debug: false,
+});</code></pre>
+
+      <h3>Event Bus</h3>
+      <pre><code>import { on, emit } from 'teryx';
+on('user:selected', (user) =&gt; console.log(user));
+emit('user:selected', { id: 1, name: 'Alice' });</code></pre>
+
+      <h3>Internationalization</h3>
+      <pre><code>import { setLocale } from 'teryx';
+setLocale({ search: 'Buscar', noData: 'Sin datos', loading: 'Cargando...' });</code></pre>
+
+      <div class="callout"><p>Ready to explore? Head to the <a href="widgets.html">Widget API Reference</a>.</p></div>
+    </main>
+  </div>
+</body>
+</html>

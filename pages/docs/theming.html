@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theming — Teryx Documentation</title>
+  <link rel="stylesheet" href="../teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font); color: var(--tx-text); background: var(--tx-bg); }
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--tx-border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; padding: 0 2rem; height: 56px; gap: 2rem; }
+    .nav-brand { font-weight: 800; font-size: 1.25rem; color: var(--tx-text); text-decoration: none; margin-right: auto; }
+    .nav-link { font-size: 0.875rem; color: var(--tx-text-secondary); text-decoration: none; font-weight: 500; }
+    .nav-link:hover { color: var(--tx-text); }
+    .nav-link.active { color: var(--tx-primary); }
+    .layout { display: flex; margin-top: 56px; min-height: calc(100vh - 56px); }
+    .sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 240px; padding: 1.5rem 1rem; border-right: 1px solid var(--tx-border); background: var(--tx-bg-secondary); overflow-y: auto; }
+    .sidebar a { display: block; padding: 0.4rem 0.75rem; margin: 0.15rem 0; color: var(--tx-text-secondary); text-decoration: none; font-size: 0.875rem; border-radius: var(--tx-radius); }
+    .sidebar a:hover { background: var(--tx-bg-tertiary); color: var(--tx-text); }
+    .sidebar a.active { background: var(--tx-primary-light); color: var(--tx-primary); font-weight: 600; }
+    .sidebar .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--tx-text-muted); padding: 1rem 0.75rem 0.25rem; }
+    .content { margin-left: 240px; flex: 1; padding: 2rem 3rem 4rem; max-width: 860px; }
+    .content h1 { font-size: 2rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .content h2 { font-size: 1.375rem; font-weight: 700; margin: 2.5rem 0 0.75rem; padding-top: 1rem; border-top: 1px solid var(--tx-border); }
+    .content h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+    .content p { line-height: 1.7; color: var(--tx-text-secondary); margin: 0.5rem 0 1rem; }
+    .content ul { line-height: 1.8; color: var(--tx-text-secondary); padding-left: 1.5rem; }
+    pre { background: var(--tx-bg-tertiary); border: 1px solid var(--tx-border); border-radius: var(--tx-radius-lg); padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--tx-font-mono); font-size: 0.8125rem; line-height: 1.6; margin: 0.5rem 0 1.25rem; }
+    code { font-family: var(--tx-font-mono); font-size: 0.85em; background: var(--tx-bg-tertiary); padding: 0.125rem 0.35rem; border-radius: var(--tx-radius-sm); }
+    pre code { background: none; padding: 0; }
+    .lead { font-size: 1.1rem; color: var(--tx-text-secondary); margin-bottom: 2rem; }
+    .callout { background: var(--tx-primary-light); border-left: 4px solid var(--tx-primary); padding: 1rem 1.25rem; border-radius: 0 var(--tx-radius) var(--tx-radius) 0; margin: 1rem 0 1.5rem; }
+    .callout p { margin: 0; color: var(--tx-text); }
+    table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1.5rem; font-size: 0.8125rem; }
+    th { text-align: left; padding: 0.5rem 0.75rem; background: var(--tx-bg-secondary); border: 1px solid var(--tx-border); font-weight: 600; }
+    td { padding: 0.5rem 0.75rem; border: 1px solid var(--tx-border); vertical-align: top; }
+    .swatch-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 0.5rem 0 1.5rem; }
+    .swatch { width: 80px; text-align: center; }
+    .swatch-color { width: 80px; height: 48px; border-radius: var(--tx-radius); border: 1px solid var(--tx-border); }
+    .swatch-label { font-size: 0.7rem; color: var(--tx-text-muted); margin-top: 0.25rem; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <nav class="nav"><div class="nav-inner">
+    <a class="nav-brand" href="../">Teryx</a>
+    <a class="nav-link active" href="./">Docs</a>
+    <a class="nav-link" href="../">Showcase</a>
+    <a class="nav-link" href="https://github.com/teryxjs/teryxjs">GitHub</a>
+  </div></nav>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="section-label">Getting Started</div>
+      <a href="./">Introduction</a>
+      <div class="section-label">Guides</div>
+      <a href="widgets.html">Widget API Reference</a>
+      <a href="declarative.html">Declarative HTML</a>
+      <a href="theming.html" class="active">Theming</a>
+      <div class="section-label">Links</div>
+      <a href="../">Showcase</a>
+      <a href="https://github.com/teryxjs/teryxjs">GitHub</a>
+    </aside>
+    <main class="content">
+      <h1>Theming</h1>
+      <p class="lead">Teryx uses CSS custom properties for its entire design system. Switch themes at runtime or create your own.</p>
+
+      <h2>Built-in Themes</h2>
+      <ul>
+        <li><strong>light</strong> (default) -- White backgrounds, dark text</li>
+        <li><strong>dark</strong> -- Dark backgrounds, light text</li>
+        <li><strong>highContrast</strong> -- Maximum contrast for accessibility</li>
+      </ul>
+      <h3>Color Palette</h3>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-color" style="background:#3b82f6"></div><div class="swatch-label">primary</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#6b7280"></div><div class="swatch-label">secondary</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#10b981"></div><div class="swatch-label">success</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#f59e0b"></div><div class="swatch-label">warning</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#ef4444"></div><div class="swatch-label">danger</div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#06b6d4"></div><div class="swatch-label">info</div></div>
+      </div>
+
+      <h2>setTheme API</h2>
+      <pre><code>import { setTheme, getTheme, getThemeNames } from 'teryx';
+setTheme('dark');
+console.log(getTheme()); // 'dark'
+console.log(getThemeNames()); // ['light', 'dark', 'highContrast']</code></pre>
+
+      <h2>registerTheme API</h2>
+      <pre><code>import { registerTheme, setTheme } from 'teryx';
+registerTheme({
+  name: 'ocean',
+  vars: {
+    '--tx-primary': '#0ea5e9',
+    '--tx-primary-hover': '#0284c7',
+    '--tx-primary-light': '#e0f2fe',
+    '--tx-bg': '#f0f9ff',
+    '--tx-bg-secondary': '#e0f2fe',
+    '--tx-text': '#0c4a6e',
+    '--tx-border': '#7dd3fc',
+  },
+});
+setTheme('ocean');</code></pre>
+      <div class="callout"><p><code>registerTheme()</code> does not activate the theme. Call <code>setTheme(name)</code> afterwards.</p></div>
+
+      <h2>CSS Variables Reference</h2>
+      <h3>Colors</h3>
+      <table><tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>--tx-primary</code></td><td><code>#3b82f6</code></td><td>Primary brand color</td></tr>
+        <tr><td><code>--tx-primary-hover</code></td><td><code>#2563eb</code></td><td>Hover state</td></tr>
+        <tr><td><code>--tx-primary-light</code></td><td><code>#dbeafe</code></td><td>Light background</td></tr>
+        <tr><td><code>--tx-secondary</code></td><td><code>#6b7280</code></td><td>Secondary</td></tr>
+        <tr><td><code>--tx-success</code></td><td><code>#10b981</code></td><td>Success</td></tr>
+        <tr><td><code>--tx-warning</code></td><td><code>#f59e0b</code></td><td>Warning</td></tr>
+        <tr><td><code>--tx-danger</code></td><td><code>#ef4444</code></td><td>Danger</td></tr>
+        <tr><td><code>--tx-info</code></td><td><code>#06b6d4</code></td><td>Info</td></tr>
+      </table>
+      <h3>Surfaces</h3>
+      <table><tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>--tx-bg</code></td><td><code>#ffffff</code></td><td>Page background</td></tr>
+        <tr><td><code>--tx-bg-secondary</code></td><td><code>#f9fafb</code></td><td>Sidebars, headers</td></tr>
+        <tr><td><code>--tx-bg-tertiary</code></td><td><code>#f3f4f6</code></td><td>Code blocks</td></tr>
+        <tr><td><code>--tx-surface</code></td><td><code>#ffffff</code></td><td>Cards, panels</td></tr>
+        <tr><td><code>--tx-overlay</code></td><td><code>rgba(0,0,0,0.5)</code></td><td>Backdrop</td></tr>
+      </table>
+      <h3>Text</h3>
+      <table><tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>--tx-text</code></td><td><code>#111827</code></td><td>Primary text</td></tr>
+        <tr><td><code>--tx-text-secondary</code></td><td><code>#6b7280</code></td><td>Secondary text</td></tr>
+        <tr><td><code>--tx-text-muted</code></td><td><code>#9ca3af</code></td><td>Muted text</td></tr>
+      </table>
+      <h3>Borders, Shadows, Typography</h3>
+      <table><tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>--tx-border</code></td><td><code>#e5e7eb</code></td><td>Default border</td></tr>
+        <tr><td><code>--tx-shadow-sm</code></td><td><code>0 1px 3px ...</code></td><td>Small shadow</td></tr>
+        <tr><td><code>--tx-shadow</code></td><td><code>0 4px 6px ...</code></td><td>Default shadow</td></tr>
+        <tr><td><code>--tx-font</code></td><td>system stack</td><td>Font family</td></tr>
+        <tr><td><code>--tx-font-mono</code></td><td>monospace stack</td><td>Mono font</td></tr>
+        <tr><td><code>--tx-radius</code></td><td><code>0.375rem</code></td><td>Border radius</td></tr>
+      </table>
+      <h3>Layout</h3>
+      <table><tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>--tx-sidebar-width</code></td><td><code>260px</code></td><td>Sidebar width</td></tr>
+        <tr><td><code>--tx-navbar-height</code></td><td><code>56px</code></td><td>Navbar height</td></tr>
+        <tr><td><code>--tx-container-max</code></td><td><code>1280px</code></td><td>Max container</td></tr>
+      </table>
+
+      <h2>CSS-Only Theming</h2>
+      <pre><code>:root {
+  --tx-primary: #8b5cf6;
+  --tx-primary-hover: #7c3aed;
+  --tx-radius: 0.75rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tx-bg: #111827;
+    --tx-text: #f9fafb;
+    --tx-border: #374151;
+  }
+}</code></pre>
+
+      <h2>Dark Mode Toggle</h2>
+      <pre><code>&lt;button id="theme-toggle"&gt;Toggle Dark Mode&lt;/button&gt;
+&lt;script&gt;
+  document.getElementById('theme-toggle').addEventListener('click', () =&gt; {
+    const cur = Teryx.getTheme();
+    Teryx.setTheme(cur === 'light' ? 'dark' : 'light');
+  });
+&lt;/script&gt;</code></pre>
+      <div class="callout"><p>The <code>data-theme</code> attribute on <code>&lt;html&gt;</code> is set automatically by <code>setTheme()</code>. Use it for theme-specific CSS: <code>[data-theme="dark"] .my-class { ... }</code></p></div>
+    </main>
+  </div>
+</body>
+</html>

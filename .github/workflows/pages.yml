@@ -39,6 +39,7 @@ jobs:
           cp dist/index.global.js _site/teryx.js
           cp dist/teryx.css _site/teryx.css
           cp xhtmlx.js _site/xhtmlx.js
+          cp -r pages/docs _site/docs
 
       - uses: actions/upload-pages-artifact@v3
 
