@@ -266,6 +266,8 @@ export function emit(event: string, ...args: unknown[]): void {
 // ----------------------------------------------------------
 //  Auto-init on DOMContentLoaded + MutationObserver
 // ----------------------------------------------------------
+let _observer: MutationObserver | null = null;
+
 if (typeof document !== 'undefined') {
   const run = () => {
     if (config.autoInit) initWidgets();
@@ -277,7 +279,7 @@ if (typeof document !== 'undefined') {
     run();
   }
 
-  const observer = new MutationObserver((mutations) => {
+  _observer = new MutationObserver((mutations) => {
     if (!config.autoInit) return;
     for (const m of mutations) {
       for (const node of Array.from(m.addedNodes)) {
@@ -289,5 +291,13 @@ if (typeof document !== 'undefined') {
       }
     }
   });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  _observer.observe(document.documentElement, { childList: true, subtree: true });
+}
+
+/** Disconnect the MutationObserver to allow garbage collection. */
+export function teardown(): void {
+  if (_observer) {
+    _observer.disconnect();
+    _observer = null;
+  }
 }

@@ -55,16 +55,18 @@ export function dropdown(options: DropdownOptions): DropdownInstance {
   });
 
   // Click outside
-  document.addEventListener('click', (e) => {
+  const outsideClickHandler = (e: MouseEvent) => {
     if (isOpen && !menuEl.contains(e.target as Node) && !triggerEl.contains(e.target as Node)) {
       close();
     }
-  });
+  };
+  document.addEventListener('click', outsideClickHandler);
 
   // Escape key
-  document.addEventListener('keydown', (e) => {
+  const escapeKeyHandler = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && isOpen) close();
-  });
+  };
+  document.addEventListener('keydown', escapeKeyHandler);
 
   // Menu item clicks
   menuEl.addEventListener('click', (e) => {
@@ -82,6 +84,8 @@ export function dropdown(options: DropdownOptions): DropdownInstance {
   const instance: DropdownInstance = {
     el: menuEl,
     destroy() {
+      document.removeEventListener('click', outsideClickHandler);
+      document.removeEventListener('keydown', escapeKeyHandler);
       menuEl.remove();
     },
     open,
@@ -133,13 +137,15 @@ export function contextMenu(options: MenuOptions): MenuInstance {
   }
 
   // Click outside
-  document.addEventListener('click', (e) => {
+  const ctxOutsideHandler = (e: MouseEvent) => {
     if (isOpen && !menuEl.contains(e.target as Node)) close();
-  });
+  };
+  document.addEventListener('click', ctxOutsideHandler);
 
-  document.addEventListener('keydown', (e) => {
+  const ctxEscapeHandler = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && isOpen) close();
-  });
+  };
+  document.addEventListener('keydown', ctxEscapeHandler);
 
   // Item clicks
   menuEl.addEventListener('click', (e) => {
@@ -156,6 +162,8 @@ export function contextMenu(options: MenuOptions): MenuInstance {
   return {
     el: menuEl,
     destroy() {
+      document.removeEventListener('click', ctxOutsideHandler);
+      document.removeEventListener('keydown', ctxEscapeHandler);
       menuEl.remove();
     },
     open,

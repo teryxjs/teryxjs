@@ -146,6 +146,10 @@ export function modal(options: ModalOptions): ModalInstance {
     },
     destroy() {
       if (instance.isOpen()) instance.close();
+      // Remove document-level keydown listener to prevent memory leak
+      if ((overlay as any)._keyHandler) {
+        document.removeEventListener('keydown', (overlay as any)._keyHandler);
+      }
       setTimeout(() => overlay.remove(), 250);
     },
   };
