@@ -1649,52 +1649,6 @@ body.tx-modal-open {
   background: var(--tx-bg-secondary);
 }
 
-/* === Skeleton Loading === */
-.tx-skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: var(--tx-space-3);
-}
-.tx-skeleton-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--tx-bg-tertiary);
-  flex-shrink: 0;
-}
-.tx-skeleton-image {
-  width: 100%;
-  height: 180px;
-  border-radius: var(--tx-radius);
-  background: var(--tx-bg-tertiary);
-}
-.tx-skeleton-lines {
-  display: flex;
-  flex-direction: column;
-  gap: var(--tx-space-2);
-  flex: 1;
-}
-.tx-skeleton-line {
-  height: 0.875rem;
-  border-radius: var(--tx-radius-sm);
-  background: var(--tx-bg-tertiary);
-}
-.tx-skeleton-animated .tx-skeleton-avatar,
-.tx-skeleton-animated .tx-skeleton-image,
-.tx-skeleton-animated .tx-skeleton-line {
-  background: linear-gradient(90deg, var(--tx-bg-tertiary) 25%, var(--tx-bg-secondary) 50%, var(--tx-bg-tertiary) 75%);
-  background-size: 200% 100%;
-  animation: tx-skeleton-shimmer 1.5s ease-in-out infinite;
-}
-@keyframes tx-skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
 @media (max-width: 767px) {
   .tx-navbar-toggler {
     display: flex;
@@ -3123,53 +3077,6 @@ body.tx-drawer-open {
     display: none !important;
   }
 }
-
-/* === Skeleton Loading === */
-.tx-skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: var(--tx-space-3);
-}
-.tx-skeleton-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--tx-bg-tertiary);
-  flex-shrink: 0;
-}
-.tx-skeleton-image {
-  width: 100%;
-  height: 180px;
-  border-radius: var(--tx-radius);
-  background: var(--tx-bg-tertiary);
-}
-.tx-skeleton-lines {
-  display: flex;
-  flex-direction: column;
-  gap: var(--tx-space-2);
-  flex: 1;
-}
-.tx-skeleton-line {
-  height: 0.875rem;
-  border-radius: var(--tx-radius-sm);
-  background: var(--tx-bg-tertiary);
-}
-.tx-skeleton-animated .tx-skeleton-avatar,
-.tx-skeleton-animated .tx-skeleton-image,
-.tx-skeleton-animated .tx-skeleton-line {
-  background: linear-gradient(90deg, var(--tx-bg-tertiary) 25%, var(--tx-bg-secondary) 50%, var(--tx-bg-tertiary) 75%);
-  background-size: 200% 100%;
-  animation: tx-skeleton-shimmer 1.5s ease-in-out infinite;
-}
-@keyframes tx-skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
 @media (max-width: 767px) {
   .tx-hide-md {
     display: none !important;
@@ -4595,52 +4502,6 @@ body.tx-drawer-open {
   letter-spacing: 0.05em;
   position: sticky;
   top: 0;
-}
-
-/* === Skeleton Loading === */
-.tx-skeleton {
-  display: flex;
-  flex-direction: column;
-  gap: var(--tx-space-3);
-}
-.tx-skeleton-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--tx-bg-tertiary);
-  flex-shrink: 0;
-}
-.tx-skeleton-image {
-  width: 100%;
-  height: 180px;
-  border-radius: var(--tx-radius);
-  background: var(--tx-bg-tertiary);
-}
-.tx-skeleton-lines {
-  display: flex;
-  flex-direction: column;
-  gap: var(--tx-space-2);
-  flex: 1;
-}
-.tx-skeleton-line {
-  height: 0.875rem;
-  border-radius: var(--tx-radius-sm);
-  background: var(--tx-bg-tertiary);
-}
-.tx-skeleton-animated .tx-skeleton-avatar,
-.tx-skeleton-animated .tx-skeleton-image,
-.tx-skeleton-animated .tx-skeleton-line {
-  background: linear-gradient(90deg, var(--tx-bg-tertiary) 25%, var(--tx-bg-secondary) 50%, var(--tx-bg-tertiary) 75%);
-  background-size: 200% 100%;
-  animation: tx-skeleton-shimmer 1.5s ease-in-out infinite;
-}
-@keyframes tx-skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
 }
 
 @media (max-width: 767px) {
