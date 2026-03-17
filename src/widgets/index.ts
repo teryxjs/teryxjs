@@ -39,3 +39,4 @@ export { datePicker } from './datepicker';
 export { draggable, droppable } from './drag-drop';
 export { slider } from './slider';
 export { tagInput } from './tag-input';
+export { transferList } from './transfer-list';

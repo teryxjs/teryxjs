@@ -80,6 +80,7 @@ export {
   slider,
   tagInput,
   datePicker,
+  transferList,
 } from './widgets';
 
 // Category imports
