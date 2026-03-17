@@ -75,7 +75,7 @@ export {
   richEditor,
   tooltip,
   popover,
-  transferList,
+  kanban,
 } from './widgets';
 
 // Category imports
