@@ -9,16 +9,17 @@ export function uid(prefix = 'tx'): string {
   return `${prefix}-${++_idCounter}`;
 }
 
+const escMap: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
 /** HTML-escape a string. */
 export function esc(str: string): string {
-  const map: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-  };
-  return str.replace(/[&<>"']/g, (ch) => map[ch]!);
+  return str.replace(/[&<>"']/g, (ch) => escMap[ch]!);
 }
 
 /** Resolve a CSS selector or HTMLElement to an element, throwing if not found. */

@@ -339,13 +339,24 @@ export function calendar(target: string | HTMLElement, options: CalendarOptions)
     }
     h += '</div></div>';
 
+    // Pre-compute events per day (avoids calling getEventsForDate twice per day)
+    const dayEventsMap = new Map<string, { allDay: CalendarEvent[]; timed: CalendarEvent[] }>();
+    for (const d of days) {
+      const dateStr = fmtDate(d);
+      const evts = getEventsForDate(d);
+      dayEventsMap.set(dateStr, {
+        allDay: evts.filter((e) => isAllDay(e)),
+        timed: evts.filter((e) => !isAllDay(e)),
+      });
+    }
+
     // All-day events row
     h += '<div class="tx-calendar-allday-row">';
     h += '<div class="tx-calendar-allday-label">all-day</div>';
     h += '<div class="tx-calendar-allday-cells">';
     for (const d of days) {
       const dateStr = fmtDate(d);
-      const allDayEvts = getEventsForDate(d).filter((e) => isAllDay(e));
+      const allDayEvts = dayEventsMap.get(dateStr)!.allDay;
       h += `<div class="tx-calendar-allday-cell" data-date="${dateStr}">`;
       for (const ev of allDayEvts) {
         h += `<span class="tx-calendar-event" data-event-id="${esc(ev.id)}" style="background:${eventColor(ev)}" title="${esc(ev.title)}">${esc(ev.title)}</span>`;
@@ -377,7 +388,7 @@ export function calendar(target: string | HTMLElement, options: CalendarOptions)
       }
 
       // Timed events
-      const timedEvts = getEventsForDate(d).filter((e) => !isAllDay(e));
+      const timedEvts = dayEventsMap.get(dateStr)!.timed;
       for (const ev of timedEvts) {
         const startDt = parseEventDateTime(ev.start);
         const endDt = ev.end ? parseEventDateTime(ev.end) : new Date(startDt.getTime() + 60 * 60 * 1000);
