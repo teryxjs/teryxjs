@@ -71,7 +71,9 @@ export {
   exportHTML,
   gridColumnsToExport,
   chart,
-  skeleton,
+  datePicker,
+  tooltip,
+  popover,
 } from './widgets';
 
 // Category imports
