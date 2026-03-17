@@ -96,6 +96,79 @@ export function tree(target: string | HTMLElement, options: TreeOptions): TreeIn
     }
   });
 
+  // Keyboard navigation: Arrow Up/Down between nodes, Left/Right to collapse/expand, Enter to select
+  container.addEventListener('keydown', (e) => {
+    const tgt = e.target as HTMLElement;
+    const contentEl = tgt.closest('.tx-tree-content') as HTMLElement;
+    if (!contentEl) return;
+
+    const allContents = Array.from(container.querySelectorAll('.tx-tree-content')) as HTMLElement[];
+    // Filter to only visible nodes
+    const visibleContents = allContents.filter((c) => {
+      let parent = c.parentElement;
+      while (parent && parent !== container) {
+        if (parent.classList.contains('tx-tree-children') && parent.style.display === 'none') return false;
+        parent = parent.parentElement;
+      }
+      return true;
+    });
+
+    const currentIdx = visibleContents.indexOf(contentEl);
+    const node = contentEl.closest('.tx-tree-node') as HTMLElement;
+
+    switch (e.key) {
+      case 'ArrowDown': {
+        e.preventDefault();
+        const nextIdx = currentIdx + 1;
+        if (nextIdx < visibleContents.length) visibleContents[nextIdx].focus();
+        break;
+      }
+      case 'ArrowUp': {
+        e.preventDefault();
+        const prevIdx = currentIdx - 1;
+        if (prevIdx >= 0) visibleContents[prevIdx].focus();
+        break;
+      }
+      case 'ArrowRight': {
+        e.preventDefault();
+        if (node) {
+          const children = node.querySelector(':scope > .tx-tree-children') as HTMLElement;
+          if (children && !node.classList.contains('tx-tree-expanded')) {
+            const nodeId = node.getAttribute('data-id')!;
+            setExpanded(nodeId, true);
+            emit('tree:toggle', { id, nodeId, expanded: true });
+          }
+        }
+        break;
+      }
+      case 'ArrowLeft': {
+        e.preventDefault();
+        if (node) {
+          if (node.classList.contains('tx-tree-expanded')) {
+            const nodeId = node.getAttribute('data-id')!;
+            setExpanded(nodeId, false);
+            emit('tree:toggle', { id, nodeId, expanded: false });
+          }
+        }
+        break;
+      }
+      case 'Enter':
+      case ' ': {
+        e.preventDefault();
+        if (node && options.selectable !== false) {
+          const nodeId = node.getAttribute('data-id')!;
+          container.querySelectorAll('.tx-tree-selected').forEach((n) => n.classList.remove('tx-tree-selected'));
+          contentEl.classList.add('tx-tree-selected');
+          selectedNode = nodeId;
+          const nodeData = findNode(options.nodes || [], nodeId);
+          if (nodeData) options.onSelect?.(nodeData);
+          emit('tree:select', { id, nodeId });
+        }
+        break;
+      }
+    }
+  });
+
   function setExpanded(nodeId: string, expanded: boolean): void {
     const node = container.querySelector(`[data-id="${nodeId}"]`) as HTMLElement;
     if (!node) return;
@@ -163,7 +236,7 @@ function renderNodes(nodes: TreeNode[], options: TreeOptions, depth: number): st
     const isLeaf = node.leaf ?? !hasChildren;
 
     html += `<div class="${cls('tx-tree-node', isExpanded && 'tx-tree-expanded', node.cls)}" data-id="${esc(node.id)}" role="treeitem" style="--depth:${depth}">`;
-    html += '<div class="tx-tree-content">';
+    html += '<div class="tx-tree-content" tabindex="0">';
 
     // Indent + toggle
     if (!isLeaf) {

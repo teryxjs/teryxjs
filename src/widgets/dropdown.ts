@@ -25,12 +25,35 @@ export function dropdown(options: DropdownOptions): DropdownInstance {
   triggerEl.style.position = 'relative';
   triggerEl.appendChild(menuEl);
 
+  // Set aria attributes on trigger
+  triggerEl.setAttribute('aria-haspopup', 'true');
+  triggerEl.setAttribute('aria-expanded', 'false');
+
   let isOpen = false;
+  let focusedIndex = -1;
+
+  function getMenuItems(): HTMLElement[] {
+    return Array.from(menuEl.querySelectorAll('.tx-dropdown-item:not(.tx-dropdown-item-disabled)')) as HTMLElement[];
+  }
+
+  function setFocusedItem(idx: number): void {
+    const items = getMenuItems();
+    items.forEach((item) => item.setAttribute('tabindex', '-1'));
+    if (idx >= 0 && idx < items.length) {
+      focusedIndex = idx;
+      items[idx].setAttribute('tabindex', '0');
+      items[idx].focus();
+    } else {
+      focusedIndex = -1;
+    }
+  }
 
   function open(): void {
     menuEl.style.display = '';
     requestAnimationFrame(() => menuEl.classList.add('tx-dropdown-open'));
     isOpen = true;
+    triggerEl.setAttribute('aria-expanded', 'true');
+    setFocusedItem(0);
     emit('dropdown:open', { id });
   }
 
@@ -40,6 +63,8 @@ export function dropdown(options: DropdownOptions): DropdownInstance {
       menuEl.style.display = 'none';
     }, 150);
     isOpen = false;
+    focusedIndex = -1;
+    triggerEl.setAttribute('aria-expanded', 'false');
     emit('dropdown:close', { id });
   }
 
@@ -62,11 +87,48 @@ export function dropdown(options: DropdownOptions): DropdownInstance {
   };
   document.addEventListener('click', outsideClickHandler);
 
-  // Escape key
-  const escapeKeyHandler = (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && isOpen) close();
+  // Keyboard navigation
+  const keyHandler = (e: KeyboardEvent) => {
+    if (!isOpen) return;
+
+    const items = getMenuItems();
+    if (items.length === 0) return;
+
+    switch (e.key) {
+      case 'Escape':
+        e.preventDefault();
+        close();
+        triggerEl.focus();
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        setFocusedItem(focusedIndex < items.length - 1 ? focusedIndex + 1 : 0);
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setFocusedItem(focusedIndex > 0 ? focusedIndex - 1 : items.length - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        setFocusedItem(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        setFocusedItem(items.length - 1);
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        if (focusedIndex >= 0 && focusedIndex < items.length) {
+          items[focusedIndex].click();
+        }
+        break;
+      case 'Tab':
+        close();
+        break;
+    }
   };
-  document.addEventListener('keydown', escapeKeyHandler);
+  document.addEventListener('keydown', keyHandler);
 
   // Menu item clicks
   menuEl.addEventListener('click', (e) => {
@@ -85,7 +147,7 @@ export function dropdown(options: DropdownOptions): DropdownInstance {
     el: menuEl,
     destroy() {
       document.removeEventListener('click', outsideClickHandler);
-      document.removeEventListener('keydown', escapeKeyHandler);
+      document.removeEventListener('keydown', keyHandler);
       menuEl.remove();
     },
     open,
@@ -178,24 +240,24 @@ function renderMenuItems(items: MenuItem[], _id: string): string {
   let html = '';
   items.forEach((item, i) => {
     if (item.divider) {
-      html += '<div class="tx-dropdown-divider"></div>';
+      html += '<div class="tx-dropdown-divider" role="separator"></div>';
       return;
     }
 
     const itemCls = cls('tx-dropdown-item', item.disabled && 'tx-dropdown-item-disabled');
 
     if (item.href) {
-      html += `<a class="${itemCls}" href="${esc(item.href)}" data-index="${i}" role="menuitem"`;
+      html += `<a class="${itemCls}" href="${esc(item.href)}" data-index="${i}" role="menuitem" tabindex="-1"`;
       if (item.target) html += ` target="${esc(item.target)}"`;
       html += '>';
     } else if (item.action) {
-      html += `<button class="${itemCls}" data-index="${i}" role="menuitem"`;
+      html += `<button class="${itemCls}" data-index="${i}" role="menuitem" tabindex="-1"`;
       const method = (item.method || 'post').toLowerCase();
       html += ` xh-${method}="${esc(item.action)}"`;
       if (item.target) html += ` xh-target="${esc(item.target)}"`;
       html += '>';
     } else {
-      html += `<button class="${itemCls}" data-index="${i}" role="menuitem">`;
+      html += `<button class="${itemCls}" data-index="${i}" role="menuitem" tabindex="-1">`;
     }
 
     if (item.icon) html += `<span class="tx-dropdown-item-icon">${icon(item.icon)}</span>`;
@@ -210,7 +272,7 @@ function renderMenuItems(items: MenuItem[], _id: string): string {
 
     // Sub-menu
     if (item.children?.length) {
-      html += '<div class="tx-dropdown-submenu">';
+      html += '<div class="tx-dropdown-submenu" role="menu">';
       html += renderMenuItems(item.children, _id);
       html += '</div>';
     }
