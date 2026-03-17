@@ -5,6 +5,7 @@
 import type { FileUploadOptions, WidgetInstance } from '../types';
 import { uid, esc, cls, icon, resolveTarget } from '../utils';
 import { registerWidget, emit } from '../core';
+import { t } from '../i18n';
 
 export function fileupload(target: string | HTMLElement, options: FileUploadOptions): WidgetInstance {
   const el = resolveTarget(target);
@@ -22,10 +23,10 @@ export function fileupload(target: string | HTMLElement, options: FileUploadOpti
   html += `<div class="tx-upload-icon">${icon('upload', 32)}</div>`;
   html += '<div class="tx-upload-text">';
   if (dragDrop) {
-    html += '<span>Drop files here or </span>';
+    html += `<span>${esc(t('upload.dropText'))}</span>`;
   }
   html += `<label class="tx-upload-browse">`;
-  html += 'Browse';
+  html += esc(t('upload.browse'));
   html += `<input type="file" class="tx-upload-input"`;
   if (multiple) html += ' multiple';
   if (options.accept) html += ` accept="${esc(options.accept)}"`;

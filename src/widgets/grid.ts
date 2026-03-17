@@ -5,6 +5,7 @@
 import type { GridOptions, GridColumn, GridInstance, ToolbarItem } from '../types';
 import { uid, esc, cls, icon, resolveTarget } from '../utils';
 import { registerWidget } from '../core';
+import { t } from '../i18n';
 
 export function grid(target: string | HTMLElement, options: GridOptions): GridInstance {
   const el = resolveTarget(target);
@@ -128,7 +129,7 @@ function renderToolbar(options: GridOptions, id: string): string {
     html += `<span class="tx-input-icon">${icon('search')}</span>`;
     html += `<input type="text" id="${esc(id)}-search"`;
     html += ` class="tx-input tx-grid-search"`;
-    html += ` placeholder="Search..."`;
+    html += ` placeholder="${esc(t('grid.search'))}"`;
     html += ` name="${esc(options.searchParam || 'q')}">`;
     html += `</div>`;
   }
@@ -310,7 +311,7 @@ function renderTableTemplate(
   // Empty state
   html += `<div xh-if="!${esc(rowsField)}.length" class="tx-grid-empty">`;
   html += `<div class="tx-grid-empty-icon">${icon('file')}</div>`;
-  html += `<div class="tx-grid-empty-text">${esc(options.emptyMessage || 'No data found')}</div>`;
+  html += `<div class="tx-grid-empty-text">${esc(options.emptyMessage || t('grid.noData'))}</div>`;
   html += '</div>';
 
   // Pagination

@@ -18,6 +18,10 @@ export { configure, config, initWidgets, registerWidget, on, off, emit } from '.
 // Types
 export type * from './types';
 
+// i18n
+export { setLocale, getLocale, t } from './i18n';
+export type { TeryxLocale } from './i18n';
+
 // Utilities
 export { uid, esc, cls, icon, icons, resolveTarget, createElement, debounce, throttle, clamp } from './utils';
 
