@@ -42,7 +42,11 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
   html += `<div id="${esc(id)}-data"`;
   html += ` xh-get="${esc(options.source)}"`;
   html += ` xh-trigger="${triggerParts.join(', ')}"`;
-  html += ` xh-indicator="#${esc(id)}-loading">`;
+  html += ` xh-indicator="#${esc(id)}-loading"`;
+  if (options.groupBy) {
+    html += ` data-group-by="${esc(options.groupBy)}"`;
+  }
+  html += `>`;
 
   // Inline xhtmlx template
   html += `<template>`;
@@ -65,7 +69,7 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
 
   el.innerHTML = html;
 
-  // --- Post-render: attach sort click handlers, cell editing, locked scroll sync ---
+  // --- Post-render: attach sort click handlers, cell editing, locked scroll sync, grouping ---
   requestAnimationFrame(() => {
     attachSortHandlers(el, id, options);
     if (options.editable) {
@@ -73,6 +77,9 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
     }
     if (hasLockedCols) {
       attachLockedScrollSync(el);
+    }
+    if (options.groupBy) {
+      attachGroupByHandlers(el, id, options);
     }
   });
 
@@ -529,6 +536,135 @@ function attachCellEditHandlers(root: HTMLElement, _id: string, options: GridOpt
         td.innerHTML = originalHTML;
       }
     });
+  });
+}
+
+// ----------------------------------------------------------
+// Row grouping (post-render)
+// ----------------------------------------------------------
+function attachGroupByHandlers(root: HTMLElement, id: string, options: GridOptions): void {
+  if (!options.groupBy) return;
+  const groupByField: string = options.groupBy;
+
+  const dataEl = document.getElementById(`${id}-data`);
+  if (!dataEl) return;
+
+  // Determine the column index for the groupBy field
+  const visibleCols = options.columns.filter((c) => !c.hidden);
+  let fieldColIndex = visibleCols.findIndex((c) => c.field === groupByField);
+  if (fieldColIndex === -1) return;
+
+  // Account for extra columns (row numbers, selectable)
+  let colOffset = 0;
+  if (options.rowNumbers) colOffset++;
+  if (options.selectable) colOffset++;
+  fieldColIndex += colOffset;
+
+  const totalCols = visibleCols.length + colOffset;
+
+  function applyGrouping(): void {
+    const tbody = dataEl!.querySelector('tbody');
+    if (!tbody) return;
+
+    const rows = Array.from(tbody.querySelectorAll<HTMLTableRowElement>('tr.tx-grid-row'));
+    if (rows.length === 0) return;
+
+    // Already grouped? Remove old group headers first
+    tbody.querySelectorAll('.tx-grid-group-header').forEach((h) => h.remove());
+    rows.forEach((r) => {
+      r.style.display = '';
+      r.removeAttribute('data-group-value');
+    });
+
+    // Build groups in order of first appearance
+    const groupOrder: string[] = [];
+    const groupRows: Map<string, HTMLTableRowElement[]> = new Map();
+
+    for (const row of rows) {
+      const cells = row.querySelectorAll('td');
+      const cell = cells[fieldColIndex];
+      const value = cell ? (cell.textContent || '').trim() : '';
+      row.setAttribute('data-group-value', value);
+
+      if (!groupRows.has(value)) {
+        groupOrder.push(value);
+        groupRows.set(value, []);
+      }
+      groupRows.get(value)!.push(row);
+    }
+
+    // Insert group header rows and rearrange
+    for (const groupValue of groupOrder) {
+      const groupRowsList = groupRows.get(groupValue)!;
+
+      const headerRow = document.createElement('tr');
+      headerRow.className = 'tx-grid-group-header';
+      headerRow.setAttribute('data-group-value', groupValue);
+
+      const headerCell = document.createElement('td');
+      headerCell.colSpan = totalCols;
+      headerCell.innerHTML =
+        `<span class="tx-grid-group-toggle">${icon('chevronDown')}</span>` +
+        `${esc(groupByField)}: ${esc(groupValue)}` +
+        `<span class="tx-grid-group-count">(${groupRowsList.length})</span>`;
+      headerRow.appendChild(headerCell);
+
+      // Insert header before first row of the group
+      tbody.insertBefore(headerRow, groupRowsList[0]);
+
+      // Ensure group rows follow the header in order
+      let insertAfter: Node = headerRow;
+      for (const row of groupRowsList) {
+        if (insertAfter.nextSibling) {
+          tbody.insertBefore(row, insertAfter.nextSibling);
+        } else {
+          tbody.appendChild(row);
+        }
+        insertAfter = row;
+      }
+    }
+  }
+
+  // Observe mutations on the data element for when xhtmlx renders or re-renders
+  const observer = new MutationObserver(() => {
+    // Delay to allow xhtmlx to finish rendering
+    requestAnimationFrame(() => applyGrouping());
+  });
+
+  observer.observe(dataEl, { childList: true, subtree: true });
+
+  // Also try to apply immediately in case content is already rendered
+  applyGrouping();
+
+  // Event delegation for group header collapse/expand
+  root.addEventListener('click', (e) => {
+    const headerRow = (e.target as HTMLElement).closest('.tx-grid-group-header') as HTMLTableRowElement | null;
+    if (!headerRow) return;
+
+    const groupValue = headerRow.getAttribute('data-group-value') || '';
+    const isCollapsed = headerRow.classList.contains('tx-grid-group-collapsed');
+
+    if (isCollapsed) {
+      // Expand
+      headerRow.classList.remove('tx-grid-group-collapsed');
+      let sibling = headerRow.nextElementSibling as HTMLTableRowElement | null;
+      while (sibling && !sibling.classList.contains('tx-grid-group-header')) {
+        if (sibling.getAttribute('data-group-value') === groupValue) {
+          sibling.style.display = '';
+        }
+        sibling = sibling.nextElementSibling as HTMLTableRowElement | null;
+      }
+    } else {
+      // Collapse
+      headerRow.classList.add('tx-grid-group-collapsed');
+      let sibling = headerRow.nextElementSibling as HTMLTableRowElement | null;
+      while (sibling && !sibling.classList.contains('tx-grid-group-header')) {
+        if (sibling.getAttribute('data-group-value') === groupValue) {
+          sibling.style.display = 'none';
+        }
+        sibling = sibling.nextElementSibling as HTMLTableRowElement | null;
+      }
+    }
   });
 }
 
