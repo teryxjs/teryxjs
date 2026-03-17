@@ -20,6 +20,9 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
   const pageSize = options.pageSize || 25;
   const visibleCols = options.columns.filter((c) => !c.hidden);
 
+  // Determine if locked columns are in use
+  const hasLockedCols = visibleCols.some((c) => c.locked === 'left' || c.locked === 'right');
+
   let html = `<div class="${cls('tx-grid', options.class)}" id="${esc(id)}">`;
 
   // --- Toolbar ---
@@ -43,7 +46,11 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
 
   // Inline xhtmlx template
   html += `<template>`;
-  html += renderTableTemplate(visibleCols, options, id, rowsField, totalField, pageSize);
+  if (hasLockedCols) {
+    html += renderLockedTableTemplate(visibleCols, options, id, rowsField, totalField, pageSize);
+  } else {
+    html += renderTableTemplate(visibleCols, options, id, rowsField, totalField, pageSize);
+  }
   html += `</template>`;
 
   // Loading indicator
@@ -58,11 +65,14 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
 
   el.innerHTML = html;
 
-  // --- Post-render: attach sort click handlers + cell editing ---
+  // --- Post-render: attach sort click handlers, cell editing, locked scroll sync ---
   requestAnimationFrame(() => {
     attachSortHandlers(el, id, options);
     if (options.editable) {
       attachCellEditHandlers(el, id, options);
+    }
+    if (hasLockedCols) {
+      attachLockedScrollSync(el);
     }
   });
 
@@ -514,6 +524,196 @@ function attachCellEditHandlers(root: HTMLElement, _id: string, options: GridOpt
         td.classList.remove('tx-grid-cell-editing');
         td.innerHTML = originalHTML;
       }
+    });
+  });
+}
+
+// ----------------------------------------------------------
+// Locked columns template rendering
+// ----------------------------------------------------------
+function renderLockedTableTemplate(
+  cols: GridColumn[],
+  options: GridOptions,
+  id: string,
+  rowsField: string,
+  _totalField: string,
+  _pageSize: number,
+): string {
+  const leftCols = cols.filter((c) => c.locked === 'left');
+  const rightCols = cols.filter((c) => c.locked === 'right');
+  const centerCols = cols.filter((c) => !c.locked);
+
+  let html = `<div class="tx-grid-locked-container">`;
+
+  if (leftCols.length > 0) {
+    html += `<div class="tx-grid-locked-left">`;
+    html += renderSectionTable(leftCols, options, id, rowsField);
+    html += `</div>`;
+  }
+
+  html += `<div class="tx-grid-scrollable">`;
+  html += renderSectionTable(centerCols, options, id, rowsField, true);
+  html += `</div>`;
+
+  if (rightCols.length > 0) {
+    html += `<div class="tx-grid-locked-right">`;
+    html += renderSectionTable(rightCols, options, id, rowsField);
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+
+  html += `<div xh-if="!${esc(rowsField)}.length" class="tx-grid-empty">`;
+  html += `<div class="tx-grid-empty-icon">${icon('file')}</div>`;
+  html += `<div class="tx-grid-empty-text">${esc(options.emptyMessage || t('grid.noData'))}</div>`;
+  html += '</div>';
+
+  if (options.paginated) {
+    html += `<div class="tx-grid-footer">`;
+    html += `<div class="tx-grid-footer-info">`;
+    html += `<span xh-if="total" class="tx-grid-total">Showing <span xh-text="from"></span>-<span xh-text="to"></span> of <span xh-text="total"></span></span>`;
+    html += `</div>`;
+    html += `<div class="tx-grid-pagination" id="${esc(id)}-pagination">`;
+    html += `<div xh-if="totalPages" class="tx-pagination">`;
+    html += `<button class="tx-pagination-btn" xh-if="page" xh-attr-disabled="page === 1"`;
+    html += ` xh-get="${esc(options.source)}?${esc(options.pageParam || 'page')}={{prevPage}}"`;
+    html += ` xh-target="#${esc(id)}-data" xh-trigger="click">${icon('chevronLeft')}</button>`;
+    html += `<span class="tx-pagination-info">Page <span xh-text="page"></span> of <span xh-text="totalPages"></span></span>`;
+    html += `<button class="tx-pagination-btn" xh-if="page" xh-attr-disabled="page === totalPages"`;
+    html += ` xh-get="${esc(options.source)}?${esc(options.pageParam || 'page')}={{nextPage}}"`;
+    html += ` xh-target="#${esc(id)}-data" xh-trigger="click">${icon('chevronRight')}</button>`;
+    html += `</div>`;
+    html += `</div>`;
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+function renderSectionTable(
+  cols: GridColumn[],
+  options: GridOptions,
+  id: string,
+  rowsField: string,
+  includeRowExtras = false,
+): string {
+  const tableClasses = cls(
+    'tx-table',
+    options.striped && 'tx-table-striped',
+    options.hoverable !== false && 'tx-table-hoverable',
+    options.bordered && 'tx-table-bordered',
+    options.compact && 'tx-table-compact',
+    options.stickyHeader && 'tx-table-sticky',
+  );
+
+  let html = `<table class="${tableClasses}">`;
+  html += '<thead><tr>';
+
+  if (includeRowExtras && options.rowNumbers) {
+    html += '<th class="tx-grid-rownum-col">#</th>';
+  }
+  if (includeRowExtras && options.selectable) {
+    html += '<th class="tx-grid-select-col"><input type="checkbox" class="tx-checkbox tx-grid-select-all"></th>';
+  }
+
+  for (const col of cols) {
+    const thCls = cls(col.headerClass, col.align && `tx-text-${col.align}`, col.sortable && 'tx-grid-sortable');
+    const style = col.width
+      ? ` style="width:${esc(col.width)}"`
+      : col.minWidth
+        ? ` style="min-width:${esc(col.minWidth)}"`
+        : '';
+    html += `<th class="${thCls}" data-field="${esc(col.field)}"${style}>`;
+    html += `<span class="tx-grid-header-text">${esc(col.label)}</span>`;
+    if (col.sortable) {
+      html += `<span class="tx-grid-sort-icon">${icon('sort')}</span>`;
+    }
+    html += '</th>';
+  }
+
+  html += '</tr>';
+
+  if (cols.some((c) => c.filterable)) {
+    html += '<tr class="tx-grid-filter-row">';
+    if (includeRowExtras && options.rowNumbers) html += '<th></th>';
+    if (includeRowExtras && options.selectable) html += '<th></th>';
+    for (const col of cols) {
+      html += '<th>';
+      if (col.filterable) {
+        html += renderColumnFilter(col, id);
+      }
+      html += '</th>';
+    }
+    html += '</tr>';
+  }
+
+  html += '</thead>';
+  html += '<tbody>';
+
+  const trCls = cls('tx-grid-row', options.rowClass);
+  html += `<tr xh-each="${esc(rowsField)}" class="${trCls}">`;
+
+  if (includeRowExtras && options.rowNumbers) {
+    html += '<td class="tx-grid-rownum-col" xh-text="$index"></td>';
+  }
+  if (includeRowExtras && options.selectable) {
+    html += '<td class="tx-grid-select-col"><input type="checkbox" class="tx-checkbox tx-grid-row-select"></td>';
+  }
+
+  for (const col of cols) {
+    const tdCls = cls(col.class, col.align && `tx-text-${col.align}`);
+    html += `<td class="${tdCls}">`;
+    if (col.template) {
+      html += col.template;
+    } else if (col.renderer) {
+      html += renderCellByType(col);
+    } else {
+      html += `<span xh-text="${esc(col.field)}"></span>`;
+    }
+    html += '</td>';
+  }
+
+  html += '</tr>';
+  html += '</tbody>';
+
+  if (options.showSummary) {
+    html += '<tfoot><tr class="tx-grid-summary">';
+    if (includeRowExtras && options.rowNumbers) html += '<td></td>';
+    if (includeRowExtras && options.selectable) html += '<td></td>';
+    for (const col of cols) {
+      if (col.summary) {
+        html += `<td class="tx-text-${col.align || 'right'}" xh-text="${esc(col.field)}_${esc(col.summary)}"></td>`;
+      } else {
+        html += '<td></td>';
+      }
+    }
+    html += '</tr></tfoot>';
+  }
+
+  html += '</table>';
+  return html;
+}
+
+function attachLockedScrollSync(root: HTMLElement): void {
+  const container = root.querySelector('.tx-grid-locked-container');
+  if (!container) return;
+
+  const sections = container.querySelectorAll<HTMLElement>(
+    '.tx-grid-locked-left, .tx-grid-scrollable, .tx-grid-locked-right',
+  );
+
+  let syncing = false;
+  sections.forEach((section) => {
+    section.addEventListener('scroll', () => {
+      if (syncing) return;
+      syncing = true;
+      const scrollTop = section.scrollTop;
+      sections.forEach((other) => {
+        if (other !== section) {
+          other.scrollTop = scrollTop;
+        }
+      });
+      syncing = false;
     });
   });
 }
