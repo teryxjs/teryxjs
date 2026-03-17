@@ -32,4 +32,4 @@ export { segmented } from './segmented';
 export { propertyGrid, descriptions } from './property-grid';
 export { exportCSV, exportExcel, exportJSON, exportHTML, gridColumnsToExport } from './exporter';
 export { chart } from './chart';
-export { skeleton } from './skeleton';
+export { tooltip, popover } from './tooltip';
