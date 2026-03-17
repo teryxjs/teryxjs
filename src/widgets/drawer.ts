@@ -6,7 +6,7 @@ import type { DrawerOptions, DrawerInstance } from '../types';
 import { uid, esc, cls, icon } from '../utils';
 import { registerWidget, emit } from '../core';
 
-const openDrawers = new Set<DrawerInstance>();
+const openDrawers: Set<DrawerInstance> = new Set();
 
 export function drawer(options: DrawerOptions): DrawerInstance {
   const id = options.id || uid('tx-drawer');
@@ -92,7 +92,6 @@ export function drawer(options: DrawerOptions): DrawerInstance {
     },
     destroy() {
       if (instance.isOpen()) instance.close();
-      document.removeEventListener('keydown', escapeHandler);
       setTimeout(() => overlay.remove(), 350);
     },
   };
@@ -108,10 +107,9 @@ export function drawer(options: DrawerOptions): DrawerInstance {
   }
 
   // Escape
-  const escapeHandler = (e: KeyboardEvent) => {
+  document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && instance.isOpen()) instance.close();
-  };
-  document.addEventListener('keydown', escapeHandler);
+  });
 
   return instance;
 }
