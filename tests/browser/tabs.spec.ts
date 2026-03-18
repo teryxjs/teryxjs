@@ -393,7 +393,7 @@ test.describe('Tabs', () => {
     `,
     );
 
-    await page.locator('.tx-tab[data-tab="t2"]').click();
+    await page.locator('.tx-tab[data-tab="tab2"]').click();
     await page.waitForTimeout(50);
 
     // Focused and blurred nav should be pixel-identical (no focus ring)
