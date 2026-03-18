@@ -1269,7 +1269,15 @@ body.tx-modal-open {
   color: var(--tx-text-secondary);
   cursor: pointer;
   white-space: nowrap;
-  outline: none;
+  outline: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.tx-tab:focus,
+.tx-tab:focus-visible {
+  outline: 0;
+  box-shadow: none;
 }
 .tx-tab:hover {
   color: var(--tx-text);
