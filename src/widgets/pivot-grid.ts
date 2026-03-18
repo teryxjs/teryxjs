@@ -24,9 +24,9 @@ function aggregate(values: number[], fn: AggFn): number {
     case 'count':
       return values.length;
     case 'min':
-      return Math.min(...values);
+      return values.reduce((a, b) => (a < b ? a : b));
     case 'max':
-      return Math.max(...values);
+      return values.reduce((a, b) => (a > b ? a : b));
   }
 }
 
@@ -55,6 +55,7 @@ function buildPivot(
   rowKeys: string[];
   colKeys: string[];
   cells: Map<string, PivotCell>;
+  buckets: Map<string, Map<string, number[]>>;
   rowTotals: Map<string, Map<string, number>>;
   colTotals: Map<string, Map<string, number>>;
   grandTotals: Map<string, number>;
@@ -97,17 +98,17 @@ function buildPivot(
     cells.set(cellKey, { rowKey: rk, colKey: ck, values });
   }
 
-  // Row totals
+  // Row totals — aggregate from raw bucket values, not from per-cell aggregates
   const rowTotals = new Map<string, Map<string, number>>();
   for (const rk of rowKeys) {
     const totals = new Map<string, number>();
     for (const vf of valueFields) {
-      const vals: number[] = [];
+      const raw: number[] = [];
       for (const ck of colKeys) {
-        const cell = cells.get(`${rk}::${ck}`);
-        if (cell) vals.push(cell.values.get(vf.field) || 0);
+        const bucket = buckets.get(`${rk}::${ck}`);
+        if (bucket) raw.push(...(bucket.get(vf.field) || []));
       }
-      totals.set(vf.field, aggregate(vals, vf.aggregate === 'avg' ? 'avg' : 'sum'));
+      totals.set(vf.field, aggregate(raw, vf.aggregate));
     }
     rowTotals.set(rk, totals);
   }
@@ -117,25 +118,24 @@ function buildPivot(
   for (const ck of colKeys) {
     const totals = new Map<string, number>();
     for (const vf of valueFields) {
-      const vals: number[] = [];
+      const raw: number[] = [];
       for (const rk of rowKeys) {
-        const cell = cells.get(`${rk}::${ck}`);
-        if (cell) vals.push(cell.values.get(vf.field) || 0);
+        const bucket = buckets.get(`${rk}::${ck}`);
+        if (bucket) raw.push(...(bucket.get(vf.field) || []));
       }
-      totals.set(vf.field, aggregate(vals, vf.aggregate === 'avg' ? 'avg' : 'sum'));
+      totals.set(vf.field, aggregate(raw, vf.aggregate));
     }
     colTotals.set(ck, totals);
   }
 
-  // Grand totals
+  // Grand totals — aggregate all raw values
   const grandTotals = new Map<string, number>();
   for (const vf of valueFields) {
-    const vals: number[] = [];
-    for (const rk of rowKeys) {
-      const rt = rowTotals.get(rk);
-      if (rt) vals.push(rt.get(vf.field) || 0);
+    const raw: number[] = [];
+    for (const bucket of buckets.values()) {
+      raw.push(...(bucket.get(vf.field) || []));
     }
-    grandTotals.set(vf.field, aggregate(vals, vf.aggregate === 'avg' ? 'avg' : 'sum'));
+    grandTotals.set(vf.field, aggregate(raw, vf.aggregate));
   }
 
   // Label maps
@@ -148,7 +148,7 @@ function buildPivot(
     colLabels.set(ck, ck.split('|||'));
   }
 
-  return { rowKeys, colKeys, cells, rowTotals, colTotals, grandTotals, rowLabels, colLabels };
+  return { rowKeys, colKeys, cells, buckets, rowTotals, colTotals, grandTotals, rowLabels, colLabels };
 }
 
 function formatNumber(val: number): string {
@@ -163,10 +163,12 @@ export function pivotGrid(target: string | HTMLElement, options: PivotOptions): 
   const valueFields = options.values;
 
   let currentData: Row[] = [];
+  let cachedPivot: ReturnType<typeof buildPivot> | null = null;
   const collapsed = new Set<string>();
 
   function render(): void {
     const pivot = buildPivot(currentData, rowFields, colFields, valueFields);
+    cachedPivot = pivot;
     const hasColFields = colFields.length > 0 && pivot.colKeys[0] !== '__all__';
     const valueCount = valueFields.length;
 
@@ -225,46 +227,39 @@ export function pivotGrid(target: string | HTMLElement, options: PivotOptions): 
         html += `${esc(groupVal)}`;
         html += '</td>';
 
-        // Group subtotals
-        const groupSubtotals = new Map<string, Map<string, number>>();
+        // Group subtotals — aggregate from raw buckets for correctness (esp. avg)
         if (hasColFields) {
           for (const ck of pivot.colKeys) {
-            const totals = new Map<string, number>();
             for (const vf of valueFields) {
-              const vals: number[] = [];
+              const raw: number[] = [];
               for (const rk of groupRows) {
-                const cell = pivot.cells.get(`${rk}::${ck}`);
-                if (cell) vals.push(cell.values.get(vf.field) || 0);
+                const bucket = pivot.buckets.get(`${rk}::${ck}`);
+                if (bucket) raw.push(...(bucket.get(vf.field) || []));
               }
-              totals.set(vf.field, aggregate(vals, vf.aggregate === 'avg' ? 'avg' : 'sum'));
-            }
-            groupSubtotals.set(ck, totals);
-          }
-          for (const ck of pivot.colKeys) {
-            const totals = groupSubtotals.get(ck)!;
-            for (const vf of valueFields) {
-              html += `<td class="tx-pivot-cell tx-pivot-subtotal">${formatNumber(totals.get(vf.field) || 0)}</td>`;
+              html += `<td class="tx-pivot-cell tx-pivot-subtotal">${formatNumber(aggregate(raw, vf.aggregate))}</td>`;
             }
           }
         } else {
           for (const vf of valueFields) {
-            const vals: number[] = [];
+            const raw: number[] = [];
             for (const rk of groupRows) {
-              const cell = pivot.cells.get(`${rk}::__all__`);
-              if (cell) vals.push(cell.values.get(vf.field) || 0);
+              const bucket = pivot.buckets.get(`${rk}::__all__`);
+              if (bucket) raw.push(...(bucket.get(vf.field) || []));
             }
-            html += `<td class="tx-pivot-cell tx-pivot-subtotal">${formatNumber(aggregate(vals, vf.aggregate === 'avg' ? 'avg' : 'sum'))}</td>`;
+            html += `<td class="tx-pivot-cell tx-pivot-subtotal">${formatNumber(aggregate(raw, vf.aggregate))}</td>`;
           }
         }
 
         // Group row totals
         for (const vf of valueFields) {
-          const vals: number[] = [];
+          const raw: number[] = [];
           for (const rk of groupRows) {
-            const rt = pivot.rowTotals.get(rk);
-            if (rt) vals.push(rt.get(vf.field) || 0);
+            for (const ck of pivot.colKeys) {
+              const bucket = pivot.buckets.get(`${rk}::${ck}`);
+              if (bucket) raw.push(...(bucket.get(vf.field) || []));
+            }
           }
-          html += `<td class="tx-pivot-cell tx-pivot-total">${formatNumber(aggregate(vals, vf.aggregate === 'avg' ? 'avg' : 'sum'))}</td>`;
+          html += `<td class="tx-pivot-cell tx-pivot-total">${formatNumber(aggregate(raw, vf.aggregate))}</td>`;
         }
         html += '</tr>';
 
@@ -398,7 +393,7 @@ export function pivotGrid(target: string | HTMLElement, options: PivotOptions): 
       loadData(data);
     },
     getAggregatedData() {
-      const pivot = buildPivot(currentData, rowFields, colFields, valueFields);
+      const pivot = cachedPivot || buildPivot(currentData, rowFields, colFields, valueFields);
       const result: Record<string, unknown>[] = [];
       for (const rk of pivot.rowKeys) {
         const labels = pivot.rowLabels.get(rk)!;
