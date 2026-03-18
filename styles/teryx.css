@@ -1301,19 +1301,15 @@ body.tx-modal-open {
 }
 .tx-tabs-content {
   padding: var(--tx-space-4) 0;
-  position: relative;
+  display: grid;
 }
 .tx-tab-panel {
+  grid-area: 1 / 1;
   visibility: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   pointer-events: none;
 }
 .tx-tab-panel-active {
   visibility: visible;
-  position: relative;
   pointer-events: auto;
 }
 
