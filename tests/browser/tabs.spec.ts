@@ -334,6 +334,52 @@ test.describe('Tabs', () => {
     expect(tabIds).toEqual(['tab1', 'tab2', 'tab3']);
   });
 
+  test('content area height does not collapse during tab switch', async ({ page }) => {
+    await createWidget(
+      page,
+      `
+      Teryx.tabs('#target', {
+        items: [
+          { id: 'tab1', title: 'First', content: '<p style="height:80px">Tall content</p>' },
+          { id: 'tab2', title: 'Second', content: '<p style="height:80px">Also tall</p>' },
+        ],
+      });
+    `,
+    );
+
+    const content = page.locator('.tx-tabs-content');
+    const heightBefore = await content.evaluate((el) => el.getBoundingClientRect().height);
+    expect(heightBefore).toBeGreaterThan(0);
+
+    // Switch tabs and immediately measure — height must never hit zero
+    await page.evaluate(() => {
+      const container = document.querySelector('.tx-tabs-container')!;
+      const contentEl = container.querySelector('.tx-tabs-content')!;
+      (window as any).__minHeight = Infinity;
+
+      const observer = new MutationObserver(() => {
+        const h = contentEl.getBoundingClientRect().height;
+        if (h < (window as any).__minHeight) (window as any).__minHeight = h;
+      });
+      observer.observe(container, { attributes: true, subtree: true, childList: true });
+      (window as any).__observer = observer;
+    });
+
+    await page.locator('.tx-tab[data-tab="tab2"]').click();
+    await page.waitForTimeout(100);
+
+    const minHeight = await page.evaluate(() => {
+      (window as any).__observer.disconnect();
+      return (window as any).__minHeight;
+    });
+
+    // Content area should never have collapsed to zero
+    expect(minHeight).toBeGreaterThan(0);
+
+    const heightAfter = await content.evaluate((el) => el.getBoundingClientRect().height);
+    expect(heightAfter).toBeGreaterThan(0);
+  });
+
   test('variant class is applied', async ({ page }) => {
     await createWidget(
       page,
