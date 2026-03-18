@@ -70,12 +70,12 @@ describe('Tabs widget', () => {
 
     // Old panel should be hidden
     const panel1 = container.querySelector('[data-tab="tab1"].tx-tab-panel') as HTMLElement;
-    expect(panel1.hasAttribute('hidden')).toBe(true);
+    expect(panel1.getAttribute('aria-hidden')).toBe('true');
 
     // New panel should be visible
     const panel2 = container.querySelector('[data-tab="tab2"].tx-tab-panel') as HTMLElement;
     expect(panel2.classList.contains('tx-tab-panel-active')).toBe(true);
-    expect(panel2.hasAttribute('hidden')).toBe(false);
+    expect(panel2.hasAttribute('aria-hidden')).toBe(false);
   });
 
   it('activeTab() returns current', () => {

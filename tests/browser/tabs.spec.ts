@@ -43,10 +43,10 @@ test.describe('Tabs', () => {
 
     const firstPanel = page.locator('.tx-tab-panel[data-tab="tab1"]');
     await expect(firstPanel).toHaveClass(/tx-tab-panel-active/);
-    await expect(firstPanel).not.toHaveAttribute('hidden', '');
+    await expect(firstPanel).not.toHaveAttribute('aria-hidden', 'true');
 
     const secondPanel = page.locator('.tx-tab-panel[data-tab="tab2"]');
-    await expect(secondPanel).toHaveAttribute('hidden', '');
+    await expect(secondPanel).toHaveAttribute('aria-hidden', 'true');
   });
 
   test('clicking a tab switches active tab', async ({ page }) => {
@@ -71,14 +71,14 @@ test.describe('Tabs', () => {
 
     const secondPanel = page.locator('.tx-tab-panel[data-tab="tab2"]');
     await expect(secondPanel).toHaveClass(/tx-tab-panel-active/);
-    await expect(secondPanel).not.toHaveAttribute('hidden', '');
+    await expect(secondPanel).not.toHaveAttribute('aria-hidden', 'true');
 
     // First tab should no longer be active
     const firstTab = page.locator('.tx-tab[data-tab="tab1"]');
     await expect(firstTab).not.toHaveClass(/tx-tab-active/);
 
     const firstPanel = page.locator('.tx-tab-panel[data-tab="tab1"]');
-    await expect(firstPanel).toHaveAttribute('hidden', '');
+    await expect(firstPanel).toHaveAttribute('aria-hidden', 'true');
   });
 
   test('disabled tab does not switch on click', async ({ page }) => {

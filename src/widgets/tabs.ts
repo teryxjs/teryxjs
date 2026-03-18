@@ -72,7 +72,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     html += ` data-tab="${esc(item.id)}"`;
     html += ` tabindex="0"`;
     html += ` aria-labelledby="${esc(id)}-tab-${esc(item.id)}"`;
-    if (!isActive) html += ' hidden';
+    if (!isActive) html += ' aria-hidden="true"';
     html += '>';
 
     if (item.source) {
@@ -104,7 +104,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     const oldPanel = container.querySelector(`.tx-tab-panel-active`);
     if (oldPanel) {
       oldPanel.classList.remove('tx-tab-panel-active');
-      oldPanel.setAttribute('hidden', '');
+      oldPanel.setAttribute('aria-hidden', 'true');
     }
 
     // Activate new
@@ -117,7 +117,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
     }
     if (newPanel) {
       newPanel.classList.add('tx-tab-panel-active');
-      newPanel.removeAttribute('hidden');
+      newPanel.removeAttribute('aria-hidden');
 
       // Lazy-load: trigger xhtmlx fetch if source panel hasn't been loaded
       const xhEl = newPanel.querySelector('[xh-get][xh-trigger="none"]');
@@ -244,7 +244,7 @@ export function tabs(target: string | HTMLElement, options: TabsOptions): TabsIn
 
       // Add panel
       const content = container.querySelector('.tx-tabs-content');
-      const panelHtml = `<div class="tx-tab-panel" role="tabpanel" id="${esc(id)}-panel-${esc(item.id)}" data-tab="${esc(item.id)}" tabindex="0" aria-labelledby="${esc(id)}-tab-${esc(item.id)}" hidden>${item.content || ''}</div>`;
+      const panelHtml = `<div class="tx-tab-panel" role="tabpanel" id="${esc(id)}-panel-${esc(item.id)}" data-tab="${esc(item.id)}" tabindex="0" aria-labelledby="${esc(id)}-tab-${esc(item.id)}" aria-hidden="true">${item.content || ''}</div>`;
       const panelEl = document.createElement('div');
       panelEl.innerHTML = panelHtml;
       content?.appendChild(panelEl.firstElementChild!);
