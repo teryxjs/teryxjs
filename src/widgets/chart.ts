@@ -586,7 +586,7 @@ function renderPieChart(
 
   const cx = w / 2;
   const cy = h / 2;
-  const outerR = Math.min(w, h) / 2 - 40;
+  const outerR = Math.min(w, h) * 0.42;
   const innerR = isDonut ? outerR * (1 - (opts.donutWidth ?? 0.4)) : 0;
 
   let svg = '';
@@ -843,7 +843,7 @@ export function chart(target: string | HTMLElement, options: ChartOptions): Char
     const svgContent = renderChart(opts, w, h);
     container.innerHTML =
       `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
-      `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
+      `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
       svgContent +
       `</svg></div>`;
   }
@@ -852,7 +852,7 @@ export function chart(target: string | HTMLElement, options: ChartOptions): Char
     // Show loading state, then fetch
     container.innerHTML =
       `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
-      `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
+      `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
       `<text x="${w / 2}" y="${h / 2}" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="#9ca3af">Loading\u2026</text>` +
       `</svg></div>`;
 
@@ -873,7 +873,7 @@ export function chart(target: string | HTMLElement, options: ChartOptions): Char
       .catch(() => {
         container.innerHTML =
           `<div class="${cls('tx-chart', opts.class)}" id="${esc(chartId)}">` +
-          `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
+          `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">` +
           `<text x="${w / 2}" y="${h / 2}" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="#ef4444">Failed to load chart data</text>` +
           `</svg></div>`;
       });
