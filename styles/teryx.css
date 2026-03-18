@@ -1278,6 +1278,7 @@ body.tx-modal-open {
 .tx-tab-active:hover {
   color: var(--tx-primary);
   border-bottom-color: var(--tx-primary);
+  background: none;
 }
 .tx-tab-disabled {
   opacity: 0.5;
@@ -1326,8 +1327,12 @@ body.tx-modal-open {
   background: var(--tx-primary);
   color: #fff;
 }
-.tx-tabs-underline .tx-tab-active {
-  box-shadow: inset 0 -3px 0 var(--tx-primary);
+.tx-tabs-underline .tx-tab {
+  border-bottom-width: 3px;
+  margin-bottom: -3px;
+}
+.tx-tabs-underline .tx-tabs-nav {
+  border-bottom-width: 3px;
 }
 .tx-tabs-card .tx-tabs-nav {
   border-bottom: 1px solid var(--tx-border);
