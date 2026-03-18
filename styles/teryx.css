@@ -1269,13 +1269,13 @@ body.tx-modal-open {
   color: var(--tx-text-secondary);
   cursor: pointer;
   white-space: nowrap;
-  transition: color var(--tx-transition), border-color var(--tx-transition), background var(--tx-transition), box-shadow var(--tx-transition);
 }
 .tx-tab:hover {
   color: var(--tx-text);
   background: var(--tx-bg-secondary);
 }
-.tx-tab-active {
+.tx-tab-active,
+.tx-tab-active:hover {
   color: var(--tx-primary);
   border-bottom-color: var(--tx-primary);
 }
