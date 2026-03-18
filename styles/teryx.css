@@ -1269,6 +1269,7 @@ body.tx-modal-open {
   color: var(--tx-text-secondary);
   cursor: pointer;
   white-space: nowrap;
+  outline: none;
 }
 .tx-tab:hover {
   color: var(--tx-text);
