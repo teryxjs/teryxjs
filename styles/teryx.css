@@ -1269,15 +1269,17 @@ body.tx-modal-open {
   color: var(--tx-text-secondary);
   cursor: pointer;
   white-space: nowrap;
-  transition: all var(--tx-transition);
+  outline: none;
 }
 .tx-tab:hover {
   color: var(--tx-text);
   background: var(--tx-bg-secondary);
 }
-.tx-tab-active {
+.tx-tab-active,
+.tx-tab-active:hover {
   color: var(--tx-primary);
   border-bottom-color: var(--tx-primary);
+  background: none;
 }
 .tx-tab-disabled {
   opacity: 0.5;
@@ -1301,19 +1303,15 @@ body.tx-modal-open {
 }
 .tx-tabs-content {
   padding: var(--tx-space-4) 0;
-  position: relative;
+  display: grid;
 }
 .tx-tab-panel {
+  grid-area: 1 / 1;
   visibility: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   pointer-events: none;
 }
 .tx-tab-panel-active {
   visibility: visible;
-  position: relative;
   pointer-events: auto;
 }
 
@@ -1330,7 +1328,11 @@ body.tx-modal-open {
   background: var(--tx-primary);
   color: #fff;
 }
-.tx-tabs-underline .tx-tab-active {
+.tx-tabs-underline .tx-tab {
+  border-bottom-width: 3px;
+  margin-bottom: -3px;
+}
+.tx-tabs-underline .tx-tabs-nav {
   border-bottom-width: 3px;
 }
 .tx-tabs-card .tx-tabs-nav {

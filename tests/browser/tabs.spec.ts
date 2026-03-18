@@ -380,6 +380,32 @@ test.describe('Tabs', () => {
     expect(heightAfter).toBeGreaterThan(0);
   });
 
+  test('no focus outline on tab buttons when clicked', async ({ page }) => {
+    await createWidget(
+      page,
+      `
+      Teryx.tabs('#target', {
+        items: [
+          { id: 'tab1', title: 'First', content: '<p>Content 1</p>' },
+          { id: 'tab2', title: 'Second', content: '<p>Content 2</p>' },
+        ],
+      });
+    `,
+    );
+
+    await page.locator('.tx-tab[data-tab="tab2"]').click();
+    await page.waitForTimeout(50);
+
+    // Focused and blurred nav should be pixel-identical (no focus ring)
+    const nav = page.locator('.tx-tabs-nav');
+    const withFocus = await nav.screenshot();
+    await page.evaluate(() => (document.activeElement as any)?.blur());
+    await page.waitForTimeout(50);
+    const withoutFocus = await nav.screenshot();
+
+    expect(withFocus).toEqual(withoutFocus);
+  });
+
   test('variant class is applied', async ({ page }) => {
     await createWidget(
       page,
