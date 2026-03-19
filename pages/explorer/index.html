@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teryx Explorer</title>
   <link rel="stylesheet" href="../teryx.css">
+  <link rel="stylesheet" href="../site-layout.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; height: 100vh; overflow: hidden; background: #f8fafc; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; }
+    .ex-app { display: flex; height: calc(100vh - 56px); overflow: hidden; }
 
     /* ── Sidebar ── */
     .ex-sidebar { width: 260px; min-width: 260px; background: #fff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; }
@@ -59,11 +61,11 @@
 </head>
 <body>
 
+<div class="ex-app">
 <!-- Sidebar -->
 <aside class="ex-sidebar">
   <div class="ex-sidebar-header">
-    <h1>Teryx Explorer</h1>
-    <a href="../">Home</a>
+    <h1>Explorer</h1>
   </div>
   <div class="ex-search">
     <input type="text" id="search" placeholder="Search widgets..." autocomplete="off">
@@ -81,9 +83,11 @@
   </div>
   <div class="ex-content" id="content"></div>
 </main>
+</div><!-- .ex-app -->
 
 <script src="../xhtmlx.js"></script>
 <script src="../teryx.js"></script>
+<script src="../site-layout.js" data-page="explorer"></script>
 <script>
 (function () {
   'use strict';
