@@ -508,29 +508,226 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
 
 // ── Tree ──
 ExplorerRegistry.add('Data Display', 'Tree', function (container) {
+  // 1. Basic Tree
   ExplorerDemo(container, 'Basic Tree', [
     'Teryx.tree(el, {',
-    '  data: [',
-    '    { id: "1", label: "Documents", children: [ ... ] },',
+    '  nodes: [',
+    '    { id: "1", text: "Documents", children: [',
+    '      { id: "1a", text: "Reports", children: [',
+    '        { id: "1a1", text: "Q1 Report.pdf" },',
+    '      ]},',
+    '    ]},',
+    '    { id: "2", text: "Images" },',
     '  ]',
     '});'
   ].join('\n'), function (el) {
     Teryx.tree(el, {
-      data: [
-        { id: '1', label: 'Documents', children: [
-          { id: '1a', label: 'Reports', children: [
-            { id: '1a1', label: 'Q1 Report.pdf' },
-            { id: '1a2', label: 'Q2 Report.pdf' },
+      nodes: [
+        { id: '1', text: 'Documents', children: [
+          { id: '1a', text: 'Reports', children: [
+            { id: '1a1', text: 'Q1 Report.pdf' },
+            { id: '1a2', text: 'Q2 Report.pdf' },
           ]},
-          { id: '1b', label: 'Presentations' },
+          { id: '1b', text: 'Presentations', children: [
+            { id: '1b1', text: 'Kickoff.pptx' },
+          ]},
         ]},
-        { id: '2', label: 'Images', children: [
-          { id: '2a', label: 'photo.jpg' },
-          { id: '2b', label: 'logo.png' },
+        { id: '2', text: 'Images', children: [
+          { id: '2a', text: 'photo.jpg' },
+          { id: '2b', text: 'logo.png' },
         ]},
-        { id: '3', label: 'README.md' },
+        { id: '3', text: 'README.md' },
       ]
     });
+  });
+
+  // 2. Checkboxes
+  ExplorerDemo(container, 'Checkboxes', [
+    'Teryx.tree(el, {',
+    '  checkable: true,',
+    '  nodes: [',
+    '    { id: "p1", text: "Frontend", children: [',
+    '      { id: "p1a", text: "React", checked: true },',
+    '      { id: "p1b", text: "Vue" },',
+    '    ]},',
+    '  ],',
+    '  onCheck: function (node, checked) { ... }',
+    '});'
+  ].join('\n'), function (el) {
+    var statusEl = document.createElement('div');
+    statusEl.className = 'tx-tree-check-status';
+    statusEl.style.cssText = 'margin-top:0.75rem;padding:0.5rem;background:#f8fafc;border-radius:6px;font-size:0.8125rem;color:#475569;';
+    statusEl.textContent = 'Check a node to see the event.';
+
+    Teryx.tree(el, {
+      checkable: true,
+      nodes: [
+        { id: 'p1', text: 'Frontend', children: [
+          { id: 'p1a', text: 'React', checked: true },
+          { id: 'p1b', text: 'Vue' },
+          { id: 'p1c', text: 'Angular' },
+        ]},
+        { id: 'p2', text: 'Backend', children: [
+          { id: 'p2a', text: 'Node.js' },
+          { id: 'p2b', text: 'Python', checked: true },
+        ]},
+        { id: 'p3', text: 'Database', children: [
+          { id: 'p3a', text: 'PostgreSQL' },
+          { id: 'p3b', text: 'Redis' },
+        ]},
+      ],
+      onCheck: function (node, checked) {
+        statusEl.textContent = (checked ? 'Checked' : 'Unchecked') + ': ' + node.text;
+      }
+    });
+
+    el.appendChild(statusEl);
+  });
+
+  // 3. Async Loading
+  ExplorerDemo(container, 'Async Loading', [
+    'Teryx.tree(el, {',
+    '  source: \'/api/tree\',',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tree(el, {
+      source: '/api/tree',
+    });
+  });
+
+  // 4. Icons
+  ExplorerDemo(container, 'Custom Icons', [
+    'Teryx.tree(el, {',
+    '  nodes: [',
+    '    { id: "1", text: "Home", icon: "home", children: [',
+    '      { id: "1a", text: "Profile", icon: "user" },',
+    '      { id: "1b", text: "Settings", icon: "settings" },',
+    '    ]},',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tree(el, {
+      nodes: [
+        { id: 'i1', text: 'Home', icon: 'home', children: [
+          { id: 'i1a', text: 'Profile', icon: 'user' },
+          { id: 'i1b', text: 'Settings', icon: 'settings' },
+          { id: 'i1c', text: 'Calendar', icon: 'calendar' },
+        ]},
+        { id: 'i2', text: 'Files', icon: 'folder', children: [
+          { id: 'i2a', text: 'Documents', icon: 'file' },
+          { id: 'i2b', text: 'Downloads', icon: 'download' },
+        ]},
+        { id: 'i3', text: 'Favorites', icon: 'star', children: [
+          { id: 'i3a', text: 'Bookmarks', icon: 'externalLink' },
+        ]},
+      ]
+    });
+  });
+
+  // 5. Search / Filter
+  ExplorerDemo(container, 'Search / Filter', [
+    '// Client-side filter over tree nodes',
+    'var input = document.createElement("input");',
+    'input.addEventListener("input", function () {',
+    '  // show/hide nodes based on text match',
+    '});'
+  ].join('\n'), function (el) {
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Filter tree nodes...';
+    input.className = 'tx-tree-filter-input';
+    input.style.cssText = 'width:100%;padding:0.5rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;font-size:0.8125rem;margin-bottom:0.75rem;outline:none;box-sizing:border-box;';
+    el.appendChild(input);
+
+    var treeContainer = document.createElement('div');
+    el.appendChild(treeContainer);
+
+    Teryx.tree(treeContainer, {
+      nodes: [
+        { id: 'f1', text: 'Animals', children: [
+          { id: 'f1a', text: 'Cat' },
+          { id: 'f1b', text: 'Dog' },
+          { id: 'f1c', text: 'Elephant' },
+        ]},
+        { id: 'f2', text: 'Fruits', children: [
+          { id: 'f2a', text: 'Apple' },
+          { id: 'f2b', text: 'Banana' },
+          { id: 'f2c', text: 'Cherry' },
+        ]},
+        { id: 'f3', text: 'Colors', children: [
+          { id: 'f3a', text: 'Red' },
+          { id: 'f3b', text: 'Green' },
+          { id: 'f3c', text: 'Blue' },
+        ]},
+      ],
+      expandAll: true,
+    });
+
+    input.addEventListener('input', function () {
+      var q = input.value.toLowerCase().trim();
+      var allNodes = treeContainer.querySelectorAll('.tx-tree-node');
+      allNodes.forEach(function (node) {
+        var label = node.querySelector(':scope > .tx-tree-content .tx-tree-label');
+        if (!label) return;
+        var text = label.textContent.toLowerCase();
+        // Only hide leaf nodes; parents stay visible
+        var children = node.querySelector(':scope > .tx-tree-children');
+        if (!children) {
+          node.style.display = (q.length === 0 || text.indexOf(q) !== -1) ? '' : 'none';
+        }
+      });
+    });
+  });
+
+  // 6. Expand All / Collapse All
+  ExplorerDemo(container, 'Expand All / Collapse All', [
+    'var inst = Teryx.tree(el, { nodes: [...] });',
+    'inst.expandAll();',
+    'inst.collapseAll();'
+  ].join('\n'), function (el) {
+    var toolbar = document.createElement('div');
+    toolbar.style.cssText = 'margin-bottom:0.75rem;display:flex;gap:0.5rem;';
+
+    var btnExpand = document.createElement('button');
+    btnExpand.className = 'tx-btn tx-btn-secondary';
+    btnExpand.style.cssText = 'padding:0.375rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+    btnExpand.textContent = 'Expand All';
+    toolbar.appendChild(btnExpand);
+
+    var btnCollapse = document.createElement('button');
+    btnCollapse.className = 'tx-btn tx-btn-secondary';
+    btnCollapse.style.cssText = 'padding:0.375rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+    btnCollapse.textContent = 'Collapse All';
+    toolbar.appendChild(btnCollapse);
+
+    el.appendChild(toolbar);
+
+    var treeContainer = document.createElement('div');
+    el.appendChild(treeContainer);
+
+    var inst = Teryx.tree(treeContainer, {
+      nodes: [
+        { id: 'e1', text: 'src', children: [
+          { id: 'e1a', text: 'components', children: [
+            { id: 'e1a1', text: 'Button.tsx' },
+            { id: 'e1a2', text: 'Input.tsx' },
+          ]},
+          { id: 'e1b', text: 'utils', children: [
+            { id: 'e1b1', text: 'helpers.ts' },
+          ]},
+          { id: 'e1c', text: 'index.ts' },
+        ]},
+        { id: 'e2', text: 'tests', children: [
+          { id: 'e2a', text: 'unit', children: [
+            { id: 'e2a1', text: 'button.test.ts' },
+          ]},
+        ]},
+        { id: 'e3', text: 'package.json' },
+      ]
+    });
+
+    btnExpand.onclick = function () { inst.expandAll(); };
+    btnCollapse.onclick = function () { inst.collapseAll(); };
   });
 });
 
