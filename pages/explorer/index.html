@@ -1761,13 +1761,31 @@ ExplorerRegistry.add('Data Entry', 'Rating', function (container) {
   ExplorerDemo(container, 'Interactive Rating', [
     'Teryx.rating(el, { value: 3, max: 5 });'
   ].join('\n'), function (el) {
-    Teryx.rating(el, { value: 3, max: 5, size: 'lg' });
+    Teryx.rating(el, { value: 3, max: 5, size: 'md' });
   });
 
   ExplorerDemo(container, 'Readonly Rating', [
     'Teryx.rating(el, { value: 4, max: 5, readonly: true });'
   ].join('\n'), function (el) {
     Teryx.rating(el, { value: 4, max: 5, readonly: true });
+  });
+
+  ExplorerDemo(container, 'Small Rating', [
+    'Teryx.rating(el, { value: 2, max: 5, size: "sm" });'
+  ].join('\n'), function (el) {
+    Teryx.rating(el, { value: 2, max: 5, size: 'sm' });
+  });
+
+  ExplorerDemo(container, 'Large Rating', [
+    'Teryx.rating(el, { value: 5, max: 5, size: "lg" });'
+  ].join('\n'), function (el) {
+    Teryx.rating(el, { value: 5, max: 5, size: 'lg' });
+  });
+
+  ExplorerDemo(container, '10-Star Rating', [
+    'Teryx.rating(el, { value: 7, max: 10 });'
+  ].join('\n'), function (el) {
+    Teryx.rating(el, { value: 7, max: 10 });
   });
 });
 
@@ -1777,6 +1795,164 @@ ExplorerRegistry.add('Data Entry', 'Slider', function (container) {
     'Teryx.slider(el, { value: 40, min: 0, max: 100 });'
   ].join('\n'), function (el) {
     Teryx.slider(el, { value: 40, min: 0, max: 100 });
+  });
+
+  ExplorerDemo(container, 'Dual Thumb (Range)', [
+    'Teryx.slider(el, {',
+    '  range: true,',
+    '  values: [20, 80],',
+    '  min: 0, max: 100',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.slider(el, { range: true, values: [20, 80], min: 0, max: 100 });
+  });
+
+  ExplorerDemo(container, 'Slider with Marks', [
+    'Teryx.slider(el, {',
+    '  value: 50, min: 0, max: 100,',
+    '  marks: { 0: "0%", 25: "25%", 50: "50%", 75: "75%", 100: "100%" }',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.slider(el, {
+      value: 50, min: 0, max: 100,
+      marks: { 0: '0%', 25: '25%', 50: '50%', 75: '75%', 100: '100%' }
+    });
+  });
+
+  ExplorerDemo(container, 'Vertical Slider', [
+    'Teryx.slider(el, {',
+    '  value: 60, min: 0, max: 100,',
+    '  vertical: true',
+    '});'
+  ].join('\n'), function (el) {
+    el.style.height = '200px';
+    Teryx.slider(el, { value: 60, min: 0, max: 100, vertical: true });
+  });
+
+  ExplorerDemo(container, 'Tooltip & Number Input', [
+    'Teryx.slider(el, {',
+    '  value: 30, min: 0, max: 100,',
+    '  showTooltip: true, showInput: true',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.slider(el, { value: 30, min: 0, max: 100, showTooltip: true, showInput: true });
+  });
+
+  ExplorerDemo(container, 'Step Slider (step: 10)', [
+    'Teryx.slider(el, {',
+    '  value: 50, min: 0, max: 100, step: 10',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.slider(el, { value: 50, min: 0, max: 100, step: 10 });
+  });
+});
+
+// ── Tag Input ──
+ExplorerRegistry.add('Data Entry', 'Tag Input', function (container) {
+  ExplorerDemo(container, 'Basic Tag Input', [
+    'Teryx.tagInput(el, {',
+    '  value: ["JavaScript", "TypeScript"],',
+    '  placeholder: "Add a tag..."',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tagInput(el, {
+      value: ['JavaScript', 'TypeScript'],
+      placeholder: 'Add a tag...'
+    });
+  });
+
+  ExplorerDemo(container, 'With Suggestions', [
+    'Teryx.tagInput(el, {',
+    '  placeholder: "Type to see suggestions...",',
+    '  suggestions: ["React", "Vue", "Angular", "Svelte", "Solid"]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tagInput(el, {
+      placeholder: 'Type to see suggestions...',
+      suggestions: ['React', 'Vue', 'Angular', 'Svelte', 'Solid']
+    });
+  });
+
+  ExplorerDemo(container, 'Max Tags (limit: 3)', [
+    'Teryx.tagInput(el, {',
+    '  value: ["One", "Two"],',
+    '  maxTags: 3,',
+    '  placeholder: "Max 3 tags"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tagInput(el, {
+      value: ['One', 'Two'],
+      maxTags: 3,
+      placeholder: 'Max 3 tags'
+    });
+  });
+});
+
+// ── Segmented ──
+ExplorerRegistry.add('Data Entry', 'Segmented', function (container) {
+  ExplorerDemo(container, 'Basic Segmented', [
+    'Teryx.segmented(el, {',
+    '  items: [',
+    '    { label: "Day", value: "day" },',
+    '    { label: "Week", value: "week" },',
+    '    { label: "Month", value: "month" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.segmented(el, {
+      items: [
+        { label: 'Day', value: 'day' },
+        { label: 'Week', value: 'week' },
+        { label: 'Month', value: 'month' }
+      ]
+    });
+  });
+
+  ExplorerDemo(container, 'With Icons', [
+    'Teryx.segmented(el, {',
+    '  items: [',
+    '    { label: "Home", value: "home", icon: "home" },',
+    '    { label: "Settings", value: "settings", icon: "settings" },',
+    '    { label: "User", value: "user", icon: "user" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.segmented(el, {
+      items: [
+        { label: 'Home', value: 'home', icon: 'home' },
+        { label: 'Settings', value: 'settings', icon: 'settings' },
+        { label: 'User', value: 'user', icon: 'user' }
+      ]
+    });
+  });
+
+  ExplorerDemo(container, 'Sizes', [
+    '// Small',
+    'Teryx.segmented(el, { items: [...], size: "sm" });',
+    '// Medium (default)',
+    'Teryx.segmented(el, { items: [...], size: "md" });',
+    '// Large',
+    'Teryx.segmented(el, { items: [...], size: "lg" });'
+  ].join('\n'), function (el) {
+    var items = [
+      { label: 'Left', value: 'left' },
+      { label: 'Center', value: 'center' },
+      { label: 'Right', value: 'right' }
+    ];
+
+    var smWrap = document.createElement('div');
+    smWrap.style.marginBottom = '0.75rem';
+    el.appendChild(smWrap);
+    Teryx.segmented(smWrap, { items: items, size: 'sm' });
+
+    var mdWrap = document.createElement('div');
+    mdWrap.style.marginBottom = '0.75rem';
+    el.appendChild(mdWrap);
+    Teryx.segmented(mdWrap, { items: items, size: 'md' });
+
+    var lgWrap = document.createElement('div');
+    el.appendChild(lgWrap);
+    Teryx.segmented(lgWrap, { items: items, size: 'lg' });
   });
 });
 
