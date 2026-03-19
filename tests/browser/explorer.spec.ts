@@ -28,11 +28,12 @@ test.describe('Explorer', () => {
     await page.waitForTimeout(200);
 
     await expect(page.locator('.ex-nav-item.active')).toHaveCount(1);
-    await expect(page.locator('.ex-demo')).toHaveCount(1);
-    await expect(page.locator('.ex-demo-header h3')).toHaveText('Basic Grid');
+    const demos = page.locator('.ex-demo');
+    expect(await demos.count()).toBeGreaterThanOrEqual(1);
+    await expect(demos.first().locator('.ex-demo-header h3')).toHaveText('Basic Grid');
 
     // Grid should render a table
-    await expect(page.locator('.tx-grid')).toBeVisible();
+    await expect(page.locator('.tx-grid').first()).toBeVisible();
   });
 
   test('breadcrumb updates on navigation', async ({ page }) => {
