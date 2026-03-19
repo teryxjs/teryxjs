@@ -51,7 +51,7 @@ test.describe('Explorer', () => {
     await page.waitForTimeout(200);
 
     await expect(page.locator('.ex-nav-item.active')).toHaveAttribute('data-id', 'feedback-toast');
-    await expect(page.locator('.ex-demo')).toHaveCount(1);
+    await expect(page.locator('.ex-demo')).toHaveCount(4);
   });
 
   test('search filters navigation items', async ({ page }) => {
@@ -106,7 +106,7 @@ test.describe('Explorer', () => {
     await page.waitForTimeout(200);
 
     const demos = page.locator('.ex-demo');
-    expect(await demos.count()).toBe(4);
+    expect(await demos.count()).toBe(7);
   });
 
   test('chart demos render SVG', async ({ page }) => {

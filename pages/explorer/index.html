@@ -1340,14 +1340,18 @@ ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
 
 // ── Toast ──
 ExplorerRegistry.add('Feedback', 'Toast', function (container) {
-  ExplorerDemo(container, 'Toast Notifications', [
-    'Teryx.toast({ title: "Success", message: "Saved", type: "success" });'
+  // 1. Toast Types
+  ExplorerDemo(container, 'Toast Types', [
+    'Teryx.toast({ title: "Success", message: "Saved", type: "success" });',
+    'Teryx.toast({ title: "Error", message: "Failed", type: "danger" });',
+    'Teryx.toast({ title: "Warning", message: "Careful", type: "warning" });',
+    'Teryx.toast({ title: "Info", message: "Note", type: "info" });'
   ].join('\n'), function (el) {
-    var types = ['success', 'error', 'warning', 'info'];
+    var types = ['success', 'danger', 'warning', 'info'];
     types.forEach(function (t) {
       var btn = document.createElement('button');
-      btn.className = 'tx-btn tx-btn-' + (t === 'error' ? 'danger' : t === 'warning' ? 'warning' : t === 'info' ? 'primary' : 'success');
-      btn.style.cssText = 'margin:0.25rem;padding:0.5rem 1rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+      btn.className = 'tx-btn tx-btn-' + (t === 'danger' ? 'danger' : t === 'warning' ? 'warning' : t === 'info' ? 'primary' : 'success');
+      btn.style.cssText = 'margin:0.25rem;';
       btn.textContent = t.charAt(0).toUpperCase() + t.slice(1);
       btn.onclick = function () {
         Teryx.toast({ title: t.charAt(0).toUpperCase() + t.slice(1), message: 'This is a ' + t + ' notification.', type: t, duration: 3000 });
@@ -1355,10 +1359,73 @@ ExplorerRegistry.add('Feedback', 'Toast', function (container) {
       el.appendChild(btn);
     });
   });
+
+  // 2. Toast Positions
+  ExplorerDemo(container, 'Toast Positions', [
+    'Teryx.toast({ message: "Top-right", position: "top-right" });',
+    'Teryx.toast({ message: "Top-left", position: "top-left" });',
+    'Teryx.toast({ message: "Bottom-right", position: "bottom-right" });'
+  ].join('\n'), function (el) {
+    var positions = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
+    positions.forEach(function (p) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-secondary';
+      btn.style.cssText = 'margin:0.25rem;';
+      btn.textContent = p;
+      btn.onclick = function () {
+        Teryx.toast({ message: 'Toast at ' + p, position: p, duration: 2000 });
+      };
+      el.appendChild(btn);
+    });
+  });
+
+  // 3. Toast Duration
+  ExplorerDemo(container, 'Toast Duration', [
+    'Teryx.toast({ message: "Short (1s)", duration: 1000 });',
+    'Teryx.toast({ message: "Long (10s)", duration: 10000 });',
+    'Teryx.toast({ message: "Persistent", duration: 0 });'
+  ].join('\n'), function (el) {
+    var durations = [
+      { label: 'Short (1s)', value: 1000 },
+      { label: 'Medium (3s)', value: 3000 },
+      { label: 'Long (10s)', value: 10000 },
+      { label: 'Persistent', value: 0 }
+    ];
+    durations.forEach(function (d) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-secondary';
+      btn.style.cssText = 'margin:0.25rem;';
+      btn.textContent = d.label;
+      btn.onclick = function () {
+        Teryx.toast({ message: d.label + ' toast', duration: d.value, type: 'info' });
+      };
+      el.appendChild(btn);
+    });
+  });
+
+  // 4. Toast Stacking
+  ExplorerDemo(container, 'Toast Stacking', [
+    '// Click to fire multiple toasts that stack',
+    'for (var i = 1; i <= 3; i++) {',
+    '  Teryx.toast({ title: "Toast #" + i, message: "Stacked", type: "info" });',
+    '}'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Fire 3 Stacked Toasts';
+    btn.onclick = function () {
+      var types = ['success', 'warning', 'info'];
+      for (var i = 0; i < 3; i++) {
+        Teryx.toast({ title: 'Toast #' + (i + 1), message: 'Stacked notification ' + (i + 1), type: types[i], duration: 4000 });
+      }
+    };
+    el.appendChild(btn);
+  });
 });
 
 // ── Alert ──
 ExplorerRegistry.add('Feedback', 'Alert', function (container) {
+  // 1. Alert Types
   var types = ['info', 'success', 'warning', 'danger'];
   types.forEach(function (t) {
     ExplorerDemo(container, t.charAt(0).toUpperCase() + t.slice(1) + ' Alert', [
@@ -1368,8 +1435,214 @@ ExplorerRegistry.add('Feedback', 'Alert', function (container) {
         type: t,
         title: t.charAt(0).toUpperCase() + t.slice(1),
         message: 'This is a ' + t + ' alert message with relevant details.',
-        closable: true
+        dismissible: true
       });
+    });
+  });
+
+  // 5. Closable Alert
+  ExplorerDemo(container, 'Closable Alert', [
+    'Teryx.alert(el, { type: "info", title: "Dismissible",',
+    '  message: "Click X to dismiss.", dismissible: true });'
+  ].join('\n'), function (el) {
+    Teryx.alert(el, {
+      type: 'info',
+      title: 'Dismissible',
+      message: 'Click the close button to dismiss this alert.',
+      dismissible: true
+    });
+  });
+
+  // 6. Alert with Icons
+  ExplorerDemo(container, 'Alerts with Icons', [
+    'Teryx.alert(el, { type: "success", message: "...", icon: true });',
+    'Teryx.alert(el, { type: "warning", message: "...", icon: false });'
+  ].join('\n'), function (el) {
+    var wrap1 = document.createElement('div');
+    wrap1.style.marginBottom = '0.5rem';
+    el.appendChild(wrap1);
+    Teryx.alert(wrap1, { type: 'success', title: 'With Icon', message: 'This alert has the default icon.' });
+    var wrap2 = document.createElement('div');
+    el.appendChild(wrap2);
+    Teryx.alert(wrap2, { type: 'warning', title: 'No Icon', message: 'This alert hides the icon.', icon: false });
+  });
+
+  // 7. Alert without Title
+  ExplorerDemo(container, 'Alert without Title', [
+    'Teryx.alert(el, { type: "info", message: "Simple message only." });'
+  ].join('\n'), function (el) {
+    Teryx.alert(el, { type: 'info', message: 'A simple alert with a message and no title.' });
+  });
+});
+
+// ── Modal ──
+ExplorerRegistry.add('Feedback', 'Modal', function (container) {
+  // 1. Basic Modal
+  ExplorerDemo(container, 'Basic Modal', [
+    'var m = Teryx.modal({ title: "Basic Modal", content: "Hello!" });',
+    'm.open();'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Open Basic Modal';
+    btn.onclick = function () {
+      var m = Teryx.modal({
+        title: 'Basic Modal',
+        content: '<p>This is a basic modal dialog with a title and close button.</p>',
+        buttons: [{ label: 'Close', variant: 'secondary', action: 'close' }]
+      });
+      m.open();
+    };
+    el.appendChild(btn);
+  });
+
+  // 2. Modal Sizes
+  ExplorerDemo(container, 'Modal Sizes', [
+    'Teryx.modal({ title: "Small", size: "sm", content: "..." }).open();',
+    'Teryx.modal({ title: "Large", size: "lg", content: "..." }).open();',
+    'Teryx.modal({ title: "XL", size: "xl", content: "..." }).open();'
+  ].join('\n'), function (el) {
+    var sizes = ['sm', 'md', 'lg', 'xl'];
+    sizes.forEach(function (s) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-secondary';
+      btn.style.cssText = 'margin:0.25rem;';
+      btn.textContent = s.toUpperCase();
+      btn.onclick = function () {
+        var m = Teryx.modal({
+          title: s.toUpperCase() + ' Modal',
+          size: s,
+          content: '<p>This modal uses size <strong>' + s + '</strong>.</p>',
+          buttons: [{ label: 'Close', variant: 'secondary', action: 'close' }]
+        });
+        m.open();
+      };
+      el.appendChild(btn);
+    });
+  });
+
+  // 3. Stacking Modals
+  ExplorerDemo(container, 'Stacking Modals', [
+    'var m1 = Teryx.modal({ title: "First", content: "Open another..." });',
+    'm1.open();'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Open Stacked Modals';
+    btn.onclick = function () {
+      var m1 = Teryx.modal({
+        title: 'First Modal',
+        content: '<p>Click the button below to open a second modal on top.</p><button class="tx-btn tx-btn-primary" id="open-inner-modal">Open Second Modal</button>',
+        buttons: [{ label: 'Close', variant: 'secondary', action: 'close' }]
+      });
+      m1.open();
+      setTimeout(function () {
+        var innerBtn = document.getElementById('open-inner-modal');
+        if (innerBtn) {
+          innerBtn.onclick = function () {
+            var m2 = Teryx.modal({
+              title: 'Second Modal',
+              size: 'sm',
+              content: '<p>This modal is stacked on top of the first one.</p>',
+              buttons: [{ label: 'Close', variant: 'secondary', action: 'close' }]
+            });
+            m2.open();
+          };
+        }
+      }, 100);
+    };
+    el.appendChild(btn);
+  });
+
+  // 4. Confirm Dialog Modal
+  ExplorerDemo(container, 'Confirm Dialog', [
+    'var m = Teryx.modal({',
+    '  title: "Confirm",',
+    '  content: "Are you sure?",',
+    '  buttons: [',
+    '    { label: "Cancel", variant: "secondary", action: "close" },',
+    '    { label: "Confirm", variant: "primary" }',
+    '  ]',
+    '});',
+    'm.open();'
+  ].join('\n'), function (el) {
+    var resultEl = document.createElement('span');
+    resultEl.style.cssText = 'margin-left:0.75rem;font-size:0.8125rem;color:#64748b;';
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-warning';
+    btn.textContent = 'Delete Item';
+    btn.onclick = function () {
+      var m = Teryx.modal({
+        title: 'Confirm Delete',
+        size: 'sm',
+        content: '<p>Are you sure you want to delete this item? This action cannot be undone.</p>',
+        buttons: [
+          { label: 'Cancel', variant: 'secondary', action: 'close' },
+          { label: 'Delete', variant: 'danger', handler: function () { resultEl.textContent = 'Deleted!'; m.close(); } }
+        ]
+      });
+      m.open();
+    };
+    el.appendChild(btn);
+    el.appendChild(resultEl);
+  });
+});
+
+// ── MessageBox ──
+ExplorerRegistry.add('Feedback', 'MessageBox', function (container) {
+  // 1. MessageBox Alert
+  ExplorerDemo(container, 'MessageBox Alert', [
+    'Teryx.messageBox.alert("Operation completed!", "Alert");'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Show Alert';
+    btn.onclick = function () {
+      Teryx.messageBox.alert('The operation completed successfully.', 'Alert');
+    };
+    el.appendChild(btn);
+  });
+
+  // 2. MessageBox Confirm
+  ExplorerDemo(container, 'MessageBox Confirm', [
+    'Teryx.messageBox.confirm("Proceed?", "Confirm").then(function (ok) {',
+    '  console.log(ok ? "Confirmed" : "Cancelled");',
+    '});'
+  ].join('\n'), function (el) {
+    var resultEl = document.createElement('span');
+    resultEl.style.cssText = 'margin-left:0.75rem;font-size:0.8125rem;color:#64748b;';
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-warning';
+    btn.textContent = 'Show Confirm';
+    btn.onclick = function () {
+      Teryx.messageBox.confirm('Do you want to proceed with this action?', 'Confirm').then(function (ok) {
+        resultEl.textContent = ok ? 'Confirmed!' : 'Cancelled.';
+      });
+    };
+    el.appendChild(btn);
+    el.appendChild(resultEl);
+  });
+
+  // 3. MessageBox Types
+  ExplorerDemo(container, 'MessageBox Types', [
+    'Teryx.messageBox.success("Saved!", "Success");',
+    'Teryx.messageBox.warning("Careful!", "Warning");',
+    'Teryx.messageBox.error("Failed!", "Error");'
+  ].join('\n'), function (el) {
+    var msgTypes = [
+      { label: 'Success', fn: 'success', variant: 'success' },
+      { label: 'Warning', fn: 'warning', variant: 'warning' },
+      { label: 'Error', fn: 'error', variant: 'danger' }
+    ];
+    msgTypes.forEach(function (t) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-' + t.variant;
+      btn.style.cssText = 'margin:0.25rem;';
+      btn.textContent = t.label;
+      btn.onclick = function () {
+        Teryx.messageBox[t.fn]('This is a ' + t.label.toLowerCase() + ' message.', t.label);
+      };
+      el.appendChild(btn);
     });
   });
 });
