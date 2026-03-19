@@ -5,7 +5,7 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 
 // Serve framework files
 app.use('/teryx.css', express.static(path.join(__dirname, '..', 'styles', 'teryx.css')));
-app.use('/xhtmlx.js', express.static(path.join(__dirname, '..', 'xhtmlx.js')));
+app.use('/xhtmlx.js', express.static(path.join(__dirname, '..', 'node_modules', 'xhtmlx', 'xhtmlx.js')));
 app.use('/teryx.js', express.static(path.join(__dirname, '..', 'dist', 'index.global.js')));
 
 // Serve the showcase directory

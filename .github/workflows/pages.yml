@@ -38,7 +38,7 @@ jobs:
           cp pages/index.html _site/index.html
           cp dist/index.global.js _site/teryx.js
           cp dist/teryx.css _site/teryx.css
-          cp xhtmlx.js _site/xhtmlx.js
+          cp node_modules/xhtmlx/xhtmlx.js _site/xhtmlx.js
           cp -r pages/docs _site/docs
           cp -r pages/explorer _site/explorer
 
