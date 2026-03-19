@@ -4279,5 +4279,333 @@ ExplorerRegistry.add('Utilities', 'Dropdown', function (container) {
 });
 </script>
 
+<script>
+// ── Drag & Drop ──
+ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
+  // 1. Sortable List
+  ExplorerDemo(container, 'Sortable List', [
+    'var list = document.createElement("ul");',
+    'var items = ["Apples", "Bananas", "Cherries", "Dates", "Elderberries"];',
+    'items.forEach(function (text) {',
+    '  var li = document.createElement("li");',
+    '  li.textContent = text;',
+    '  list.appendChild(li);',
+    '  Teryx.draggable(li, { data: text, ghost: true });',
+    '});'
+  ].join('\n'), function (el) {
+    var list = document.createElement('ul');
+    list.className = 'tx-dd-sortable-list';
+    list.setAttribute('data-testid', 'dd-sortable-list');
+    list.style.cssText = 'list-style:none;padding:0;margin:0;max-width:320px;';
+
+    var items = ['Apples', 'Bananas', 'Cherries', 'Dates', 'Elderberries'];
+    var instances = [];
+
+    items.forEach(function (text) {
+      var li = document.createElement('li');
+      li.className = 'tx-dd-sortable-item';
+      li.style.cssText = 'padding:0.625rem 1rem;margin:0.25rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:6px;cursor:grab;display:flex;align-items:center;gap:0.5rem;';
+      li.innerHTML = '<span style="color:#94a3b8;">&#x2630;</span> ' + text;
+      list.appendChild(li);
+      instances.push(Teryx.draggable(li, { data: text, ghost: true }));
+    });
+
+    el.appendChild(list);
+  });
+
+  // 2. Drag Between Containers
+  ExplorerDemo(container, 'Drag Between Containers', [
+    'var srcList = document.createElement("div");',
+    'var dstList = document.createElement("div");',
+    'Teryx.droppable(dstList, {',
+    '  hoverClass: "tx-drop-hover",',
+    '  onDrop: function (el, data) {',
+    '    /* move item to target */ ',
+    '  }',
+    '});'
+  ].join('\n'), function (el) {
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display:flex;gap:1.5rem;flex-wrap:wrap;';
+
+    function makePanel(title, id, items) {
+      var panel = document.createElement('div');
+      panel.style.cssText = 'flex:1;min-width:200px;border:2px dashed #e2e8f0;border-radius:8px;padding:0.75rem;min-height:180px;background:#fafbfc;';
+      panel.setAttribute('data-testid', id);
+      var heading = document.createElement('div');
+      heading.style.cssText = 'font-weight:600;font-size:0.8125rem;color:#64748b;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;';
+      heading.textContent = title;
+      panel.appendChild(heading);
+
+      var listEl = document.createElement('div');
+      listEl.className = 'tx-dd-panel-list';
+      panel.appendChild(listEl);
+
+      items.forEach(function (text) {
+        addItem(listEl, text);
+      });
+
+      Teryx.droppable(panel, {
+        hoverClass: 'tx-drop-hover',
+        onDrop: function (_dropEl, data) {
+          // Remove from old panel
+          wrapper.querySelectorAll('.tx-dd-between-item').forEach(function (item) {
+            if (item.textContent === data) item.remove();
+          });
+          addItem(listEl, data);
+        }
+      });
+
+      return panel;
+    }
+
+    function addItem(listEl, text) {
+      var item = document.createElement('div');
+      item.className = 'tx-dd-between-item';
+      item.style.cssText = 'padding:0.5rem 0.75rem;margin:0.25rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:4px;cursor:grab;font-size:0.8125rem;';
+      item.textContent = text;
+      listEl.appendChild(item);
+      Teryx.draggable(item, { data: text, ghost: true });
+    }
+
+    wrapper.appendChild(makePanel('Source', 'dd-source-panel', ['Task A', 'Task B', 'Task C']));
+    wrapper.appendChild(makePanel('Target', 'dd-target-panel', []));
+    el.appendChild(wrapper);
+  });
+
+  // 3. Drag Handle
+  ExplorerDemo(container, 'Drag Handle', [
+    'var card = document.createElement("div");',
+    'card.innerHTML = \'<span class="handle">&#x2630;</span> Card content\';',
+    'Teryx.draggable(card, { handle: ".handle", data: "card" });'
+  ].join('\n'), function (el) {
+    var list = document.createElement('div');
+    list.setAttribute('data-testid', 'dd-handle-list');
+    list.style.cssText = 'max-width:360px;';
+
+    var cards = ['Design System', 'API Gateway', 'Dashboard UI'];
+    cards.forEach(function (text) {
+      var card = document.createElement('div');
+      card.style.cssText = 'display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;margin:0.25rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:6px;';
+      var handle = document.createElement('span');
+      handle.className = 'dd-handle';
+      handle.style.cssText = 'cursor:grab;color:#94a3b8;font-size:1.125rem;flex-shrink:0;';
+      handle.innerHTML = '&#x2630;';
+      var label = document.createElement('span');
+      label.textContent = text;
+      card.appendChild(handle);
+      card.appendChild(label);
+      list.appendChild(card);
+      Teryx.draggable(card, { handle: '.dd-handle', data: text, ghost: true });
+    });
+
+    el.appendChild(list);
+  });
+
+  // 4. Drop Zone with Accept Filter
+  ExplorerDemo(container, 'Drop Zone with Accept Filter', [
+    'Teryx.droppable(zone, {',
+    '  accept: function (data) { return data.type === "valid"; },',
+    '  hoverClass: "tx-drop-hover",',
+    '  onDrop: function (el, data) { log.textContent = "Dropped: " + data.label; }',
+    '});'
+  ].join('\n'), function (el) {
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;';
+
+    var itemsCol = document.createElement('div');
+    itemsCol.style.cssText = 'display:flex;flex-direction:column;gap:0.25rem;';
+
+    var dragItems = [
+      { label: 'Valid Item A', type: 'valid', color: '#22c55e' },
+      { label: 'Valid Item B', type: 'valid', color: '#3b82f6' },
+      { label: 'Invalid Item', type: 'invalid', color: '#ef4444' }
+    ];
+
+    dragItems.forEach(function (item) {
+      var chip = document.createElement('div');
+      chip.className = 'tx-dd-filter-chip';
+      chip.style.cssText = 'padding:0.5rem 1rem;background:' + item.color + '15;border:1px solid ' + item.color + ';border-radius:6px;cursor:grab;font-size:0.8125rem;color:' + item.color + ';';
+      chip.textContent = item.label;
+      itemsCol.appendChild(chip);
+      Teryx.draggable(chip, { data: item, ghost: true });
+    });
+
+    var zone = document.createElement('div');
+    zone.setAttribute('data-testid', 'dd-accept-zone');
+    zone.style.cssText = 'flex:1;min-width:180px;min-height:120px;border:2px dashed #e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:1rem;color:#94a3b8;font-size:0.8125rem;';
+    zone.textContent = 'Drop valid items here';
+
+    var log = document.createElement('div');
+    log.className = 'tx-dd-accept-log';
+    log.style.cssText = 'margin-top:0.75rem;font-size:0.8125rem;color:#475569;min-height:1.25rem;';
+
+    Teryx.droppable(zone, {
+      accept: function (data) { return data && data.type === 'valid'; },
+      hoverClass: 'tx-drop-hover',
+      onDrop: function (_dropEl, data) {
+        zone.textContent = 'Received: ' + data.label;
+        log.textContent = 'Last dropped: ' + data.label;
+      }
+    });
+
+    wrapper.appendChild(itemsCol);
+    wrapper.appendChild(zone);
+    el.appendChild(wrapper);
+    el.appendChild(log);
+  });
+});
+</script>
+
+<script>
+// ── Export ──
+ExplorerRegistry.add('Utilities', 'Export', function (container) {
+  var sampleData = [
+    { id: 1, name: 'Alice Johnson', role: 'Engineer', department: 'Engineering', salary: 125000 },
+    { id: 2, name: 'Bob Smith', role: 'Designer', department: 'Design', salary: 110000 },
+    { id: 3, name: 'Carol Lee', role: 'Manager', department: 'Engineering', salary: 145000 },
+    { id: 4, name: 'David Kim', role: 'Analyst', department: 'Marketing', salary: 95000 },
+    { id: 5, name: 'Eva Martinez', role: 'Developer', department: 'Engineering', salary: 130000 }
+  ];
+
+  var sampleCols = [
+    { field: 'id', label: 'ID' },
+    { field: 'name', label: 'Name' },
+    { field: 'role', label: 'Role' },
+    { field: 'department', label: 'Department' },
+    { field: 'salary', label: 'Salary' }
+  ];
+
+  // 1. Export CSV
+  ExplorerDemo(container, 'Export CSV', [
+    'var data = [ { name: "Alice", role: "Engineer", ... }, ... ];',
+    'var cols = [{ field: "name", label: "Name" }, ...];',
+    'Teryx.exportCSV(data, { columns: cols, filename: "team.csv" });'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.setAttribute('data-testid', 'export-csv-btn');
+    btn.textContent = 'Export CSV';
+    btn.onclick = function () { Teryx.exportCSV(sampleData, { columns: sampleCols, filename: 'team.csv' }); };
+    el.appendChild(btn);
+
+    var desc = document.createElement('p');
+    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:#64748b;';
+    desc.textContent = 'Downloads a comma-separated values file with headers.';
+    el.appendChild(desc);
+  });
+
+  // 2. Export Excel
+  ExplorerDemo(container, 'Export Excel', [
+    'Teryx.exportExcel(data, { columns: cols, filename: "team.xls" });'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.setAttribute('data-testid', 'export-excel-btn');
+    btn.textContent = 'Export Excel';
+    btn.onclick = function () { Teryx.exportExcel(sampleData, { columns: sampleCols, filename: 'team.xls' }); };
+    el.appendChild(btn);
+
+    var desc = document.createElement('p');
+    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:#64748b;';
+    desc.textContent = 'Downloads an Excel XML (.xls) file with styled header row.';
+    el.appendChild(desc);
+  });
+
+  // 3. Export JSON
+  ExplorerDemo(container, 'Export JSON', [
+    'Teryx.exportJSON(data, { filename: "team.json" });'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-secondary';
+    btn.setAttribute('data-testid', 'export-json-btn');
+    btn.textContent = 'Export JSON';
+    btn.onclick = function () { Teryx.exportJSON(sampleData, { filename: 'team.json' }); };
+    el.appendChild(btn);
+
+    var desc = document.createElement('p');
+    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:#64748b;';
+    desc.textContent = 'Downloads a pretty-printed JSON file.';
+    el.appendChild(desc);
+  });
+
+  // 4. Export HTML
+  ExplorerDemo(container, 'Export HTML', [
+    'Teryx.exportHTML(data, { columns: cols, filename: "team.html" });'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-secondary';
+    btn.setAttribute('data-testid', 'export-html-btn');
+    btn.textContent = 'Export HTML';
+    btn.onclick = function () { Teryx.exportHTML(sampleData, { columns: sampleCols, filename: 'team.html' }); };
+    el.appendChild(btn);
+
+    var desc = document.createElement('p');
+    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:#64748b;';
+    desc.textContent = 'Downloads a styled HTML table.';
+    el.appendChild(desc);
+  });
+
+  // 5. All Formats
+  ExplorerDemo(container, 'All Formats', [
+    '// Export the same data in all four formats',
+    'Teryx.exportCSV(data, opts);',
+    'Teryx.exportExcel(data, opts);',
+    'Teryx.exportJSON(data);',
+    'Teryx.exportHTML(data, opts);'
+  ].join('\n'), function (el) {
+    var formats = [
+      { label: 'CSV', fn: function () { Teryx.exportCSV(sampleData, { columns: sampleCols, filename: 'team.csv' }); } },
+      { label: 'Excel', fn: function () { Teryx.exportExcel(sampleData, { columns: sampleCols, filename: 'team.xls' }); } },
+      { label: 'JSON', fn: function () { Teryx.exportJSON(sampleData, { filename: 'team.json' }); } },
+      { label: 'HTML', fn: function () { Teryx.exportHTML(sampleData, { columns: sampleCols, filename: 'team.html' }); } }
+    ];
+
+    var btnGroup = document.createElement('div');
+    btnGroup.setAttribute('data-testid', 'export-all-group');
+    btnGroup.style.cssText = 'display:flex;gap:0.5rem;flex-wrap:wrap;';
+
+    formats.forEach(function (fmt) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-primary';
+      btn.textContent = 'Export ' + fmt.label;
+      btn.onclick = fmt.fn;
+      btnGroup.appendChild(btn);
+    });
+
+    el.appendChild(btnGroup);
+
+    // Preview table
+    var table = document.createElement('table');
+    table.setAttribute('data-testid', 'export-preview-table');
+    table.style.cssText = 'width:100%;border-collapse:collapse;margin-top:1rem;font-size:0.8125rem;';
+
+    var thead = document.createElement('thead');
+    var headerRow = document.createElement('tr');
+    sampleCols.forEach(function (col) {
+      var th = document.createElement('th');
+      th.style.cssText = 'text-align:left;padding:0.5rem 0.75rem;border-bottom:2px solid #e2e8f0;color:#475569;font-weight:600;';
+      th.textContent = col.label;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    var tbody = document.createElement('tbody');
+    sampleData.forEach(function (row) {
+      var tr = document.createElement('tr');
+      sampleCols.forEach(function (col) {
+        var td = document.createElement('td');
+        td.style.cssText = 'padding:0.5rem 0.75rem;border-bottom:1px solid #f1f5f9;';
+        td.textContent = String(row[col.field]);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    el.appendChild(table);
+  });
+});
+</script>
+
 </body>
 </html>
