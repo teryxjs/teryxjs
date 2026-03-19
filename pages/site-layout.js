@@ -35,6 +35,9 @@
     var path = window.location.pathname;
     if (path.indexOf('/explorer') !== -1) return '../';
     if (path.indexOf('/docs') !== -1) return '../';
+    if (path.indexOf('/widgets') !== -1) return '../';
+    if (path.indexOf('/pricing') !== -1) return '../';
+    if (path.indexOf('/blog') !== -1) return '../';
     return '';
   }
 

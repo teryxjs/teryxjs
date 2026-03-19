@@ -187,6 +187,46 @@ test.describe('Site Layout — Footer', () => {
   });
 });
 
+test.describe('Site Layout — Nav Links on Subdirectory Pages', () => {
+  const subdirPages = [
+    { path: '/widgets/', name: 'Widgets' },
+    { path: '/pricing/', name: 'Pricing' },
+    { path: '/blog/', name: 'Blog' },
+    { path: '/docs/', name: 'Docs' },
+    { path: '/explorer/', name: 'Explorer' },
+  ];
+
+  for (const { path: pagePath, name } of subdirPages) {
+    test(`nav Home link resolves to root from ${name} page`, async ({ page }) => {
+      await page.goto(pagePath);
+      const homeLink = page.locator('.site-nav-link', { hasText: 'Home' });
+      const href = await homeLink.getAttribute('href');
+      expect(href).toBe('../');
+    });
+
+    test(`nav Widgets link resolves correctly from ${name} page`, async ({ page }) => {
+      await page.goto(pagePath);
+      const link = page.locator('.site-nav-link', { hasText: 'Widgets' });
+      const href = await link.getAttribute('href');
+      expect(href).toBe('../widgets/');
+    });
+  }
+
+  test('nav Home link on homepage resolves to ./', async ({ page }) => {
+    await page.goto('/pages-home/');
+    const homeLink = page.locator('.site-nav-link', { hasText: 'Home' });
+    const href = await homeLink.getAttribute('href');
+    expect(href).toBe('./');
+  });
+
+  test('nav Widgets link on homepage resolves to widgets/', async ({ page }) => {
+    await page.goto('/pages-home/');
+    const link = page.locator('.site-nav-link', { hasText: 'Widgets' });
+    const href = await link.getAttribute('href');
+    expect(href).toBe('widgets/');
+  });
+});
+
 test.describe('Site Layout — Accessibility', () => {
   test('nav has correct role and aria-label', async ({ page }) => {
     await page.goto('/explorer/');
