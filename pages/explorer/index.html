@@ -1415,21 +1415,268 @@ ExplorerRegistry.add('Data Entry', 'Slider', function (container) {
 
 // ── Steps ──
 ExplorerRegistry.add('Navigation', 'Steps', function (container) {
-  ExplorerDemo(container, 'Wizard Steps', [
+  // 1. Horizontal Steps
+  ExplorerDemo(container, 'Horizontal Steps', [
     'Teryx.steps(el, {',
+    '  direction: "horizontal",',
+    '  current: 1,',
     '  items: [',
-    '    { title: "Account", status: "completed" },',
-    '    { title: "Profile", status: "active" },',
-    '    { title: "Review", status: "pending" },',
+    '    { title: "Account", description: "Create your account" },',
+    '    { title: "Profile", description: "Set up your profile" },',
+    '    { title: "Review", description: "Review and submit" },',
     '  ]',
     '});'
   ].join('\n'), function (el) {
     Teryx.steps(el, {
+      direction: 'horizontal',
+      current: 1,
       items: [
-        { title: 'Account', description: 'Create your account', status: 'completed' },
-        { title: 'Profile', description: 'Set up your profile', status: 'active' },
-        { title: 'Review', description: 'Review and submit', status: 'pending' },
+        { title: 'Account', description: 'Create your account' },
+        { title: 'Profile', description: 'Set up your profile' },
+        { title: 'Review', description: 'Review and submit' },
       ]
+    });
+  });
+
+  // 2. Vertical Steps
+  ExplorerDemo(container, 'Vertical Steps', [
+    'Teryx.steps(el, {',
+    '  direction: "vertical",',
+    '  current: 2,',
+    '  items: [',
+    '    { title: "Sign Up", description: "Create account" },',
+    '    { title: "Verify Email", description: "Confirm address" },',
+    '    { title: "Complete Profile", description: "Add details" },',
+    '    { title: "Get Started", description: "Begin using the app" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.steps(el, {
+      direction: 'vertical',
+      current: 2,
+      items: [
+        { title: 'Sign Up', description: 'Create account' },
+        { title: 'Verify Email', description: 'Confirm address' },
+        { title: 'Complete Profile', description: 'Add details' },
+        { title: 'Get Started', description: 'Begin using the app' },
+      ]
+    });
+  });
+
+  // 3. Clickable Steps
+  ExplorerDemo(container, 'Clickable Steps', [
+    'var inst = Teryx.steps(el, {',
+    '  clickable: true,',
+    '  current: 0,',
+    '  items: [',
+    '    { title: "Cart", description: "Review items" },',
+    '    { title: "Shipping", description: "Enter address" },',
+    '    { title: "Payment", description: "Choose method" },',
+    '    { title: "Confirm", description: "Place order" },',
+    '  ],',
+    '  onChange: function (step) { console.log("Step:", step); }',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.steps(el, {
+      clickable: true,
+      current: 0,
+      items: [
+        { title: 'Cart', description: 'Review items' },
+        { title: 'Shipping', description: 'Enter address' },
+        { title: 'Payment', description: 'Choose method' },
+        { title: 'Confirm', description: 'Place order' },
+      ]
+    });
+  });
+});
+
+// ── Sidebar ──
+ExplorerRegistry.add('Navigation', 'Sidebar', function (container) {
+  // 1. Collapsible Sidebar
+  ExplorerDemo(container, 'Collapsible Sidebar', [
+    'Teryx.sidebar(el, {',
+    '  brand: "MyApp",',
+    '  collapsible: true,',
+    '  variant: "dark",',
+    '  items: [',
+    '    { label: "Dashboard", icon: "home", href: "#", active: true },',
+    '    { label: "Analytics", icon: "chart", href: "#" },',
+    '    { label: "Settings", icon: "settings", href: "#" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    el.style.position = 'relative';
+    el.style.height = '300px';
+    Teryx.sidebar(el, {
+      brand: 'MyApp',
+      collapsible: true,
+      variant: 'dark',
+      items: [
+        { label: 'Dashboard', icon: 'home', href: '#', active: true },
+        { label: 'Analytics', icon: 'chart', href: '#' },
+        { label: 'Settings', icon: 'settings', href: '#' },
+      ]
+    });
+  });
+
+  // 2. Nested Items Sidebar
+  ExplorerDemo(container, 'Nested Items', [
+    'Teryx.sidebar(el, {',
+    '  brand: "Admin",',
+    '  variant: "light",',
+    '  items: [',
+    '    { label: "Home", icon: "home", href: "#" },',
+    '    { label: "Users", icon: "user", active: true, children: [',
+    '      { label: "All Users", href: "#" },',
+    '      { label: "Add User", href: "#" },',
+    '    ]},',
+    '    { label: "Reports", icon: "folder", children: [',
+    '      { label: "Monthly", href: "#" },',
+    '      { label: "Annual", href: "#" },',
+    '    ]},',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    el.style.position = 'relative';
+    el.style.height = '350px';
+    Teryx.sidebar(el, {
+      brand: 'Admin',
+      variant: 'light',
+      items: [
+        { label: 'Home', icon: 'home', href: '#' },
+        { label: 'Users', icon: 'user', active: true, children: [
+          { label: 'All Users', href: '#' },
+          { label: 'Add User', href: '#' },
+        ]},
+        { label: 'Reports', icon: 'folder', children: [
+          { label: 'Monthly', href: '#' },
+          { label: 'Annual', href: '#' },
+        ]},
+      ]
+    });
+  });
+});
+
+// ── Navbar ──
+ExplorerRegistry.add('Navigation', 'Navbar', function (container) {
+  // 1. Responsive Navbar
+  ExplorerDemo(container, 'Responsive Navbar', [
+    'Teryx.navbar(el, {',
+    '  brand: "Teryx",',
+    '  collapsible: true,',
+    '  variant: "light",',
+    '  items: [',
+    '    { label: "Home", href: "#", active: true },',
+    '    { label: "Products", href: "#" },',
+    '    { label: "About", href: "#" },',
+    '    { label: "Contact", href: "#" },',
+    '  ],',
+    '  endItems: [',
+    '    { label: "Sign In", href: "#" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.navbar(el, {
+      brand: 'Teryx',
+      collapsible: true,
+      variant: 'light',
+      items: [
+        { label: 'Home', href: '#', active: true },
+        { label: 'Products', href: '#' },
+        { label: 'About', href: '#' },
+        { label: 'Contact', href: '#' },
+      ],
+      endItems: [
+        { label: 'Sign In', href: '#' },
+      ]
+    });
+  });
+
+  // 2. Dark Navbar with Dropdowns
+  ExplorerDemo(container, 'Dark Navbar with Dropdowns', [
+    'Teryx.navbar(el, {',
+    '  brand: "Dashboard",',
+    '  variant: "dark",',
+    '  items: [',
+    '    { label: "Home", href: "#" },',
+    '    { label: "Services", children: [',
+    '      { label: "Web Dev", href: "#" },',
+    '      { label: "Design", href: "#" },',
+    '    ]},',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.navbar(el, {
+      brand: 'Dashboard',
+      variant: 'dark',
+      items: [
+        { label: 'Home', href: '#' },
+        { label: 'Services', children: [
+          { label: 'Web Development', href: '#' },
+          { label: 'Design', href: '#' },
+          { label: 'Consulting', href: '#' },
+        ]},
+        { label: 'Pricing', href: '#' },
+      ]
+    });
+  });
+});
+
+// ── Pagination ──
+ExplorerRegistry.add('Navigation', 'Pagination', function (container) {
+  // 1. Default Pagination
+  ExplorerDemo(container, 'Default Pagination', [
+    'Teryx.pagination(el, {',
+    '  total: 200,',
+    '  current: 1,',
+    '  pageSize: 10,',
+    '  onChange: function (page, size) { console.log(page, size); }',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.pagination(el, {
+      total: 200,
+      current: 1,
+      pageSize: 10
+    });
+  });
+
+  // 2. Small with Page Info
+  ExplorerDemo(container, 'Simple Pagination with Page Info', [
+    'Teryx.pagination(el, {',
+    '  total: 100,',
+    '  current: 3,',
+    '  pageSize: 10,',
+    '  simple: true,',
+    '  showTotal: true,',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.pagination(el, {
+      total: 100,
+      current: 3,
+      pageSize: 10,
+      simple: true,
+      showTotal: true
+    });
+  });
+
+  // 3. Full-featured Pagination
+  ExplorerDemo(container, 'Full-Featured Pagination', [
+    'Teryx.pagination(el, {',
+    '  total: 500,',
+    '  current: 5,',
+    '  pageSize: 25,',
+    '  showTotal: true,',
+    '  showSizeChanger: true,',
+    '  showJumper: true,',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.pagination(el, {
+      total: 500,
+      current: 5,
+      pageSize: 25,
+      showTotal: true,
+      showSizeChanger: true,
+      showJumper: true
     });
   });
 });
