@@ -1780,6 +1780,199 @@ ExplorerRegistry.add('Data Entry', 'Slider', function (container) {
   });
 });
 
+// ── Form ──
+ExplorerRegistry.add('Data Entry', 'Form', function (container) {
+  // 1. Basic Form (text, email, password, number)
+  ExplorerDemo(container, 'Basic Form', [
+    'Teryx.form(el, {',
+    '  action: "/api/register",',
+    '  fields: [',
+    '    { name: "fullName", label: "Full Name", type: "text", required: true, placeholder: "John Doe" },',
+    '    { name: "email", label: "Email", type: "email", required: true, placeholder: "john@example.com" },',
+    '    { name: "password", label: "Password", type: "password", required: true, placeholder: "Min 8 characters" },',
+    '    { name: "age", label: "Age", type: "number", min: 18, max: 120, placeholder: "25" },',
+    '  ],',
+    '  submitLabel: "Register",',
+    '  cancelLabel: "Reset"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.form(el, {
+      action: '/api/register',
+      fields: [
+        { name: 'fullName', label: 'Full Name', type: 'text', required: true, placeholder: 'John Doe' },
+        { name: 'email', label: 'Email', type: 'email', required: true, placeholder: 'john@example.com' },
+        { name: 'password', label: 'Password', type: 'password', required: true, placeholder: 'Min 8 characters' },
+        { name: 'age', label: 'Age', type: 'number', min: 18, max: 120, placeholder: '25' },
+      ],
+      submitLabel: 'Register',
+      cancelLabel: 'Reset'
+    });
+  });
+
+  // 2. Select, Checkbox, Radio, Switch
+  ExplorerDemo(container, 'Select, Checkbox, Radio & Switch', [
+    'Teryx.form(el, {',
+    '  action: "/api/preferences",',
+    '  fields: [',
+    '    { name: "country", label: "Country", type: "select",',
+    '      placeholder: "Choose a country",',
+    '      options: [',
+    '        { value: "us", label: "United States" },',
+    '        { value: "uk", label: "United Kingdom" },',
+    '        { value: "de", label: "Germany" },',
+    '        { value: "jp", label: "Japan" },',
+    '      ] },',
+    '    { name: "newsletter", label: "Subscribe to newsletter", type: "checkbox" },',
+    '    { name: "theme", label: "Theme", type: "radio",',
+    '      options: [',
+    '        { value: "light", label: "Light" },',
+    '        { value: "dark", label: "Dark" },',
+    '        { value: "auto", label: "Auto" },',
+    '      ], value: "auto" },',
+    '    { name: "notifications", label: "Enable notifications", type: "switch" },',
+    '  ],',
+    '  submitLabel: "Save Preferences"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.form(el, {
+      action: '/api/preferences',
+      fields: [
+        { name: 'country', label: 'Country', type: 'select',
+          placeholder: 'Choose a country',
+          options: [
+            { value: 'us', label: 'United States' },
+            { value: 'uk', label: 'United Kingdom' },
+            { value: 'de', label: 'Germany' },
+            { value: 'jp', label: 'Japan' },
+          ] },
+        { name: 'newsletter', label: 'Subscribe to newsletter', type: 'checkbox' },
+        { name: 'theme', label: 'Theme', type: 'radio',
+          options: [
+            { value: 'light', label: 'Light' },
+            { value: 'dark', label: 'Dark' },
+            { value: 'auto', label: 'Auto' },
+          ], value: 'auto' },
+        { name: 'notifications', label: 'Enable notifications', type: 'switch' },
+      ],
+      submitLabel: 'Save Preferences'
+    });
+  });
+
+  // 3. Form Validation
+  ExplorerDemo(container, 'Form Validation', [
+    'Teryx.form(el, {',
+    '  action: "/api/validate",',
+    '  liveValidation: true,',
+    '  fields: [',
+    '    { name: "username", label: "Username", type: "text", required: true,',
+    '      minLength: 3, maxLength: 20,',
+    '      validators: [{ type: "minLength", value: 3,',
+    '        message: "Username must be at least 3 characters" }] },',
+    '    { name: "email", label: "Email", type: "email", required: true },',
+    '    { name: "website", label: "Website", type: "url",',
+    '      placeholder: "https://example.com" },',
+    '    { name: "bio", label: "Bio", type: "textarea", rows: 3,',
+    '      maxLength: 200, helpText: "Max 200 characters" },',
+    '  ],',
+    '  submitLabel: "Submit"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.form(el, {
+      action: '/api/validate',
+      liveValidation: true,
+      fields: [
+        { name: 'username', label: 'Username', type: 'text', required: true,
+          minLength: 3, maxLength: 20,
+          validators: [{ type: 'minLength', value: 3,
+            message: 'Username must be at least 3 characters' }] },
+        { name: 'email', label: 'Email', type: 'email', required: true },
+        { name: 'website', label: 'Website', type: 'url',
+          placeholder: 'https://example.com' },
+        { name: 'bio', label: 'Bio', type: 'textarea', rows: 3,
+          maxLength: 200, helpText: 'Max 200 characters' },
+      ],
+      submitLabel: 'Submit'
+    });
+  });
+
+  // 4. Layout Modes (Vertical / Horizontal / Inline)
+  ExplorerDemo(container, 'Vertical Layout (default)', [
+    'Teryx.form(el, {',
+    '  action: "/api/contact",',
+    '  layout: "vertical",',
+    '  fields: [',
+    '    { name: "name", label: "Name", type: "text" },',
+    '    { name: "message", label: "Message", type: "textarea", rows: 2 },',
+    '  ],',
+    '  submitLabel: "Send"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.form(el, {
+      action: '/api/contact',
+      layout: 'vertical',
+      fields: [
+        { name: 'name', label: 'Name', type: 'text' },
+        { name: 'message', label: 'Message', type: 'textarea', rows: 2 },
+      ],
+      submitLabel: 'Send'
+    });
+  });
+
+  ExplorerDemo(container, 'Horizontal Layout', [
+    'Teryx.form(el, {',
+    '  action: "/api/contact",',
+    '  layout: "horizontal",',
+    '  fields: [',
+    '    { name: "name", label: "Name", type: "text" },',
+    '    { name: "email", label: "Email", type: "email" },',
+    '  ],',
+    '  submitLabel: "Send"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.form(el, {
+      action: '/api/contact',
+      layout: 'horizontal',
+      fields: [
+        { name: 'name', label: 'Name', type: 'text' },
+        { name: 'email', label: 'Email', type: 'email' },
+      ],
+      submitLabel: 'Send'
+    });
+  });
+
+  ExplorerDemo(container, 'Inline Layout', [
+    'Teryx.form(el, {',
+    '  action: "/api/search",',
+    '  layout: "inline",',
+    '  fields: [',
+    '    { name: "query", label: "Search", type: "text", placeholder: "Search..." },',
+    '    { name: "category", label: "Category", type: "select",',
+    '      options: [',
+    '        { value: "all", label: "All" },',
+    '        { value: "docs", label: "Docs" },',
+    '        { value: "api", label: "API" },',
+    '      ] },',
+    '  ],',
+    '  submitLabel: "Go"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.form(el, {
+      action: '/api/search',
+      layout: 'inline',
+      fields: [
+        { name: 'query', label: 'Search', type: 'text', placeholder: 'Search...' },
+        { name: 'category', label: 'Category', type: 'select',
+          options: [
+            { value: 'all', label: 'All' },
+            { value: 'docs', label: 'Docs' },
+            { value: 'api', label: 'API' },
+          ] },
+      ],
+      submitLabel: 'Go'
+    });
+  });
+});
+
 // ── Steps ──
 ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   // 1. Horizontal Steps
