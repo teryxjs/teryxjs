@@ -3274,6 +3274,173 @@ ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
     Teryx.skeleton(el, { lines: 3, animated: false });
   });
 });
+
+// ── Kanban Board ──
+ExplorerRegistry.add('Specialized', 'Kanban Board', function (container) {
+
+  // 1. Basic Columns
+  ExplorerDemo(container, 'Basic Columns', [
+    'Teryx.kanban(el, {',
+    '  columns: [',
+    '    { id: "backlog", title: "Backlog", items: [{ id: "b1", title: "Research" }] },',
+    '    { id: "todo", title: "To Do", items: [{ id: "t1", title: "Design mockups" }] },',
+    '    { id: "doing", title: "In Progress", items: [] },',
+    '    { id: "done", title: "Done", items: [] }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.kanban(el, {
+      columns: [
+        { id: 'backlog', title: 'Backlog', color: '#94a3b8', items: [
+          { id: 'b1', title: 'Research competitors', description: 'Analyse top 5 competitors' },
+          { id: 'b2', title: 'Write RFC', description: 'Draft proposal document' }
+        ]},
+        { id: 'todo', title: 'To Do', color: '#3b82f6', items: [
+          { id: 't1', title: 'Design mockups', description: 'Create Figma screens', assignee: 'Alice' }
+        ]},
+        { id: 'doing', title: 'In Progress', color: '#f59e0b', items: [
+          { id: 'd1', title: 'Build API', description: 'REST endpoints', assignee: 'Bob', priority: 'high' }
+        ]},
+        { id: 'done', title: 'Done', color: '#22c55e', items: [] }
+      ]
+    });
+  });
+
+  // 2. Drag Cards
+  ExplorerDemo(container, 'Drag Cards', [
+    'Teryx.kanban(el, {',
+    '  draggable: true,',
+    '  columns: [ ... ],',
+    '  onMove: function (cardId, from, to) { console.log(cardId, from, "->", to); }',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.kanban(el, {
+      draggable: true,
+      columns: [
+        { id: 'open', title: 'Open', color: '#3b82f6', items: [
+          { id: 'drag1', title: 'Drag me!', description: 'Drop into another column' },
+          { id: 'drag2', title: 'Me too', description: 'Try dragging this card' }
+        ]},
+        { id: 'wip', title: 'Work In Progress', color: '#f59e0b', items: [
+          { id: 'drag3', title: 'Ongoing work', assignee: 'Eve' }
+        ]},
+        { id: 'closed', title: 'Closed', color: '#22c55e', items: [] }
+      ],
+      onMove: function (cardId, from, to) {
+        console.log('Moved', cardId, 'from', from, 'to', to);
+      }
+    });
+  });
+
+  // 3. WIP Limits
+  ExplorerDemo(container, 'WIP Limits', [
+    'Teryx.kanban(el, {',
+    '  columns: [',
+    '    { id: "todo", title: "To Do", items: [...], limit: 5 },',
+    '    { id: "doing", title: "In Progress", items: [...], limit: 2 },',
+    '    { id: "done", title: "Done", items: [] }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.kanban(el, {
+      columns: [
+        { id: 'wip-todo', title: 'To Do', color: '#3b82f6', limit: 5, items: [
+          { id: 'wip1', title: 'Task A' },
+          { id: 'wip2', title: 'Task B' },
+          { id: 'wip3', title: 'Task C' }
+        ]},
+        { id: 'wip-doing', title: 'In Progress', color: '#f59e0b', limit: 2, items: [
+          { id: 'wip4', title: 'Task D', priority: 'high' },
+          { id: 'wip5', title: 'Task E', priority: 'medium' },
+          { id: 'wip6', title: 'Task F' }
+        ]},
+        { id: 'wip-done', title: 'Done', color: '#22c55e', items: [
+          { id: 'wip7', title: 'Task G' }
+        ]}
+      ]
+    });
+  });
+
+  // 4. Custom Card Templates
+  ExplorerDemo(container, 'Custom Card Templates', [
+    'Teryx.kanban(el, {',
+    '  cardTemplate: \'<div class="custom-card" data-card-id="{{id}}">\\',
+    '    <strong>{{title}}</strong>\\',
+    '    <em>{{assignee}}</em>\\',
+    '    <span class="badge">{{priority}}</span>\\',
+    '  </div>\',',
+    '  columns: [ ... ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.kanban(el, {
+      cardTemplate: '<div class="custom-tpl" data-card-id="{{id}}" style="padding:0.75rem;margin-bottom:0.5rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer">' +
+        '<div style="font-weight:600;margin-bottom:0.25rem">{{title}}</div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#64748b">' +
+        '<span>{{assignee}}</span>' +
+        '<span style="background:#dbeafe;color:#2563eb;padding:0 0.375rem;border-radius:4px">{{priority}}</span>' +
+        '</div></div>',
+      columns: [
+        { id: 'tpl-todo', title: 'To Do', color: '#6366f1', items: [
+          { id: 'tpl1', title: 'Custom layout', assignee: 'Alice', priority: 'high' },
+          { id: 'tpl2', title: 'Styled cards', assignee: 'Bob', priority: 'low' }
+        ]},
+        { id: 'tpl-doing', title: 'In Progress', color: '#f59e0b', items: [
+          { id: 'tpl3', title: 'Template engine', assignee: 'Carol', priority: 'medium' }
+        ]},
+        { id: 'tpl-done', title: 'Done', color: '#22c55e', items: [] }
+      ]
+    });
+  });
+
+  // 5. Add / Remove Cards
+  ExplorerDemo(container, 'Add / Remove Cards', [
+    'var kb = Teryx.kanban(el, { columns: [ ... ] });',
+    'kb.addCard("todo", { id: "new1", title: "New Task" });',
+    'kb.removeCard("c1");'
+  ].join('\n'), function (el) {
+    var wrapper = document.createElement('div');
+    el.appendChild(wrapper);
+
+    var kb = Teryx.kanban(wrapper, {
+      columns: [
+        { id: 'ar-todo', title: 'To Do', color: '#3b82f6', items: [
+          { id: 'ar1', title: 'Existing task', description: 'Already here' }
+        ]},
+        { id: 'ar-doing', title: 'In Progress', color: '#f59e0b', items: [] },
+        { id: 'ar-done', title: 'Done', color: '#22c55e', items: [] }
+      ]
+    });
+
+    var counter = 0;
+    var btnRow = document.createElement('div');
+    btnRow.style.display = 'flex';
+    btnRow.style.gap = '0.5rem';
+    btnRow.style.marginTop = '1rem';
+
+    var addBtn = document.createElement('button');
+    addBtn.className = 'tx-btn tx-btn-primary tx-btn-sm';
+    addBtn.textContent = 'Add Card to "To Do"';
+    addBtn.addEventListener('click', function () {
+      counter++;
+      kb.addCard('ar-todo', { id: 'new-' + counter, title: 'New Task #' + counter });
+    });
+
+    var removeBtn = document.createElement('button');
+    removeBtn.className = 'tx-btn tx-btn-danger tx-btn-sm';
+    removeBtn.textContent = 'Remove First Card';
+    removeBtn.addEventListener('click', function () {
+      var cols = kb.getColumns();
+      var todo = cols.find(function (c) { return c.id === 'ar-todo'; });
+      if (todo && todo.items && todo.items.length > 0) {
+        kb.removeCard(todo.items[0].id);
+      }
+    });
+
+    btnRow.appendChild(addBtn);
+    btnRow.appendChild(removeBtn);
+    el.appendChild(btnRow);
+  });
+});
 </script>
 
 </body>
