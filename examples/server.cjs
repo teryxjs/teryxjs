@@ -15,11 +15,12 @@ app.use('/showcase', express.static(path.join(__dirname, 'showcase')));
 app.use('/site-layout.css', express.static(path.join(__dirname, '..', 'pages', 'site-layout.css')));
 app.use('/site-layout.js', express.static(path.join(__dirname, '..', 'pages', 'site-layout.js')));
 
-// Serve pages directory (homepage, explorer, docs, pricing, blog)
+// Serve pages directory (homepage, explorer, docs, pricing, blog, widgets)
 app.use('/explorer', express.static(path.join(__dirname, '..', 'pages', 'explorer')));
 app.use('/docs', express.static(path.join(__dirname, '..', 'pages', 'docs')));
 app.use('/pricing', express.static(path.join(__dirname, '..', 'pages', 'pricing')));
 app.use('/blog', express.static(path.join(__dirname, '..', 'pages', 'blog')));
+app.use('/widgets', express.static(path.join(__dirname, '..', 'pages', 'widgets')));
 app.use('/pages-home', express.static(path.join(__dirname, '..', 'pages'), { index: 'index.html' }));
 
 app.use(express.static(path.join(__dirname)));
