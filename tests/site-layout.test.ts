@@ -217,4 +217,37 @@ describe('Site Layout', () => {
       expect(typeof layout.detectPage).toBe('function');
     });
   });
+
+  describe('Nav links for all subdirectory pages', () => {
+    // Blog is not in the nav links, only in the footer
+    const navPages = ['widgets', 'pricing', 'docs', 'explorer'] as const;
+
+    for (const page of navPages) {
+      it(`marks ${page} as active when data-page="${page}"`, () => {
+        loadLayout(page);
+        const active = document.querySelector('.site-nav-link.active');
+        expect(active).not.toBeNull();
+        const expected = page.charAt(0).toUpperCase() + page.slice(1);
+        expect(active!.textContent).toBe(expected);
+      });
+    }
+
+    it('injects footer for pricing page', () => {
+      loadLayout('pricing');
+      const footer = document.querySelector('.site-footer');
+      expect(footer).not.toBeNull();
+    });
+
+    it('injects footer for blog page', () => {
+      loadLayout('blog');
+      const footer = document.querySelector('.site-footer');
+      expect(footer).not.toBeNull();
+    });
+
+    it('injects footer for widgets page', () => {
+      loadLayout('widgets');
+      const footer = document.querySelector('.site-footer');
+      expect(footer).not.toBeNull();
+    });
+  });
 });
