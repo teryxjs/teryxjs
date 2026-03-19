@@ -11,6 +11,9 @@ app.use('/teryx.js', express.static(path.join(__dirname, '..', 'dist', 'index.gl
 // Serve the showcase directory
 app.use('/showcase', express.static(path.join(__dirname, 'showcase')));
 
+// Serve the explorer directory (pages/explorer uses ../teryx.css etc.)
+app.use('/explorer', express.static(path.join(__dirname, '..', 'pages', 'explorer')));
+
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 

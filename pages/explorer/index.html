@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teryx Explorer</title>
+  <link rel="stylesheet" href="../teryx.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; height: 100vh; overflow: hidden; background: #f8fafc; }
+
+    /* ── Sidebar ── */
+    .ex-sidebar { width: 260px; min-width: 260px; background: #fff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; }
+    .ex-sidebar-header { padding: 1rem 1.25rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.75rem; }
+    .ex-sidebar-header h1 { margin: 0; font-size: 1.125rem; font-weight: 700; color: #0f172a; }
+    .ex-sidebar-header a { font-size: 0.75rem; color: #64748b; text-decoration: none; margin-left: auto; }
+    .ex-sidebar-header a:hover { color: #0f172a; }
+    .ex-search { padding: 0.75rem 1.25rem; border-bottom: 1px solid #e2e8f0; }
+    .ex-search input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8125rem; outline: none; background: #f8fafc; }
+    .ex-search input:focus { border-color: var(--tx-primary, #3b82f6); }
+    .ex-nav { flex: 1; overflow-y: auto; padding: 0.5rem 0; }
+    .ex-nav-group { margin-bottom: 0.25rem; }
+    .ex-nav-group-title { padding: 0.5rem 1.25rem 0.25rem; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
+    .ex-nav-item { display: block; padding: 0.4rem 1.25rem 0.4rem 1.75rem; font-size: 0.8125rem; color: #475569; text-decoration: none; cursor: pointer; border-left: 3px solid transparent; }
+    .ex-nav-item:hover { background: #f1f5f9; color: #0f172a; }
+    .ex-nav-item.active { background: #eff6ff; color: #2563eb; border-left-color: #2563eb; font-weight: 500; }
+    .ex-nav-item.hidden { display: none; }
+
+    /* ── Main content ── */
+    .ex-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .ex-toolbar { padding: 0.75rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #fff; display: flex; align-items: center; gap: 1rem; min-height: 52px; }
+    .ex-breadcrumb { font-size: 0.8125rem; color: #64748b; }
+    .ex-breadcrumb span { color: #0f172a; font-weight: 500; }
+    .ex-toolbar-actions { margin-left: auto; display: flex; gap: 0.5rem; }
+    .ex-toolbar-btn { padding: 0.375rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; font-size: 0.75rem; cursor: pointer; color: #475569; }
+    .ex-toolbar-btn:hover { background: #f1f5f9; }
+    .ex-toolbar-btn.active { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+    .ex-content { flex: 1; overflow-y: auto; padding: 1.5rem; }
+
+    /* ── Demo containers ── */
+    .ex-demo { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 1.5rem; }
+    .ex-demo-header { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; }
+    .ex-demo-header h3 { margin: 0; font-size: 0.875rem; font-weight: 600; color: #334155; }
+    .ex-demo-body { padding: 1.25rem; }
+    .ex-demo-source { border-top: 1px solid #e2e8f0; background: #f8fafc; }
+    .ex-demo-source pre { margin: 0; padding: 1rem; font-size: 0.75rem; overflow-x: auto; color: #334155; line-height: 1.6; }
+    .ex-demo-source-toggle { padding: 0.5rem 1rem; font-size: 0.75rem; color: #64748b; cursor: pointer; border-top: 1px solid #e2e8f0; background: none; border-left: none; border-right: none; border-bottom: none; width: 100%; text-align: left; }
+    .ex-demo-source-toggle:hover { color: #0f172a; background: #f1f5f9; }
+
+    /* ── Welcome page ── */
+    .ex-welcome { max-width: 640px; margin: 3rem auto; text-align: center; }
+    .ex-welcome h2 { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin: 0 0 0.75rem; }
+    .ex-welcome p { color: #64748b; line-height: 1.6; margin: 0 0 1.5rem; }
+    .ex-welcome-stats { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; }
+    .ex-welcome-stat { text-align: center; }
+    .ex-welcome-stat strong { display: block; font-size: 1.5rem; color: #0f172a; }
+    .ex-welcome-stat span { font-size: 0.8125rem; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="ex-sidebar">
+  <div class="ex-sidebar-header">
+    <h1>Teryx Explorer</h1>
+    <a href="../">Home</a>
+  </div>
+  <div class="ex-search">
+    <input type="text" id="search" placeholder="Search widgets..." autocomplete="off">
+  </div>
+  <nav class="ex-nav" id="nav"></nav>
+</aside>
+
+<!-- Main -->
+<main class="ex-main">
+  <div class="ex-toolbar" id="toolbar">
+    <div class="ex-breadcrumb" id="breadcrumb">Explorer</div>
+    <div class="ex-toolbar-actions">
+      <button class="ex-toolbar-btn" id="btn-source" title="Toggle source code">Source</button>
+    </div>
+  </div>
+  <div class="ex-content" id="content"></div>
+</main>
+
+<script src="../xhtmlx.js"></script>
+<script src="../teryx.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ── Widget registry ──
+  // Each entry: { category, title, render(container) }
+  var demos = [];
+  var categories = {};
+
+  window.ExplorerRegistry = {
+    add: function (category, title, renderFn) {
+      var id = slugify(category + '-' + title);
+      var demo = { id: id, category: category, title: title, render: renderFn };
+      demos.push(demo);
+      if (!categories[category]) categories[category] = [];
+      categories[category].push(demo);
+    }
+  };
+
+  function slugify(s) {
+    return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // ── Navigation ──
+  var navEl = document.getElementById('nav');
+  var contentEl = document.getElementById('content');
+  var breadcrumbEl = document.getElementById('breadcrumb');
+  var searchEl = document.getElementById('search');
+  var btnSource = document.getElementById('btn-source');
+  var showSource = false;
+
+  function buildNav() {
+    var html = '';
+    var order = [
+      'Data Display', 'Navigation', 'Feedback', 'Data Entry',
+      'Layout', 'Specialized', 'Utilities'
+    ];
+    order.forEach(function (cat) {
+      var items = categories[cat];
+      if (!items || items.length === 0) return;
+      html += '<div class="ex-nav-group">';
+      html += '<div class="ex-nav-group-title">' + escHtml(cat) + '</div>';
+      items.forEach(function (d) {
+        html += '<a class="ex-nav-item" data-id="' + d.id + '" href="#' + d.id + '">' + escHtml(d.title) + '</a>';
+      });
+      html += '</div>';
+    });
+    navEl.innerHTML = html;
+  }
+
+  function navigate(id) {
+    var demo = demos.find(function (d) { return d.id === id; });
+
+    // Update active nav
+    navEl.querySelectorAll('.ex-nav-item').forEach(function (el) {
+      el.classList.toggle('active', el.getAttribute('data-id') === id);
+    });
+
+    if (!demo) {
+      showWelcome();
+      return;
+    }
+
+    breadcrumbEl.innerHTML = escHtml(demo.category) + ' &rsaquo; <span>' + escHtml(demo.title) + '</span>';
+    contentEl.innerHTML = '';
+    demo.render(contentEl);
+
+    // Apply source visibility
+    contentEl.querySelectorAll('.ex-demo-source').forEach(function (el) {
+      el.style.display = showSource ? '' : 'none';
+    });
+  }
+
+  function showWelcome() {
+    breadcrumbEl.textContent = 'Explorer';
+    contentEl.innerHTML =
+      '<div class="ex-welcome">' +
+      '<h2>Teryx Explorer</h2>' +
+      '<p>Interactive demos for every Teryx widget. Pick a component from the sidebar to see it in action with live examples and source code.</p>' +
+      '<div class="ex-welcome-stats">' +
+      '<div class="ex-welcome-stat"><strong>' + demos.length + '</strong><span>Demos</span></div>' +
+      '<div class="ex-welcome-stat"><strong>' + Object.keys(categories).length + '</strong><span>Categories</span></div>' +
+      '<div class="ex-welcome-stat"><strong>0</strong><span>Dependencies</span></div>' +
+      '</div></div>';
+  }
+
+  // ── Search ──
+  searchEl.addEventListener('input', function () {
+    var q = searchEl.value.toLowerCase().trim();
+    navEl.querySelectorAll('.ex-nav-item').forEach(function (el) {
+      var text = el.textContent.toLowerCase();
+      el.classList.toggle('hidden', q.length > 0 && text.indexOf(q) === -1);
+    });
+    // Hide empty groups
+    navEl.querySelectorAll('.ex-nav-group').forEach(function (g) {
+      var visible = g.querySelectorAll('.ex-nav-item:not(.hidden)').length;
+      g.style.display = visible > 0 ? '' : 'none';
+    });
+  });
+
+  // ── Source toggle ──
+  btnSource.addEventListener('click', function () {
+    showSource = !showSource;
+    btnSource.classList.toggle('active', showSource);
+    contentEl.querySelectorAll('.ex-demo-source').forEach(function (el) {
+      el.style.display = showSource ? '' : 'none';
+    });
+  });
+
+  // ── Hash routing ──
+  function onHashChange() {
+    var id = location.hash.replace('#', '');
+    navigate(id);
+  }
+  window.addEventListener('hashchange', onHashChange);
+
+  // ── Demo helper: wrap a demo with title + optional source ──
+  window.ExplorerDemo = function (container, title, source, renderFn) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'ex-demo';
+    wrapper.innerHTML =
+      '<div class="ex-demo-header"><h3>' + escHtml(title) + '</h3></div>' +
+      '<div class="ex-demo-body"></div>' +
+      (source ? '<div class="ex-demo-source" style="display:' + (showSource ? '' : 'none') + '"><pre>' + escHtml(source) + '</pre></div>' : '');
+    container.appendChild(wrapper);
+    var body = wrapper.querySelector('.ex-demo-body');
+    renderFn(body);
+    return body;
+  };
+
+  // ── Boot ──
+  // Demos are registered via ExplorerRegistry.add() in separate <script> blocks below.
+  // After all scripts load, we build nav and navigate.
+  window.addEventListener('DOMContentLoaded', function () {
+    buildNav();
+    onHashChange();
+  });
+})();
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Demo registrations — each widget category adds its demos here.
+     These will be moved to separate files as the explorer grows.
+     ══════════════════════════════════════════════════════════════ -->
+
+<script>
+// ── Grid ──
+ExplorerRegistry.add('Data Display', 'Grid', function (container) {
+  ExplorerDemo(container, 'Basic Grid', [
+    'Teryx.grid(el, {',
+    '  source: \'inline\',',
+    '  columns: [',
+    '    { field: "name", label: "Name", sortable: true },',
+    '    { field: "role", label: "Role" },',
+    '    { field: "city", label: "City" },',
+    '  ],',
+    '  data: [ ... ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.grid(el, {
+      source: 'inline',
+      columns: [
+        { field: 'name', label: 'Name', sortable: true },
+        { field: 'role', label: 'Role' },
+        { field: 'city', label: 'City' },
+      ],
+      data: [
+        { name: 'Alice Johnson', role: 'Engineer', city: 'San Francisco' },
+        { name: 'Bob Smith', role: 'Designer', city: 'New York' },
+        { name: 'Carol Lee', role: 'Manager', city: 'Chicago' },
+        { name: 'David Kim', role: 'Engineer', city: 'Seattle' },
+        { name: 'Eva Martinez', role: 'Analyst', city: 'Austin' },
+      ]
+    });
+  });
+});
+
+// ── Tree ──
+ExplorerRegistry.add('Data Display', 'Tree', function (container) {
+  ExplorerDemo(container, 'Basic Tree', [
+    'Teryx.tree(el, {',
+    '  data: [',
+    '    { id: "1", label: "Documents", children: [ ... ] },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tree(el, {
+      data: [
+        { id: '1', label: 'Documents', children: [
+          { id: '1a', label: 'Reports', children: [
+            { id: '1a1', label: 'Q1 Report.pdf' },
+            { id: '1a2', label: 'Q2 Report.pdf' },
+          ]},
+          { id: '1b', label: 'Presentations' },
+        ]},
+        { id: '2', label: 'Images', children: [
+          { id: '2a', label: 'photo.jpg' },
+          { id: '2b', label: 'logo.png' },
+        ]},
+        { id: '3', label: 'README.md' },
+      ]
+    });
+  });
+});
+
+// ── Tabs ──
+ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
+  var variants = ['tabs', 'underline', 'pills', 'card'];
+  variants.forEach(function (v) {
+    ExplorerDemo(container, v.charAt(0).toUpperCase() + v.slice(1) + ' Variant', [
+      'Teryx.tabs(el, {',
+      '  variant: \'' + v + '\',',
+      '  items: [',
+      '    { id: "t1", title: "Overview", content: "..." },',
+      '    { id: "t2", title: "Settings", content: "..." },',
+      '  ]',
+      '});'
+    ].join('\n'), function (el) {
+      Teryx.tabs(el, {
+        variant: v,
+        items: [
+          { id: v + '1', title: 'Overview', content: '<p style="padding:0.5rem 0;color:#475569">Tab content for the overview panel.</p>' },
+          { id: v + '2', title: 'Settings', content: '<p style="padding:0.5rem 0;color:#475569">Configuration and preferences.</p>' },
+          { id: v + '3', title: 'Activity', content: '<p style="padding:0.5rem 0;color:#475569">Recent activity and logs.</p>' },
+        ]
+      });
+    });
+  });
+});
+
+// ── Accordion ──
+ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
+  ExplorerDemo(container, 'Basic Accordion', [
+    'Teryx.accordion(el, {',
+    '  items: [',
+    '    { id: "a1", title: "Section 1", content: "...", open: true },',
+    '    { id: "a2", title: "Section 2", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.accordion(el, {
+      items: [
+        { id: 'a1', title: 'What is Teryx?', content: '<p style="color:#475569;margin:0">An enterprise widget framework with 45+ TypeScript components.</p>', open: true },
+        { id: 'a2', title: 'How does it work?', content: '<p style="color:#475569;margin:0">Widgets generate HTML with xhtmlx data attributes. xhtmlx handles data fetching.</p>' },
+        { id: 'a3', title: 'Is it free?', content: '<p style="color:#475569;margin:0">Yes, MIT licensed.</p>' },
+      ]
+    });
+  });
+});
+
+// ── Toast ──
+ExplorerRegistry.add('Feedback', 'Toast', function (container) {
+  ExplorerDemo(container, 'Toast Notifications', [
+    'Teryx.toast({ title: "Success", message: "Saved", type: "success" });'
+  ].join('\n'), function (el) {
+    var types = ['success', 'error', 'warning', 'info'];
+    types.forEach(function (t) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-' + (t === 'error' ? 'danger' : t === 'warning' ? 'warning' : t === 'info' ? 'primary' : 'success');
+      btn.style.cssText = 'margin:0.25rem;padding:0.5rem 1rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+      btn.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+      btn.onclick = function () {
+        Teryx.toast({ title: t.charAt(0).toUpperCase() + t.slice(1), message: 'This is a ' + t + ' notification.', type: t, duration: 3000 });
+      };
+      el.appendChild(btn);
+    });
+  });
+});
+
+// ── Alert ──
+ExplorerRegistry.add('Feedback', 'Alert', function (container) {
+  var types = ['info', 'success', 'warning', 'danger'];
+  types.forEach(function (t) {
+    ExplorerDemo(container, t.charAt(0).toUpperCase() + t.slice(1) + ' Alert', [
+      'Teryx.alert(el, { type: "' + t + '", title: "...", message: "..." });'
+    ].join('\n'), function (el) {
+      Teryx.alert(el, {
+        type: t,
+        title: t.charAt(0).toUpperCase() + t.slice(1),
+        message: 'This is a ' + t + ' alert message with relevant details.',
+        closable: true
+      });
+    });
+  });
+});
+
+// ── Progress ──
+ExplorerRegistry.add('Feedback', 'Progress', function (container) {
+  ExplorerDemo(container, 'Progress Bars', [
+    'Teryx.progress(el, { value: 65, label: "65%" });'
+  ].join('\n'), function (el) {
+    var values = [25, 50, 75, 100];
+    values.forEach(function (v) {
+      var row = document.createElement('div');
+      row.style.marginBottom = '0.75rem';
+      el.appendChild(row);
+      Teryx.progress(row, { value: v, label: v + '%' });
+    });
+  });
+});
+
+// ── Rating ──
+ExplorerRegistry.add('Data Entry', 'Rating', function (container) {
+  ExplorerDemo(container, 'Interactive Rating', [
+    'Teryx.rating(el, { value: 3, max: 5 });'
+  ].join('\n'), function (el) {
+    Teryx.rating(el, { value: 3, max: 5, size: 'lg' });
+  });
+
+  ExplorerDemo(container, 'Readonly Rating', [
+    'Teryx.rating(el, { value: 4, max: 5, readonly: true });'
+  ].join('\n'), function (el) {
+    Teryx.rating(el, { value: 4, max: 5, readonly: true });
+  });
+});
+
+// ── Slider ──
+ExplorerRegistry.add('Data Entry', 'Slider', function (container) {
+  ExplorerDemo(container, 'Basic Slider', [
+    'Teryx.slider(el, { value: 40, min: 0, max: 100 });'
+  ].join('\n'), function (el) {
+    Teryx.slider(el, { value: 40, min: 0, max: 100 });
+  });
+});
+
+// ── Steps ──
+ExplorerRegistry.add('Navigation', 'Steps', function (container) {
+  ExplorerDemo(container, 'Wizard Steps', [
+    'Teryx.steps(el, {',
+    '  items: [',
+    '    { title: "Account", status: "completed" },',
+    '    { title: "Profile", status: "active" },',
+    '    { title: "Review", status: "pending" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.steps(el, {
+      items: [
+        { title: 'Account', description: 'Create your account', status: 'completed' },
+        { title: 'Profile', description: 'Set up your profile', status: 'active' },
+        { title: 'Review', description: 'Review and submit', status: 'pending' },
+      ]
+    });
+  });
+});
+
+// ── Chart ──
+ExplorerRegistry.add('Specialized', 'Charts', function (container) {
+  ExplorerDemo(container, 'Bar Chart', [
+    'Teryx.chart(el, { type: "bar", height: 250, series: [{ ... }] });'
+  ].join('\n'), function (el) {
+    Teryx.chart(el, {
+      type: 'bar', height: 250,
+      series: [{ name: 'Revenue', data: [
+        { x: 'Jan', y: 42 }, { x: 'Feb', y: 58 }, { x: 'Mar', y: 35 },
+        { x: 'Apr', y: 67 }, { x: 'May', y: 49 }, { x: 'Jun', y: 73 }
+      ]}]
+    });
+  });
+
+  ExplorerDemo(container, 'Pie Chart', [
+    'Teryx.chart(el, { type: "pie", height: 250, data: [ ... ] });'
+  ].join('\n'), function (el) {
+    Teryx.chart(el, {
+      type: 'pie', height: 250,
+      data: [
+        { x: 'Chrome', y: 65 }, { x: 'Firefox', y: 15 },
+        { x: 'Safari', y: 12 }, { x: 'Edge', y: 8 }
+      ]
+    });
+  });
+
+  ExplorerDemo(container, 'Line Chart', [
+    'Teryx.chart(el, { type: "line", height: 250, series: [{ ... }] });'
+  ].join('\n'), function (el) {
+    Teryx.chart(el, {
+      type: 'line', height: 250,
+      series: [{ name: 'Users', data: [
+        { x: 'Mon', y: 120 }, { x: 'Tue', y: 180 }, { x: 'Wed', y: 150 },
+        { x: 'Thu', y: 210 }, { x: 'Fri', y: 190 }, { x: 'Sat', y: 95 }
+      ]}]
+    });
+  });
+});
+
+// ── Timeline ──
+ExplorerRegistry.add('Specialized', 'Timeline', function (container) {
+  ExplorerDemo(container, 'Basic Timeline', [
+    'Teryx.timeline(el, { items: [ ... ] });'
+  ].join('\n'), function (el) {
+    Teryx.timeline(el, {
+      items: [
+        { title: 'v0.1.0', content: 'Initial release with core widgets', time: 'Mar 2026', status: 'completed', color: 'success' },
+        { title: 'v0.2.0', content: 'Charts, calendar, pivot grid', time: 'Mar 2026', status: 'completed', color: 'info' },
+        { title: 'v0.3.0', content: 'Explorer demo site', time: 'Mar 2026', status: 'active', color: 'primary' },
+      ]
+    });
+  });
+});
+
+// ── Card ──
+ExplorerRegistry.add('Layout', 'Card', function (container) {
+  ExplorerDemo(container, 'Basic Card', [
+    'Teryx.card(el, { title: "Card Title", content: "..." });'
+  ].join('\n'), function (el) {
+    Teryx.card(el, {
+      title: 'Project Update',
+      content: '<p style="color:#475569;margin:0">The project is progressing well. All milestones are on track for the upcoming release.</p>',
+    });
+  });
+});
+
+// ── Skeleton ──
+ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
+  ExplorerDemo(container, 'Loading Skeleton', [
+    'Teryx.skeleton(el, { rows: 3 });'
+  ].join('\n'), function (el) {
+    Teryx.skeleton(el, { rows: 4 });
+  });
+});
+</script>
+
+</body>
+</html>
