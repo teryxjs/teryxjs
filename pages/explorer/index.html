@@ -731,6 +731,205 @@ ExplorerRegistry.add('Data Display', 'Tree', function (container) {
   });
 });
 
+// ── DataList ──
+ExplorerRegistry.add('Data Display', 'DataList', function (container) {
+  // 1. Basic DataList
+  ExplorerDemo(container, 'Basic DataList', [
+    'Teryx.datalist(el, {',
+    '  source: \'/api/notifications\',',
+    '  itemTemplate: \'<strong xh-text="title"></strong>\'',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.datalist(el, {
+      source: '/api/notifications',
+      itemsField: 'items',
+      itemTemplate: '<div style="padding:0.5rem 0;border-bottom:1px solid #e2e8f0"><strong xh-text="title"></strong><div style="font-size:0.75rem;color:#94a3b8" xh-text="time"></div></div>'
+    });
+  });
+
+  // 2. Grid Layout DataList
+  ExplorerDemo(container, 'Grid Layout', [
+    'Teryx.datalist(el, {',
+    '  source: \'/api/notifications\',',
+    '  layout: \'grid\',',
+    '  gridColumns: 2',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.datalist(el, {
+      source: '/api/notifications',
+      itemsField: 'items',
+      layout: 'grid',
+      gridColumns: 2,
+      itemTemplate: '<div style="padding:0.75rem;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0"><strong xh-text="title"></strong><div style="font-size:0.75rem;color:#94a3b8;margin-top:0.25rem" xh-text="time"></div></div>'
+    });
+  });
+
+  // 3. Empty State
+  ExplorerDemo(container, 'Empty State', [
+    'Teryx.datalist(el, {',
+    '  source: \'/api/empty\',',
+    '  emptyMessage: \'No results found\'',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.datalist(el, {
+      source: '/api/notifications',
+      itemsField: 'items',
+      emptyMessage: 'No notifications yet',
+      itemTemplate: '<div xh-text="title"></div>'
+    });
+  });
+});
+
+// ── PropertyGrid ──
+ExplorerRegistry.add('Data Display', 'PropertyGrid', function (container) {
+  // 1. Basic PropertyGrid
+  ExplorerDemo(container, 'Basic PropertyGrid', [
+    'Teryx.propertyGrid(el, {',
+    '  properties: [',
+    '    { name: "name", value: "Teryx", label: "Name" },',
+    '    { name: "version", value: "0.3.0", label: "Version" },',
+    '    { name: "license", value: "MIT", label: "License" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.propertyGrid(el, {
+      properties: [
+        { name: 'name', value: 'Teryx', label: 'Name', type: 'string' },
+        { name: 'version', value: '0.3.0', label: 'Version', type: 'string' },
+        { name: 'license', value: 'MIT', label: 'License', type: 'string' },
+        { name: 'stable', value: true, label: 'Stable', type: 'boolean' },
+        { name: 'widgets', value: 45, label: 'Widgets', type: 'number' },
+      ]
+    });
+  });
+
+  // 2. Editable PropertyGrid
+  ExplorerDemo(container, 'Editable PropertyGrid', [
+    'Teryx.propertyGrid(el, {',
+    '  editable: true,',
+    '  properties: [',
+    '    { name: "width", value: "100%", type: "string" },',
+    '    { name: "visible", value: true, type: "boolean" },',
+    '    { name: "theme", value: "light", type: "select",',
+    '      options: [{ label: "Light", value: "light" }, ...] },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var statusEl = document.createElement('div');
+    statusEl.className = 'tx-propgrid-change-status';
+    statusEl.style.cssText = 'margin-top:0.75rem;padding:0.5rem;background:#f8fafc;border-radius:6px;font-size:0.8125rem;color:#475569;';
+    statusEl.textContent = 'Edit a property to see changes.';
+
+    Teryx.propertyGrid(el, {
+      editable: true,
+      properties: [
+        { name: 'width', value: '100%', label: 'Width', type: 'string' },
+        { name: 'height', value: '400px', label: 'Height', type: 'string' },
+        { name: 'visible', value: true, label: 'Visible', type: 'boolean' },
+        { name: 'opacity', value: 1.0, label: 'Opacity', type: 'number' },
+        { name: 'bgColor', value: '#ffffff', label: 'Background', type: 'color' },
+        { name: 'theme', value: 'light', label: 'Theme', type: 'select', options: [
+          { label: 'Light', value: 'light' },
+          { label: 'Dark', value: 'dark' },
+          { label: 'Auto', value: 'auto' },
+        ]},
+      ],
+      onChange: function (name, value) {
+        statusEl.textContent = 'Changed: ' + name + ' = ' + String(value);
+      }
+    });
+
+    el.appendChild(statusEl);
+  });
+
+  // 3. API-driven PropertyGrid
+  ExplorerDemo(container, 'API-driven PropertyGrid', [
+    'Teryx.propertyGrid(el, {',
+    '  source: \'/api/component-props\',',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.propertyGrid(el, {
+      source: '/api/component-props',
+    });
+  });
+});
+
+// ── Descriptions ──
+ExplorerRegistry.add('Data Display', 'Descriptions', function (container) {
+  // 1. Basic Descriptions
+  ExplorerDemo(container, 'Basic Descriptions', [
+    'Teryx.descriptions(el, {',
+    '  title: "User Info",',
+    '  columns: 2,',
+    '  items: [',
+    '    { label: "Name", value: "Alice Johnson" },',
+    '    { label: "Role", value: "Engineer" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.descriptions(el, {
+      title: 'User Info',
+      columns: 2,
+      items: [
+        { label: 'Name', value: 'Alice Johnson' },
+        { label: 'Role', value: 'Engineer' },
+        { label: 'Department', value: 'Engineering' },
+        { label: 'Location', value: 'San Francisco' },
+        { label: 'Email', value: 'alice@example.com' },
+        { label: 'Joined', value: '2024-01-15' },
+      ]
+    });
+  });
+
+  // 2. Bordered Descriptions
+  ExplorerDemo(container, 'Bordered Descriptions', [
+    'Teryx.descriptions(el, {',
+    '  bordered: true,',
+    '  columns: 3,',
+    '  items: [ ... ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.descriptions(el, {
+      title: 'Server Details',
+      bordered: true,
+      columns: 3,
+      items: [
+        { label: 'Hostname', value: 'prod-web-01' },
+        { label: 'IP Address', value: '10.0.1.42' },
+        { label: 'OS', value: 'Ubuntu 22.04' },
+        { label: 'CPU', value: '8 cores' },
+        { label: 'Memory', value: '32 GB' },
+        { label: 'Disk', value: '500 GB SSD' },
+        { label: 'Uptime', value: '45 days' },
+        { label: 'Status', value: 'Running' },
+        { label: 'Region', value: 'us-west-2' },
+      ]
+    });
+  });
+
+  // 3. Vertical Descriptions
+  ExplorerDemo(container, 'Vertical (Single Column)', [
+    'Teryx.descriptions(el, {',
+    '  columns: 1,',
+    '  bordered: false,',
+    '  items: [ ... ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.descriptions(el, {
+      title: 'Build Info',
+      columns: 1,
+      bordered: false,
+      items: [
+        { label: 'Version', value: '0.3.0' },
+        { label: 'Build', value: '2026.03.18-abc1234' },
+        { label: 'Commit', value: 'abc1234' },
+        { label: 'Branch', value: 'main' },
+        { label: 'CI Pipeline', value: '#4521 — passed' },
+      ]
+    });
+  });
+});
+
 // ── Tabs ──
 ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
   var variants = ['tabs', 'underline', 'pills', 'card'];
