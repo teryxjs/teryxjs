@@ -930,6 +930,159 @@ ExplorerRegistry.add('Data Display', 'Descriptions', function (container) {
   });
 });
 
+// ── Pivot Grid ──
+ExplorerRegistry.add('Data Display', 'Pivot Grid', function (container) {
+  var salesData = [
+    { region: 'North', product: 'Widget A', quarter: 'Q1', revenue: 12000, units: 120 },
+    { region: 'North', product: 'Widget B', quarter: 'Q1', revenue: 8000, units: 95 },
+    { region: 'North', product: 'Widget A', quarter: 'Q2', revenue: 15000, units: 150 },
+    { region: 'North', product: 'Widget B', quarter: 'Q2', revenue: 9500, units: 110 },
+    { region: 'South', product: 'Widget A', quarter: 'Q1', revenue: 10000, units: 100 },
+    { region: 'South', product: 'Widget B', quarter: 'Q1', revenue: 7500, units: 80 },
+    { region: 'South', product: 'Widget A', quarter: 'Q2', revenue: 13000, units: 130 },
+    { region: 'South', product: 'Widget B', quarter: 'Q2', revenue: 8500, units: 90 },
+    { region: 'East', product: 'Widget A', quarter: 'Q1', revenue: 11000, units: 105 },
+    { region: 'East', product: 'Widget B', quarter: 'Q1', revenue: 6000, units: 70 },
+    { region: 'East', product: 'Widget A', quarter: 'Q2', revenue: 14000, units: 140 },
+    { region: 'East', product: 'Widget B', quarter: 'Q2', revenue: 7000, units: 85 },
+  ];
+
+  // 1. Basic Pivot
+  ExplorerDemo(container, 'Basic Pivot', [
+    'Teryx.pivotGrid(el, {',
+    '  source: JSON.stringify(data),',
+    '  rows: ["region"],',
+    '  columns: ["quarter"],',
+    '  values: [{ field: "revenue", aggregate: "sum" }]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.pivotGrid(el, {
+      source: JSON.stringify(salesData),
+      rows: ['region'],
+      columns: ['quarter'],
+      values: [{ field: 'revenue', aggregate: 'sum' }]
+    });
+  });
+
+  // 2. Multiple Value Fields
+  ExplorerDemo(container, 'Multiple Value Fields', [
+    'Teryx.pivotGrid(el, {',
+    '  source: JSON.stringify(data),',
+    '  rows: ["region"],',
+    '  columns: ["quarter"],',
+    '  values: [',
+    '    { field: "revenue", aggregate: "sum" },',
+    '    { field: "units", aggregate: "sum" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.pivotGrid(el, {
+      source: JSON.stringify(salesData),
+      rows: ['region'],
+      columns: ['quarter'],
+      values: [
+        { field: 'revenue', aggregate: 'sum' },
+        { field: 'units', aggregate: 'sum' }
+      ]
+    });
+  });
+
+  // 3. All Aggregate Functions
+  ExplorerDemo(container, 'All Aggregate Functions', [
+    'Teryx.pivotGrid(el, {',
+    '  source: JSON.stringify(data),',
+    '  rows: ["region"],',
+    '  columns: [],',
+    '  values: [',
+    '    { field: "revenue", aggregate: "sum" },',
+    '    { field: "revenue", aggregate: "avg" },',
+    '    { field: "revenue", aggregate: "count" },',
+    '    { field: "revenue", aggregate: "min" },',
+    '    { field: "revenue", aggregate: "max" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.pivotGrid(el, {
+      source: JSON.stringify(salesData),
+      rows: ['region'],
+      columns: [],
+      values: [
+        { field: 'revenue', aggregate: 'sum' },
+        { field: 'revenue', aggregate: 'avg' },
+        { field: 'revenue', aggregate: 'count' },
+        { field: 'revenue', aggregate: 'min' },
+        { field: 'revenue', aggregate: 'max' }
+      ]
+    });
+  });
+
+  // 4. Collapsible Groups
+  ExplorerDemo(container, 'Collapsible Groups', [
+    'Teryx.pivotGrid(el, {',
+    '  source: JSON.stringify(data),',
+    '  rows: ["region", "product"],',
+    '  columns: ["quarter"],',
+    '  values: [{ field: "revenue", aggregate: "sum" }]',
+    '});',
+    '// Click a group row to expand/collapse'
+  ].join('\n'), function (el) {
+    Teryx.pivotGrid(el, {
+      source: JSON.stringify(salesData),
+      rows: ['region', 'product'],
+      columns: ['quarter'],
+      values: [{ field: 'revenue', aggregate: 'sum' }]
+    });
+  });
+
+  // 5. Export Aggregated Data
+  ExplorerDemo(container, 'Export Aggregated Data', [
+    'var inst = Teryx.pivotGrid(el, { ... });',
+    'var aggregated = inst.getAggregatedData();',
+    'Teryx.exportCSV(aggregated, { columns: cols });'
+  ].join('\n'), function (el) {
+    var pivotContainer = document.createElement('div');
+    el.appendChild(pivotContainer);
+
+    var inst = Teryx.pivotGrid(pivotContainer, {
+      source: JSON.stringify(salesData),
+      rows: ['region'],
+      columns: ['quarter'],
+      values: [{ field: 'revenue', aggregate: 'sum' }]
+    });
+
+    var toolbar = document.createElement('div');
+    toolbar.style.cssText = 'margin-top:1rem;display:flex;gap:0.5rem;';
+
+    var btnCsv = document.createElement('button');
+    btnCsv.className = 'tx-btn tx-btn-secondary';
+    btnCsv.style.cssText = 'padding:0.5rem 1rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+    btnCsv.textContent = 'Export CSV';
+    btnCsv.onclick = function () {
+      var data = inst.getAggregatedData();
+      Teryx.exportCSV(data, {
+        columns: [
+          { field: 'region', label: 'Region' },
+          { field: 'revenue_sum', label: 'Revenue (Sum)' }
+        ],
+        filename: 'pivot-export.csv'
+      });
+    };
+    toolbar.appendChild(btnCsv);
+
+    var btnJson = document.createElement('button');
+    btnJson.className = 'tx-btn tx-btn-secondary';
+    btnJson.style.cssText = 'padding:0.5rem 1rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+    btnJson.textContent = 'Export JSON';
+    btnJson.onclick = function () {
+      var data = inst.getAggregatedData();
+      Teryx.exportJSON(data, { filename: 'pivot-export.json' });
+    };
+    toolbar.appendChild(btnJson);
+
+    el.appendChild(toolbar);
+  });
+});
+
 // ── Tabs ──
 ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
   var variants = ['tabs', 'underline', 'pills', 'card'];
