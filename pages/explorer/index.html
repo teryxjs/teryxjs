@@ -2260,6 +2260,145 @@ ExplorerRegistry.add('Data Entry', 'Color Picker', function (container) {
   });
 });
 
+// ── Rich Text Editor ──
+ExplorerRegistry.add('Data Entry', 'Rich Text Editor', function (container) {
+
+  // 1. Default toolbar
+  ExplorerDemo(container, 'Default Toolbar', [
+    'Teryx.richEditor(el, {',
+    '  placeholder: "Start typing..."',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.richEditor(el, {
+      placeholder: 'Start typing...'
+    });
+  });
+
+  // 2. Formatting (bold, italic, underline, lists)
+  ExplorerDemo(container, 'Pre-filled Formatting', [
+    'Teryx.richEditor(el, {',
+    '  value: "<p><strong>Bold</strong>, <em>italic</em>, and <u>underline</u>.</p>"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.richEditor(el, {
+      value: '<p><strong>Bold</strong>, <em>italic</em>, and <u>underline</u>.</p>'
+    });
+  });
+
+  // 3. Readonly
+  ExplorerDemo(container, 'Readonly Editor', [
+    'Teryx.richEditor(el, {',
+    '  value: "<p>This content is <strong>read-only</strong>.</p>",',
+    '  readonly: true',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.richEditor(el, {
+      value: '<p>This content is <strong>read-only</strong>.</p>',
+      readonly: true
+    });
+  });
+
+  // 4. Get / Set content
+  ExplorerDemo(container, 'Get / Set Content', [
+    'var editor = Teryx.richEditor(el, {',
+    '  value: "<p>Initial content</p>"',
+    '});',
+    'editor.setValue("<p>Updated via API</p>");',
+    'console.log(editor.getValue());'
+  ].join('\n'), function (el) {
+    var wrap = document.createElement('div');
+    el.appendChild(wrap);
+    var editor = Teryx.richEditor(wrap, {
+      value: '<p>Initial content</p>'
+    });
+
+    var btnRow = document.createElement('div');
+    btnRow.style.marginTop = '0.75rem';
+    btnRow.style.display = 'flex';
+    btnRow.style.gap = '0.5rem';
+
+    var setBtn = document.createElement('button');
+    setBtn.className = 'tx-btn tx-btn-primary tx-btn-sm';
+    setBtn.textContent = 'Set Content';
+    setBtn.addEventListener('click', function () {
+      editor.setValue('<p>Updated via <strong>API</strong> at ' + new Date().toLocaleTimeString() + '</p>');
+    });
+
+    var getBtn = document.createElement('button');
+    getBtn.className = 'tx-btn tx-btn-sm';
+    getBtn.textContent = 'Get Content';
+    getBtn.addEventListener('click', function () {
+      alert(editor.getValue());
+    });
+
+    btnRow.appendChild(setBtn);
+    btnRow.appendChild(getBtn);
+    el.appendChild(btnRow);
+  });
+});
+
+// ── File Upload ──
+ExplorerRegistry.add('Data Entry', 'File Upload', function (container) {
+
+  // 1. Single file upload
+  ExplorerDemo(container, 'Single File Upload', [
+    'Teryx.fileupload(el, {',
+    '  action: "/api/upload",',
+    '  dragDrop: false',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.fileupload(el, {
+      action: '/api/upload',
+      dragDrop: false
+    });
+  });
+
+  // 2. Multiple files
+  ExplorerDemo(container, 'Multiple Files', [
+    'Teryx.fileupload(el, {',
+    '  action: "/api/upload",',
+    '  multiple: true,',
+    '  maxFiles: 5',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.fileupload(el, {
+      action: '/api/upload',
+      multiple: true,
+      maxFiles: 5
+    });
+  });
+
+  // 3. Drag & drop zone
+  ExplorerDemo(container, 'Drag & Drop', [
+    'Teryx.fileupload(el, {',
+    '  action: "/api/upload",',
+    '  multiple: true,',
+    '  dragDrop: true',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.fileupload(el, {
+      action: '/api/upload',
+      multiple: true,
+      dragDrop: true
+    });
+  });
+
+  // 4. Accept specific types
+  ExplorerDemo(container, 'Accept Image Types Only', [
+    'Teryx.fileupload(el, {',
+    '  action: "/api/upload",',
+    '  accept: "image/*",',
+    '  maxSize: 5242880',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.fileupload(el, {
+      action: '/api/upload',
+      accept: 'image/*',
+      maxSize: 5242880
+    });
+  });
+});
+
 // ── Steps ──
 ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   // 1. Horizontal Steps
