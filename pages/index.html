@@ -8,127 +8,234 @@
   <link rel="stylesheet" href="site-layout.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    .section { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-    .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-    .demo-box { background: var(--tx-bg, #fff); border: 1px solid var(--tx-border, #e2e8f0); border-radius: 12px; overflow: hidden; }
-    .demo-box-header { padding: 0.75rem 1rem; border-bottom: 1px solid var(--tx-border, #e2e8f0); background: var(--tx-bg-secondary, #f8fafc); }
-    .demo-box-header h3 { margin: 0; font-size: 0.875rem; font-weight: 600; color: var(--tx-text, #334155); }
-    .demo-box-body { padding: 1rem; }
-    .section-title { font-size: 1.5rem; font-weight: 700; margin: 3rem 0 0.5rem; color: var(--tx-text, #0f172a); }
-    .section-desc { color: var(--tx-text-secondary, #64748b); margin: 0 0 1.5rem; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); color: var(--tx-text); background: var(--tx-bg); }
+
+    .home-section { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+    .home-section-header { text-align: center; margin-bottom: 2rem; }
+    .home-section-header h2 { font-size: 1.75rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .home-section-header p { font-size: 1rem; color: var(--tx-text-secondary); margin: 0; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+    /* Quick Start */
+    .quickstart { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .quickstart-step { background: var(--tx-bg-secondary); border: 1px solid var(--tx-border); border-radius: var(--tx-radius-lg, 0.5rem); padding: 1.5rem; }
+    .quickstart-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--tx-primary); color: #fff; font-size: 0.8125rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .quickstart-step h3 { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem; }
+    .quickstart-step pre { background: var(--tx-bg-tertiary); border: 1px solid var(--tx-border); border-radius: var(--tx-radius, 0.375rem); padding: 0.75rem; font-family: var(--tx-font-mono, monospace); font-size: 0.8125rem; line-height: 1.6; margin: 0; overflow-x: auto; }
+
+    /* Why Teryx feature cards */
+    .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .feature-card { text-align: center; padding: 1.5rem 1rem; }
+    .feature-icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: var(--tx-radius-lg, 0.5rem); background: var(--tx-primary-light); color: var(--tx-primary); margin-bottom: 0.75rem; font-size: 1.25rem; font-weight: 800; }
+    .feature-card h3 { font-size: 0.9375rem; font-weight: 600; margin: 0 0 0.375rem; }
+    .feature-card p { font-size: 0.8125rem; color: var(--tx-text-secondary); margin: 0; line-height: 1.5; }
+
+    /* Widget Showcase */
+    .showcase-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .showcase-box { background: var(--tx-bg); border: 1px solid var(--tx-border); border-radius: 12px; overflow: hidden; }
+    .showcase-box-header { padding: 0.75rem 1rem; border-bottom: 1px solid var(--tx-border); background: var(--tx-bg-secondary); }
+    .showcase-box-header h3 { margin: 0; font-size: 0.875rem; font-weight: 600; }
+    .showcase-box-body { padding: 1rem; min-height: 200px; }
+
+    /* DX Section */
+    .dx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .dx-panel { background: var(--tx-bg-secondary); border: 1px solid var(--tx-border); border-radius: var(--tx-radius-lg, 0.5rem); overflow: hidden; }
+    .dx-panel-header { padding: 0.75rem 1rem; border-bottom: 1px solid var(--tx-border); font-size: 0.8125rem; font-weight: 600; color: var(--tx-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+    .dx-panel pre { margin: 0; padding: 1rem; font-family: var(--tx-font-mono, monospace); font-size: 0.8125rem; line-height: 1.7; overflow-x: auto; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .stat-card { text-align: center; padding: 1.5rem; background: var(--tx-bg-secondary); border: 1px solid var(--tx-border); border-radius: var(--tx-radius-lg, 0.5rem); }
+    .stat-value { font-size: 2rem; font-weight: 800; margin: 0; }
+    .stat-value .stat-suffix { font-size: 1rem; font-weight: 600; color: var(--tx-text-secondary); }
+    .stat-label { font-size: 0.8125rem; color: var(--tx-text-secondary); margin: 0.25rem 0 0; }
+
+    /* CTA */
+    .cta-section { text-align: center; padding: 4rem 2rem; background: var(--tx-bg-secondary); border-top: 1px solid var(--tx-border); margin-top: 1rem; }
+    .cta-section h2 { font-size: 1.75rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .cta-section p { font-size: 1rem; color: var(--tx-text-secondary); margin: 0 0 1.5rem; }
+    .cta-buttons { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .cta-btn { display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; border-radius: var(--tx-radius-lg, 0.5rem); font-size: 0.9375rem; font-weight: 600; text-decoration: none; transition: opacity 150ms; }
+    .cta-btn:hover { opacity: 0.9; }
+    .cta-btn-primary { background: var(--tx-primary); color: #fff; }
+    .cta-btn-outline { background: transparent; border: 1px solid var(--tx-border); color: var(--tx-text); }
+    .cta-btn-outline:hover { background: var(--tx-bg-tertiary); }
+
+    @media (max-width: 768px) {
+      .quickstart { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .showcase-grid { grid-template-columns: 1fr; }
+      .dx-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>
+
   <!-- Hero -->
   <div id="hero"></div>
 
-  <!-- Stats -->
-  <div class="section" style="margin-top:2rem">
-    <div class="tx-row" style="margin-bottom:2rem" id="stats-row">
-      <div class="tx-col-3" id="stat-1"></div>
-      <div class="tx-col-3" id="stat-2"></div>
-      <div class="tx-col-3" id="stat-3"></div>
-      <div class="tx-col-3" id="stat-4"></div>
+  <!-- Quick Start -->
+  <div class="home-section" id="quickstart">
+    <div class="home-section-header">
+      <h2>Get started in 3 steps</h2>
+      <p>From zero to interactive UI in under a minute.</p>
     </div>
-  </div>
-
-  <!-- Widgets section -->
-  <div class="section" id="widgets">
-    <h2 class="section-title">Core Widgets</h2>
-    <p class="section-desc">30+ production-ready components — all declarative HTML or imperative JS.</p>
-    <div class="demo-grid">
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Tabs</h3></div>
-        <div class="demo-box-body" id="demo-tabs"></div>
+    <div class="quickstart">
+      <div class="quickstart-step">
+        <div class="quickstart-num">1</div>
+        <h3>Install</h3>
+        <pre>pnpm add teryx</pre>
       </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Accordion</h3></div>
-        <div class="demo-box-body" id="demo-accordion"></div>
+      <div class="quickstart-step">
+        <div class="quickstart-num">2</div>
+        <h3>Import</h3>
+        <pre>import { grid } from 'teryx';
+import 'teryx/css';</pre>
       </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Timeline</h3></div>
-        <div class="demo-box-body" id="demo-timeline"></div>
-      </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Progress Bars</h3></div>
-        <div class="demo-box-body" id="demo-progress"></div>
-      </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Rating</h3></div>
-        <div class="demo-box-body" id="demo-rating"></div>
-      </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Alerts</h3></div>
-        <div class="demo-box-body" id="demo-alerts"></div>
-      </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Steps / Wizard</h3></div>
-        <div class="demo-box-body" id="demo-steps"></div>
-      </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Tree</h3></div>
-        <div class="demo-box-body" id="demo-tree"></div>
+      <div class="quickstart-step">
+        <div class="quickstart-num">3</div>
+        <h3>Render</h3>
+        <pre>grid('#app', {
+  source: '/api/users',
+  columns: [
+    { field: 'name', label: 'Name' },
+    { field: 'email', label: 'Email' },
+  ],
+});</pre>
       </div>
     </div>
   </div>
 
-  <!-- Charts -->
-  <div class="section" id="charts">
-    <h2 class="section-title">Charts (Pure SVG)</h2>
-    <p class="section-desc">Bar, line, area, pie, donut, scatter, gauge — zero dependencies.</p>
-    <div class="demo-grid">
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Bar Chart</h3></div>
-        <div class="demo-box-body" id="demo-bar"></div>
+  <!-- Why Teryx -->
+  <div class="home-section" id="features">
+    <div class="home-section-header">
+      <h2>Why Teryx?</h2>
+      <p>Built for developers who need production-ready UI components without the overhead.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">0</div>
+        <h3>Zero Dependencies</h3>
+        <p>No React, no Vue, no jQuery. Just xhtmlx under the hood — nothing else.</p>
       </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Line Chart</h3></div>
-        <div class="demo-box-body" id="demo-line"></div>
+      <div class="feature-card">
+        <div class="feature-icon">45</div>
+        <h3>45+ Widgets</h3>
+        <p>Grids, charts, forms, kanban, calendar, tree, modals, and more — all included.</p>
       </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Pie / Donut</h3></div>
-        <div class="demo-box-body" style="display:flex;gap:1rem">
-          <div id="demo-pie" style="flex:1"></div>
-          <div id="demo-donut" style="flex:1"></div>
-        </div>
+      <div class="feature-card">
+        <div class="feature-icon">TS</div>
+        <h3>TypeScript Native</h3>
+        <p>Written in TypeScript. Full type definitions for every widget, option, and event.</p>
       </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Gauge</h3></div>
-        <div class="demo-box-body" style="display:flex;gap:1rem;justify-content:center">
-          <div id="demo-gauge1" style="width:160px"></div>
-          <div id="demo-gauge2" style="width:160px"></div>
-        </div>
+      <div class="feature-card">
+        <div class="feature-icon">&lt;/&gt;</div>
+        <h3>Dual API</h3>
+        <p>Declarative HTML with <code>data-tx-*</code> attributes or imperative JavaScript — your choice.</p>
       </div>
     </div>
   </div>
 
-  <!-- Forms -->
-  <div class="section" id="forms">
-    <h2 class="section-title">Forms</h2>
-    <p class="section-desc">20+ field types with validation, grouping, and multiple layouts.</p>
-    <div class="demo-grid">
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Contact Form</h3></div>
-        <div class="demo-box-body" id="demo-form"></div>
+  <!-- Widget Showcase -->
+  <div class="home-section" id="showcase">
+    <div class="home-section-header">
+      <h2>Interactive widget demos</h2>
+      <p>These are real widgets rendered live on this page — not screenshots.</p>
+    </div>
+    <div class="showcase-grid">
+      <div class="showcase-box">
+        <div class="showcase-box-header"><h3>Data Grid</h3></div>
+        <div class="showcase-box-body" id="demo-grid"></div>
       </div>
-      <div class="demo-box">
-        <div class="demo-box-header"><h3>Feedback</h3></div>
-        <div class="demo-box-body">
-          <div id="demo-modal-trigger" style="margin-bottom:1rem"></div>
-          <div id="demo-toast-triggers"></div>
-          <div id="demo-segmented" style="margin-top:1rem"></div>
-          <div id="demo-color" style="margin-top:1rem"></div>
+      <div class="showcase-box">
+        <div class="showcase-box-header"><h3>Charts</h3></div>
+        <div class="showcase-box-body" id="demo-charts" style="display:flex;gap:1rem"></div>
+      </div>
+      <div class="showcase-box">
+        <div class="showcase-box-header"><h3>Form</h3></div>
+        <div class="showcase-box-body" id="demo-form"></div>
+      </div>
+      <div class="showcase-box">
+        <div class="showcase-box-header"><h3>Tabs + Timeline</h3></div>
+        <div class="showcase-box-body">
+          <div id="demo-tabs" style="margin-bottom:1rem"></div>
+          <div id="demo-timeline"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Front Office -->
-  <div id="frontoffice">
-    <div id="demo-fo-features" class="section" style="margin-top:2rem"></div>
-    <div id="demo-fo-pricing" class="section"></div>
-    <div id="demo-fo-testimonials" class="section" style="margin-bottom:2rem"></div>
+  <!-- Developer Experience -->
+  <div class="home-section" id="dx">
+    <div class="home-section-header">
+      <h2>Two ways to build</h2>
+      <p>Use declarative HTML for simple cases, imperative JS for full control — or mix both.</p>
+    </div>
+    <div class="dx-grid">
+      <div class="dx-panel">
+        <div class="dx-panel-header">Declarative HTML</div>
+        <pre>&lt;div data-tx-widget="grid"
+     data-tx-source="/api/users"
+     data-tx-paginated
+     data-tx-searchable&gt;
+  &lt;tx-column field="name" label="Name" sortable&gt;&lt;/tx-column&gt;
+  &lt;tx-column field="email" label="Email"&gt;&lt;/tx-column&gt;
+  &lt;tx-column field="role" label="Role" filterable&gt;&lt;/tx-column&gt;
+&lt;/div&gt;</pre>
+      </div>
+      <div class="dx-panel">
+        <div class="dx-panel-header">Imperative TypeScript</div>
+        <pre>import { grid } from 'teryx';
+
+grid('#my-grid', {
+  source: '/api/users',
+  paginated: true,
+  searchable: true,
+  columns: [
+    { field: 'name', label: 'Name', sortable: true },
+    { field: 'email', label: 'Email' },
+    { field: 'role', label: 'Role', filterable: true },
+  ],
+});</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance Stats -->
+  <div class="home-section" id="stats">
+    <div class="home-section-header">
+      <h2>Built for performance</h2>
+      <p>Small bundle, fast rendering, zero runtime overhead.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">45<span class="stat-suffix">+</span></div>
+        <div class="stat-label">Widgets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">400<span class="stat-suffix">KB</span></div>
+        <div class="stat-label">Bundle (all widgets)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1000<span class="stat-suffix">+</span></div>
+        <div class="stat-label">Tests</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Dependencies</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Ready to build?</h2>
+    <p>Teryx is MIT licensed, free, and open source. Start building today.</p>
+    <div class="cta-buttons">
+      <a class="cta-btn cta-btn-primary" href="docs/">Get Started</a>
+      <a class="cta-btn cta-btn-outline" href="explorer/">Explore Widgets</a>
+      <a class="cta-btn cta-btn-outline" href="https://github.com/teryxjs/teryxjs" target="_blank" rel="noopener">GitHub</a>
+    </div>
   </div>
 
   <!-- Footer (injected by site-layout.js) -->
@@ -141,118 +248,44 @@
     // ── Hero ──
     Teryx.frontoffice.desktop.hero('#hero', {
       title: 'Build UIs 10x Faster',
-      subtitle: 'Enterprise-grade widget framework built on xhtmlx. 30+ TypeScript components, declarative HTML API, zero dependencies.',
+      subtitle: 'Enterprise-grade widget framework with 45+ TypeScript components, declarative HTML API, and zero dependencies.',
       backgroundGradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)',
-      minHeight: '420px',
+      minHeight: '400px',
       buttons: [
-        { label: 'Get Started', variant: 'primary', href: 'https://github.com/teryxjs/teryxjs' },
-        { label: 'View Docs', variant: 'outline', href: 'https://github.com/teryxjs/teryxjs#readme' },
+        { label: 'Get Started', variant: 'primary', href: 'docs/' },
+        { label: 'Explorer', variant: 'outline', href: 'explorer/' },
       ],
-      extraContent: '<p style="color:#64748b;font-size:0.85rem;margin-top:1.5rem">v0.1.0 &middot; MIT License &middot; TypeScript &middot; 265KB ESM</p>',
+      extraContent: '<p style="color:#94a3b8;font-size:0.85rem;margin-top:1.5rem">v0.3.0 &middot; MIT License &middot; TypeScript &middot; 400KB IIFE</p>',
     });
-
-    // ── Stats ──
-    Teryx.stat('#stat-1', { label: 'Widgets', value: '30+', icon: 'settings', color: 'primary' });
-    Teryx.stat('#stat-2', { label: 'Test Coverage', value: '352', icon: 'check', color: 'success', suffix: 'tests' });
-    Teryx.stat('#stat-3', { label: 'Bundle Size', value: '265', icon: 'download', color: 'info', suffix: 'KB' });
-    Teryx.stat('#stat-4', { label: 'Dependencies', value: '0', icon: 'star', color: 'warning' });
 
     // ── Tabs ──
     Teryx.tabs('#demo-tabs', {
       variant: 'underline',
       items: [
-        { id: 't1', title: 'Overview', content: '<p style="padding:0.5rem 0;color:#475569">Teryx provides enterprise-grade UI components that work declaratively with HTML or programmatically with TypeScript.</p>' },
-        { id: 't2', title: 'Install', content: '<pre style="background:#f8fafc;padding:0.75rem;border-radius:6px;font-size:0.8rem;margin:0.5rem 0">pnpm add teryx</pre>' },
-        { id: 't3', title: 'Usage', content: '<pre style="background:#f8fafc;padding:0.75rem;border-radius:6px;font-size:0.8rem;margin:0.5rem 0">&lt;div data-tx-widget="grid"\n     data-tx-source="/api/users"&gt;\n  &lt;tx-column field="name" label="Name" sortable&gt;&lt;/tx-column&gt;\n&lt;/div&gt;</pre>' },
-      ],
-    });
-
-    // ── Accordion ──
-    Teryx.accordion('#demo-accordion', {
-      items: [
-        { id: 'a1', title: 'What is Teryx?', content: '<p style="color:#475569;margin:0">An enterprise widget framework built on xhtmlx with 30+ TypeScript components, dual declarative/imperative API, and zero dependencies.</p>', open: true },
-        { id: 'a2', title: 'How does it work?', content: '<p style="color:#475569;margin:0">Widgets generate HTML with xhtmlx xh-* attributes. xhtmlx handles data fetching and rendering. Teryx adds the component layer on top.</p>' },
-        { id: 'a3', title: 'Is it free?', content: '<p style="color:#475569;margin:0">Yes, MIT licensed. Free for commercial and personal use.</p>' },
+        { id: 't1', title: 'Overview', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary)">Teryx provides enterprise-grade UI components that work declaratively with HTML or programmatically with TypeScript.</p>' },
+        { id: 't2', title: 'Install', content: '<pre style="background:var(--tx-bg-tertiary);padding:0.75rem;border-radius:6px;font-size:0.8rem;margin:0.5rem 0">pnpm add teryx</pre>' },
       ],
     });
 
     // ── Timeline ──
     Teryx.timeline('#demo-timeline', {
       items: [
-        { title: 'v0.1.0 Released', content: 'Initial release with 30+ widgets', time: 'Mar 2026', status: 'completed', color: 'success' },
-        { title: 'Chart Engine', content: 'Pure SVG charts — bar, line, pie, gauge', time: 'Mar 2026', status: 'completed', color: 'info' },
-        { title: 'Mobile Widgets', content: 'Navigation view, sheets, bottom tabs', time: 'Mar 2026', status: 'active', color: 'primary' },
-      ],
-    });
-
-    // ── Progress ──
-    var progEl = document.getElementById('demo-progress');
-    Teryx.progress(progEl, { value: 85, color: 'primary', showValue: true, label: 'Build progress' });
-    var p2 = document.createElement('div'); p2.style.marginTop = '0.75rem'; progEl.appendChild(p2);
-    Teryx.progress(p2, { value: 62, color: 'success', showValue: true, striped: true, animated: true, label: 'Upload' });
-    var p3 = document.createElement('div'); p3.style.marginTop = '0.75rem'; progEl.appendChild(p3);
-    Teryx.progress(p3, { value: 30, color: 'warning', showValue: true, label: 'Memory' });
-
-    // ── Rating ──
-    Teryx.rating('#demo-rating', { value: 4, max: 5, size: 'lg' });
-
-    // ── Alerts ──
-    var alertEl = document.getElementById('demo-alerts');
-    ['success', 'info', 'warning', 'danger'].forEach(function(t) {
-      var d = document.createElement('div'); alertEl.appendChild(d);
-      Teryx.alert(d, { type: t, message: t.charAt(0).toUpperCase() + t.slice(1) + ' alert example', dismissible: true });
-    });
-
-    // ── Steps ──
-    Teryx.steps('#demo-steps', {
-      current: 1,
-      items: [
-        { title: 'Install', description: 'pnpm add teryx' },
-        { title: 'Configure', description: 'Add widgets' },
-        { title: 'Deploy', description: 'Ship it' },
-      ],
-    });
-
-    // ── Tree ──
-    Teryx.tree('#demo-tree', {
-      selectable: true, lines: true,
-      nodes: [
-        { id: '1', text: 'src', icon: 'folder', expanded: true, children: [
-          { id: '1-1', text: 'widgets', icon: 'folder', children: [
-            { id: '1-1-1', text: 'grid.ts', leaf: true },
-            { id: '1-1-2', text: 'chart.ts', leaf: true },
-            { id: '1-1-3', text: 'form.ts', leaf: true },
-          ]},
-          { id: '1-2', text: 'core.ts', leaf: true },
-          { id: '1-3', text: 'index.ts', leaf: true },
-        ]},
-        { id: '2', text: 'styles', icon: 'folder', children: [
-          { id: '2-1', text: 'teryx.css', leaf: true },
-        ]},
+        { title: 'v0.3.0', content: 'Product website, explorer complete', time: 'Mar 2026', status: 'active', color: 'primary' },
+        { title: 'v0.2.0', content: 'Charts, mobile, front-office', time: 'Mar 2026', status: 'completed', color: 'success' },
+        { title: 'v0.1.0', content: 'Initial release — 30+ widgets', time: 'Mar 2026', status: 'completed', color: 'info' },
       ],
     });
 
     // ── Charts ──
-    Teryx.chart('#demo-bar', { type: 'bar', height: 220, series: [{ name: 'Revenue', data: [
+    var chartBox = document.getElementById('demo-charts');
+    var c1 = document.createElement('div'); c1.style.flex = '1'; chartBox.appendChild(c1);
+    var c2 = document.createElement('div'); c2.style.flex = '1'; chartBox.appendChild(c2);
+    Teryx.chart(c1, { type: 'bar', height: 200, series: [{ name: 'Revenue', data: [
       {x:'Jan',y:42},{x:'Feb',y:51},{x:'Mar',y:48},{x:'Apr',y:62},{x:'May',y:59},{x:'Jun',y:74}
-    ]}, { name: 'Costs', data: [
-      {x:'Jan',y:32},{x:'Feb',y:38},{x:'Mar',y:35},{x:'Apr',y:41},{x:'May',y:39},{x:'Jun',y:46}
-    ]}], legend: true });
-
-    Teryx.chart('#demo-line', { type: 'line', height: 220, series: [{ name: 'Users', data: [
-      {x:'Mon',y:120},{x:'Tue',y:180},{x:'Wed',y:150},{x:'Thu',y:210},{x:'Fri',y:190},{x:'Sat',y:90},{x:'Sun',y:70}
-    ]}]});
-
-    Teryx.chart('#demo-pie', { type: 'pie', height: 200, data: [
+    ]}] });
+    Teryx.chart(c2, { type: 'donut', height: 200, data: [
       {x:'Desktop',y:58,label:'Desktop'},{x:'Mobile',y:32,label:'Mobile'},{x:'Tablet',y:10,label:'Tablet'}
-    ]});
-
-    Teryx.chart('#demo-donut', { type: 'donut', height: 200, data: [
-      {x:'Chrome',y:65,label:'Chrome'},{x:'Safari',y:19,label:'Safari'},{x:'Firefox',y:10,label:'Firefox'},{x:'Other',y:6,label:'Other'}
-    ]});
-
-    Teryx.chart('#demo-gauge1', { type: 'gauge', height: 140, value: 73, title: 'CPU' });
-    Teryx.chart('#demo-gauge2', { type: 'gauge', height: 140, value: 41, title: 'Memory' });
+    ] });
 
     // ── Form ──
     Teryx.form('#demo-form', {
@@ -261,78 +294,30 @@
         { name: 'name', label: 'Name', required: true, placeholder: 'Your name' },
         { name: 'email', label: 'Email', type: 'email', required: true, placeholder: 'you@example.com' },
         { name: 'subject', label: 'Subject', type: 'select', options: [
-          { label: 'General', value: 'general' }, { label: 'Support', value: 'support' }, { label: 'Sales', value: 'sales' },
+          { label: 'General', value: 'general' }, { label: 'Support', value: 'support' },
         ]},
-        { name: 'message', label: 'Message', type: 'textarea', rows: 3, placeholder: 'Your message...' },
+        { name: 'message', label: 'Message', type: 'textarea', rows: 2, placeholder: 'Your message...' },
       ],
-      submitLabel: 'Send Message',
+      submitLabel: 'Send',
     });
 
-    // ── Modal trigger ──
-    var btn = document.createElement('button');
-    btn.className = 'tx-btn tx-btn-primary'; btn.textContent = 'Open Modal';
-    document.getElementById('demo-modal-trigger').appendChild(btn);
-    var m = Teryx.modal({ title: 'Example Modal', content: '<p>This is a modal dialog. It supports dragging, resizing, and dynamic content via xhtmlx.</p>', size: 'sm', buttons: [{ label: 'Close', action: 'close' }] });
-    btn.addEventListener('click', function() { m.open(); });
-
-    // ── Toast triggers ──
-    var toastBox = document.getElementById('demo-toast-triggers');
-    ['success','info','warning','danger'].forEach(function(t) {
-      var b = document.createElement('button');
-      b.className = 'tx-btn tx-btn-' + t + ' tx-btn-sm'; b.textContent = t; b.style.marginRight = '0.5rem';
-      b.addEventListener('click', function() { Teryx.toast[t](t.charAt(0).toUpperCase() + t.slice(1) + ' notification'); });
-      toastBox.appendChild(b);
-    });
-
-    // ── Segmented ──
-    Teryx.segmented('#demo-segmented', { items: [
-      { label: 'Day', value: 'day' }, { label: 'Week', value: 'week' }, { label: 'Month', value: 'month', },
-    ], value: 'week' });
-
-    // ── Color Picker ──
-    Teryx.colorPicker('#demo-color', { value: '#3b82f6' });
-
-    // ── Features ──
-    Teryx.frontoffice.desktop.feature('#demo-fo-features', {
-      title: 'Why Teryx?',
-      subtitle: 'Everything you need for enterprise UI development.',
-      columns: 3, variant: 'card', align: 'center',
-      items: [
-        { icon: 'settings', title: 'Zero Config', description: 'Works out of the box. Import and use — no build setup needed.' },
-        { icon: 'eye', title: 'Type Safe', description: 'Full TypeScript definitions for every widget, option, and callback.' },
-        { icon: 'download', title: 'Lightweight', description: 'Zero external dependencies. 265KB ESM bundle including all 30+ widgets.' },
-        { icon: 'star', title: 'SVG Charts', description: 'Bar, line, area, pie, donut, scatter, gauge — all pure SVG, no canvas.' },
-        { icon: 'user', title: 'Mobile Ready', description: 'Touch-optimized navigation views, bottom sheets, pull lists, tab bars.' },
-        { icon: 'file', title: 'Declarative', description: 'HTML-first API with tx-* child elements. Or use imperative JS — your choice.' },
+    // ── Grid ──
+    Teryx.grid('#demo-grid', {
+      height: 200,
+      data: [
+        { name: 'Alice Johnson', email: 'alice@example.com', role: 'Admin', status: 'Active' },
+        { name: 'Bob Smith', email: 'bob@example.com', role: 'Editor', status: 'Active' },
+        { name: 'Carol Williams', email: 'carol@example.com', role: 'Viewer', status: 'Inactive' },
+        { name: 'David Brown', email: 'david@example.com', role: 'Admin', status: 'Active' },
+        { name: 'Eva Martinez', email: 'eva@example.com', role: 'Editor', status: 'Pending' },
+      ],
+      columns: [
+        { field: 'name', label: 'Name', sortable: true },
+        { field: 'email', label: 'Email' },
+        { field: 'role', label: 'Role', sortable: true },
+        { field: 'status', label: 'Status' },
       ],
     });
-
-    // ── Pricing ──
-    Teryx.frontoffice.desktop.pricing('#demo-fo-pricing', {
-      title: 'Open Source, Free Forever',
-      subtitle: 'MIT licensed. No paid tiers — this is just a demo of the pricing widget.',
-      tiers: [
-        { name: 'Community', price: '$0', period: '/forever', buttonLabel: 'Get Started', buttonVariant: 'outline',
-          features: [{ text: 'All 30+ widgets', included: true }, { text: 'TypeScript types', included: true }, { text: 'MIT license', included: true }, { text: 'GitHub Issues support', included: true }] },
-        { name: 'Pro (Demo)', price: '$29', period: '/mo', recommended: true, badge: 'Example', buttonLabel: 'This is a Demo',
-          features: [{ text: 'Everything in Community', included: true }, { text: 'Priority support', included: true }, { text: 'Custom themes', included: true }, { text: 'SLA guarantee', included: true }] },
-        { name: 'Enterprise (Demo)', price: '$99', period: '/mo', buttonLabel: 'Also a Demo', buttonVariant: 'outline',
-          features: [{ text: 'Everything in Pro', included: true }, { text: 'Dedicated support', included: true }, { text: 'Custom development', included: true }, { text: 'On-premise deploy', included: true }] },
-      ],
-    });
-
-    // ── Testimonials ──
-    Teryx.frontoffice.desktop.testimonial('#demo-fo-testimonials', {
-      title: 'Developer Feedback',
-      subtitle: 'What the community says about Teryx.',
-      layout: 'grid', columns: 3,
-      quotes: [
-        { text: 'The declarative HTML API is genius. Just add attributes and child elements — the grid builds itself.', author: 'Sarah Chen', role: 'Frontend Lead', rating: 5 },
-        { text: 'Finally a widget library that takes xhtmlx seriously. The chart engine is surprisingly capable for zero deps.', author: 'Marcus Rivera', role: 'Full-Stack Dev', rating: 5 },
-        { text: 'Replaced our ExtJS frontend in a week. The TypeScript types caught three bugs during migration.', author: 'Emily Watson', role: 'VP Engineering', rating: 4 },
-      ],
-    });
-
   </script>
 </body>
 </html>
