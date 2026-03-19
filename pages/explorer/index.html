@@ -2399,6 +2399,135 @@ ExplorerRegistry.add('Data Entry', 'File Upload', function (container) {
   });
 });
 
+// ── Transfer List ──
+ExplorerRegistry.add('Data Entry', 'Transfer List', function (container) {
+
+  // 1. Basic dual-list
+  ExplorerDemo(container, 'Basic Transfer List', [
+    'Teryx.transferList(el, {',
+    '  source: [',
+    '    { label: "Apple", value: "apple" },',
+    '    { label: "Banana", value: "banana" },',
+    '    { label: "Cherry", value: "cherry" },',
+    '    { label: "Date", value: "date" },',
+    '    { label: "Elderberry", value: "elderberry" },',
+    '  ],',
+    '  target: ["cherry"],',
+    '  titles: ["Available", "Selected"]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.transferList(el, {
+      source: [
+        { label: 'Apple', value: 'apple' },
+        { label: 'Banana', value: 'banana' },
+        { label: 'Cherry', value: 'cherry' },
+        { label: 'Date', value: 'date' },
+        { label: 'Elderberry', value: 'elderberry' },
+      ],
+      target: ['cherry'],
+      titles: ['Available', 'Selected']
+    });
+  });
+
+  // 2. Search
+  ExplorerDemo(container, 'Searchable Transfer List', [
+    'Teryx.transferList(el, {',
+    '  source: [',
+    '    { label: "JavaScript", value: "js" },',
+    '    { label: "TypeScript", value: "ts" },',
+    '    { label: "Python", value: "py" },',
+    '    { label: "Ruby", value: "rb" },',
+    '    { label: "Go", value: "go" },',
+    '    { label: "Rust", value: "rs" },',
+    '  ],',
+    '  searchable: true,',
+    '  titles: ["Languages", "Selected"]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.transferList(el, {
+      source: [
+        { label: 'JavaScript', value: 'js' },
+        { label: 'TypeScript', value: 'ts' },
+        { label: 'Python', value: 'py' },
+        { label: 'Ruby', value: 'rb' },
+        { label: 'Go', value: 'go' },
+        { label: 'Rust', value: 'rs' },
+      ],
+      searchable: true,
+      titles: ['Languages', 'Selected']
+    });
+  });
+
+  // 3. Disabled items
+  ExplorerDemo(container, 'Disabled Items', [
+    'Teryx.transferList(el, {',
+    '  source: [',
+    '    { label: "Read", value: "read" },',
+    '    { label: "Write", value: "write" },',
+    '    { label: "Execute", value: "exec", disabled: true },',
+    '    { label: "Admin", value: "admin", disabled: true },',
+    '  ],',
+    '  target: ["exec"]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.transferList(el, {
+      source: [
+        { label: 'Read', value: 'read' },
+        { label: 'Write', value: 'write' },
+        { label: 'Execute', value: 'exec', disabled: true },
+        { label: 'Admin', value: 'admin', disabled: true },
+      ],
+      target: ['exec']
+    });
+  });
+
+  // 4. Custom rendering (onChange callback)
+  ExplorerDemo(container, 'With onChange Callback', [
+    'var output = document.createElement("div");',
+    'output.style.marginTop = "0.75rem";',
+    'output.style.fontSize = "0.8125rem";',
+    'output.style.color = "#64748b";',
+    'el.appendChild(output);',
+    '',
+    'Teryx.transferList(el, {',
+    '  source: [',
+    '    { label: "Small", value: "sm" },',
+    '    { label: "Medium", value: "md" },',
+    '    { label: "Large", value: "lg" },',
+    '    { label: "X-Large", value: "xl" },',
+    '  ],',
+    '  target: ["md"],',
+    '  onChange: function (keys) {',
+    '    output.textContent = "Selected: " + keys.join(", ");',
+    '  }',
+    '});'
+  ].join('\n'), function (el) {
+    var wrap = document.createElement('div');
+    el.appendChild(wrap);
+
+    var output = document.createElement('div');
+    output.className = 'tx-transfer-output';
+    output.style.marginTop = '0.75rem';
+    output.style.fontSize = '0.8125rem';
+    output.style.color = '#64748b';
+    output.textContent = 'Selected: md';
+    el.appendChild(output);
+
+    Teryx.transferList(wrap, {
+      source: [
+        { label: 'Small', value: 'sm' },
+        { label: 'Medium', value: 'md' },
+        { label: 'Large', value: 'lg' },
+        { label: 'X-Large', value: 'xl' },
+      ],
+      target: ['md'],
+      onChange: function (keys) {
+        output.textContent = 'Selected: ' + keys.join(', ');
+      }
+    });
+  });
+});
+
 // ── Steps ──
 ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   // 1. Horizontal Steps
