@@ -113,9 +113,12 @@ test.describe('Explorer', () => {
     await page.locator('.ex-nav-item[data-id="specialized-charts"]').click();
     await page.waitForTimeout(300);
 
+    const demos = page.locator('.ex-demo');
+    expect(await demos.count()).toBe(7);
+
     const svgs = page.locator('.tx-chart svg');
     const count = await svgs.count();
-    expect(count).toBeGreaterThanOrEqual(3);
+    expect(count).toBe(7);
   });
 
   test('rating demo is interactive', async ({ page }) => {
