@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Migration Guide — Teryx Documentation</title>
+  <link rel="stylesheet" href="../teryx.css">
+  <link rel="stylesheet" href="../site-layout.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font); color: var(--tx-text); background: var(--tx-bg); }
+    .layout { display: flex; min-height: calc(100vh - 56px); }
+    .sidebar { position: fixed; top: 56px; left: 0; bottom: 0; width: 240px; padding: 1.5rem 1rem; border-right: 1px solid var(--tx-border); background: var(--tx-bg-secondary); overflow-y: auto; }
+    .sidebar a { display: block; padding: 0.4rem 0.75rem; margin: 0.15rem 0; color: var(--tx-text-secondary); text-decoration: none; font-size: 0.875rem; border-radius: var(--tx-radius); }
+    .sidebar a:hover { background: var(--tx-bg-tertiary); color: var(--tx-text); }
+    .sidebar a.active { background: var(--tx-primary-light); color: var(--tx-primary); font-weight: 600; }
+    .sidebar .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--tx-text-muted); padding: 1rem 0.75rem 0.25rem; }
+    .content { margin-left: 240px; flex: 1; padding: 2rem 3rem 4rem; max-width: 860px; }
+    .content h1 { font-size: 2rem; font-weight: 800; margin: 0 0 0.5rem; }
+    .content h2 { font-size: 1.375rem; font-weight: 700; margin: 2.5rem 0 0.75rem; padding-top: 1rem; border-top: 1px solid var(--tx-border); }
+    .content h3 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+    .content p { line-height: 1.7; color: var(--tx-text-secondary); margin: 0.5rem 0 1rem; }
+    .content ul { line-height: 1.8; color: var(--tx-text-secondary); padding-left: 1.5rem; }
+    pre { background: var(--tx-bg-tertiary); border: 1px solid var(--tx-border); border-radius: var(--tx-radius-lg); padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--tx-font-mono); font-size: 0.8125rem; line-height: 1.6; margin: 0.5rem 0 1.25rem; }
+    code { font-family: var(--tx-font-mono); font-size: 0.85em; background: var(--tx-bg-tertiary); padding: 0.125rem 0.35rem; border-radius: var(--tx-radius-sm); }
+    pre code { background: none; padding: 0; }
+    .lead { font-size: 1.1rem; color: var(--tx-text-secondary); margin-bottom: 2rem; }
+    .callout { background: var(--tx-primary-light); border-left: 4px solid var(--tx-primary); padding: 1rem 1.25rem; border-radius: 0 var(--tx-radius) var(--tx-radius) 0; margin: 1rem 0 1.5rem; }
+    .callout p { margin: 0; color: var(--tx-text); }
+    table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1.5rem; font-size: 0.8125rem; }
+    th { text-align: left; padding: 0.5rem 0.75rem; background: var(--tx-bg-secondary); border: 1px solid var(--tx-border); font-weight: 600; }
+    td { padding: 0.5rem 0.75rem; border: 1px solid var(--tx-border); vertical-align: top; }
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="section-label">Getting Started</div>
+      <a href="./">Introduction</a>
+      <div class="section-label">Guides</div>
+      <a href="widgets.html">Widget API Reference</a>
+      <a href="declarative.html">Declarative HTML</a>
+      <a href="theming.html">Theming</a>
+      <a href="migration.html" class="active">Migration Guide</a>
+      <div class="section-label">Links</div>
+      <a href="../explorer/">Explorer</a>
+      <a href="https://github.com/teryxjs/teryxjs">GitHub</a>
+    </aside>
+    <main class="content">
+      <h1>Migration Guide</h1>
+      <p class="lead">Moving to Teryx from another widget framework? This guide covers the key differences and common migration patterns.</p>
+
+      <h2>From ExtJS / Sencha</h2>
+      <p>ExtJS and Teryx share similar widget concepts (grids, trees, forms, panels), but Teryx takes a lighter approach with no class system and no framework lock-in.</p>
+
+      <h3>Key Differences</h3>
+      <table>
+        <thead>
+          <tr><th>Concept</th><th>ExtJS</th><th>Teryx</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Widget creation</td><td><code>Ext.create('Ext.grid.Panel', {...})</code></td><td><code>grid('#target', {...})</code></td></tr>
+          <tr><td>Class system</td><td><code>Ext.define()</code> with inheritance</td><td>Plain functions, no classes</td></tr>
+          <tr><td>Data binding</td><td>ViewModel + data binding</td><td>Explicit API calls or xhtmlx data attributes</td></tr>
+          <tr><td>Event handling</td><td><code>listeners: { click: fn }</code></td><td><code>on('grid:click', fn)</code> via event bus</td></tr>
+          <tr><td>Layout system</td><td>Complex layout managers</td><td>CSS Grid/Flexbox + <code>tx-row</code>/<code>tx-col</code></td></tr>
+          <tr><td>License</td><td>Commercial (GPLv3 for open source)</td><td>MIT — free for all use</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Grid Migration</h3>
+      <pre><code>// ExtJS
+Ext.create('Ext.grid.Panel', {
+  renderTo: 'my-grid',
+  store: { type: 'ajax', url: '/api/users' },
+  columns: [
+    { text: 'Name', dataIndex: 'name', sortable: true },
+    { text: 'Email', dataIndex: 'email' },
+  ],
+});
+
+// Teryx equivalent
+grid('#my-grid', {
+  source: '/api/users',
+  columns: [
+    { field: 'name', label: 'Name', sortable: true },
+    { field: 'email', label: 'Email' },
+  ],
+});</code></pre>
+
+      <h3>Form Migration</h3>
+      <pre><code>// ExtJS
+Ext.create('Ext.form.Panel', {
+  renderTo: 'my-form',
+  items: [
+    { xtype: 'textfield', fieldLabel: 'Name', name: 'name' },
+    { xtype: 'textfield', fieldLabel: 'Email', name: 'email', vtype: 'email' },
+  ],
+  buttons: [{ text: 'Submit', handler: function() { ... } }],
+});
+
+// Teryx equivalent
+form('#my-form', {
+  fields: [
+    { name: 'name', label: 'Name', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+  ],
+  submitLabel: 'Submit',
+  onSubmit: function(data) { ... },
+});</code></pre>
+
+      <h2>From jQuery UI</h2>
+      <p>jQuery UI provides basic widgets (dialog, accordion, tabs). Teryx offers the same widgets with more features and no jQuery dependency.</p>
+
+      <h3>Key Differences</h3>
+      <table>
+        <thead>
+          <tr><th>Concept</th><th>jQuery UI</th><th>Teryx</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Dependency</td><td>Requires jQuery</td><td>Zero dependencies</td></tr>
+          <tr><td>Widget init</td><td><code>$('#el').dialog({...})</code></td><td><code>modal({...})</code></td></tr>
+          <tr><td>Data grid</td><td>Not included (use DataTables)</td><td>Built-in with sort/filter/pagination</td></tr>
+          <tr><td>Charts</td><td>Not included</td><td>Built-in SVG charts</td></tr>
+          <tr><td>TypeScript</td><td>Community @types</td><td>First-class TypeScript support</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Dialog Migration</h3>
+      <pre><code>// jQuery UI
+$('#dialog').dialog({ title: 'My Dialog', modal: true, width: 400 });
+
+// Teryx equivalent
+var m = modal({ title: 'My Dialog', content: '...', size: 'sm' });
+m.open();</code></pre>
+
+      <h3>Tabs Migration</h3>
+      <pre><code>// jQuery UI
+$('#tabs').tabs();
+
+// Teryx equivalent
+tabs('#tabs', {
+  variant: 'underline',
+  items: [
+    { id: 'tab1', title: 'Tab 1', content: '...' },
+    { id: 'tab2', title: 'Tab 2', content: '...' },
+  ],
+});</code></pre>
+
+      <h2>From AG Grid</h2>
+      <p>AG Grid is a powerful data grid library. Teryx includes a comparable grid widget plus 44 other widgets in a single package.</p>
+
+      <h3>Grid Comparison</h3>
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>AG Grid</th><th>Teryx Grid</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Sorting</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Filtering</td><td>Yes (advanced)</td><td>Yes</td></tr>
+          <tr><td>Pagination</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Cell editing</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Row grouping</td><td>Enterprise</td><td>Yes (included)</td></tr>
+          <tr><td>Frozen columns</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Export</td><td>Enterprise</td><td>Yes (CSV, Excel, JSON, HTML)</td></tr>
+          <tr><td>Other widgets</td><td>Grid only</td><td>45+ widgets included</td></tr>
+          <tr><td>License</td><td>MIT (Community) / Commercial</td><td>MIT</td></tr>
+        </tbody>
+      </table>
+
+      <pre><code>// AG Grid
+const gridOptions = {
+  columnDefs: [
+    { field: 'name', sortable: true },
+    { field: 'email' },
+  ],
+  rowData: data,
+};
+new agGrid.Grid(document.querySelector('#grid'), gridOptions);
+
+// Teryx equivalent
+grid('#grid', {
+  data: data,
+  columns: [
+    { field: 'name', label: 'Name', sortable: true },
+    { field: 'email', label: 'Email' },
+  ],
+});</code></pre>
+
+      <h2>General Migration Tips</h2>
+      <ul>
+        <li><strong>Start with one widget at a time.</strong> Teryx widgets are independent — you can adopt them incrementally without replacing your entire UI.</li>
+        <li><strong>Use the Explorer.</strong> Every widget has interactive demos at <a href="../explorer/">teryxjs.github.io/teryxjs/explorer/</a> with source code you can copy.</li>
+        <li><strong>Check the API Reference.</strong> The <a href="widgets.html">Widget API Reference</a> documents every widget's options, methods, and events.</li>
+        <li><strong>TypeScript helps.</strong> Import types and let your editor auto-complete options. Teryx's type definitions catch configuration errors at compile time.</li>
+        <li><strong>Mix declarative and imperative.</strong> Use <code>data-tx-widget</code> for simple cases and JavaScript for dynamic UIs. Both approaches produce the same output.</li>
+      </ul>
+
+      <div class="callout"><p>Need help migrating? <a href="https://github.com/teryxjs/teryxjs/discussions">Start a discussion</a> on GitHub.</p></div>
+    </main>
+  </div>
+  <script src="../site-layout.js" data-page="docs"></script>
+</body>
+</html>
