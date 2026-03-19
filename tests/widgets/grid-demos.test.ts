@@ -95,10 +95,16 @@ describe('Grid demos — unit tests', () => {
         source: '/api/users',
         columns: [
           { field: 'name', label: 'Name', filterable: true },
-          { field: 'role', label: 'Role', filterable: true, filterType: 'select', filterOptions: [
-            { value: 'Engineer', label: 'Engineer' },
-            { value: 'Designer', label: 'Designer' },
-          ]},
+          {
+            field: 'role',
+            label: 'Role',
+            filterable: true,
+            filterType: 'select',
+            filterOptions: [
+              { value: 'Engineer', label: 'Engineer' },
+              { value: 'Designer', label: 'Designer' },
+            ],
+          },
         ],
         data: sampleData,
       });
