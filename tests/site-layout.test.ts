@@ -2,10 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const layoutScript = fs.readFileSync(
-  path.join(__dirname, '..', 'pages', 'site-layout.js'),
-  'utf-8',
-);
+const layoutScript = fs.readFileSync(path.join(__dirname, '..', 'pages', 'site-layout.js'), 'utf-8');
 
 function loadLayout(dataPage?: string): void {
   // Create script tag with data-page attribute for detection
