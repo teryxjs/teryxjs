@@ -18,19 +18,34 @@ export function rating(
   let value = options.value || 0;
 
   function render(): void {
-    let html = `<div class="${cls('tx-rating', `tx-rating-${size}`, readonly && 'tx-rating-readonly', options.class)}" id="${id}" role="radiogroup" aria-label="Rating" tabindex="0" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="${max}">`;
-    for (let i = 1; i <= max; i++) {
-      html += `<span class="tx-rating-star${i <= value ? ' tx-rating-star-active' : ''}" data-value="${i}">`;
-      html += i <= value ? icon('starFilled') : icon('star');
-      html += '</span>';
+    if (!container) {
+      // Initial render — create the container
+      let html = `<div class="${cls('tx-rating', `tx-rating-${size}`, readonly && 'tx-rating-readonly', options.class)}" id="${id}" role="radiogroup" aria-label="Rating" tabindex="0" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="${max}">`;
+      for (let i = 1; i <= max; i++) {
+        html += `<span class="tx-rating-star${i <= value ? ' tx-rating-star-active' : ''}" data-value="${i}">`;
+        html += i <= value ? icon('starFilled') : icon('star');
+        html += '</span>';
+      }
+      html += '</div>';
+      el.innerHTML = html;
+    } else {
+      // Update in place — preserve event listeners
+      container.setAttribute('aria-valuenow', String(value));
+      container.querySelectorAll('.tx-rating-star').forEach((s, i) => {
+        if (i < value) {
+          s.classList.add('tx-rating-star-active');
+          s.innerHTML = icon('starFilled');
+        } else {
+          s.classList.remove('tx-rating-star-active');
+          s.innerHTML = icon('star');
+        }
+      });
     }
-    html += '</div>';
-    el.innerHTML = html;
   }
 
+  let container: HTMLElement | null = null;
   render();
-
-  const container = el.querySelector(`#${id}`) as HTMLElement;
+  container = el.querySelector(`#${id}`) as HTMLElement;
 
   if (!readonly) {
     // Hover preview
