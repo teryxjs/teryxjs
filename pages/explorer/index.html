@@ -2852,12 +2852,367 @@ ExplorerRegistry.add('Specialized', 'Timeline', function (container) {
 
 // ── Card ──
 ExplorerRegistry.add('Layout', 'Card', function (container) {
+
+  // 1. Basic Card
   ExplorerDemo(container, 'Basic Card', [
-    'Teryx.card(el, { title: "Card Title", content: "..." });'
+    'Teryx.card(el, {',
+    '  title: "Project Update",',
+    '  content: "<p>The project is progressing well...</p>",',
+    '  collapsible: true,',
+    '  closable: true',
+    '});'
   ].join('\n'), function (el) {
     Teryx.card(el, {
       title: 'Project Update',
       content: '<p style="color:#475569;margin:0">The project is progressing well. All milestones are on track for the upcoming release.</p>',
+      collapsible: true,
+      closable: true,
+    });
+  });
+
+  // 2. Image Card
+  ExplorerDemo(container, 'Image Card', [
+    'Teryx.card(el, {',
+    '  title: "Mountain Vista",',
+    '  image: "https://picsum.photos/seed/card1/600/200",',
+    '  content: "<p>A beautiful mountain landscape.</p>",',
+    '  footer: "<small>Photo credit: Unsplash</small>"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.card(el, {
+      title: 'Mountain Vista',
+      image: 'https://picsum.photos/seed/card1/600/200',
+      content: '<p style="color:#475569;margin:0">A beautiful mountain landscape captured at sunrise with rolling fog over the peaks.</p>',
+      footer: '<small style="color:#94a3b8">Photo credit: Unsplash</small>',
+    });
+  });
+
+  // 3. Card with Actions
+  ExplorerDemo(container, 'Card with Actions', [
+    'Teryx.card(el, {',
+    '  title: "Task Summary",',
+    '  content: "<p>Review the quarterly report...</p>",',
+    '  tools: [',
+    '    { icon: "refresh", tooltip: "Refresh" },',
+    '    { icon: "settings", tooltip: "Settings" }',
+    '  ],',
+    '  footer: "<button class=\\"tx-btn tx-btn-primary\\">Approve</button>"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.card(el, {
+      title: 'Task Summary',
+      content: '<p style="color:#475569;margin:0">Review the quarterly report and approve the budget allocation for the next fiscal year.</p>',
+      tools: [
+        { icon: 'refresh', tooltip: 'Refresh' },
+        { icon: 'settings', tooltip: 'Settings' },
+      ],
+      footer: '<div style="display:flex;gap:0.5rem;justify-content:flex-end"><button class="tx-btn tx-btn-sm">Cancel</button><button class="tx-btn tx-btn-primary tx-btn-sm">Approve</button></div>',
+    });
+  });
+
+  // 4. Horizontal Layout
+  ExplorerDemo(container, 'Horizontal Layout', [
+    '// Side-by-side cards in a flex row',
+    'var row = document.createElement("div");',
+    'row.style.display = "flex";',
+    'row.style.gap = "1rem";',
+    'Teryx.card(col1, { title: "Revenue", content: "$42,500" });',
+    'Teryx.card(col2, { title: "Users", content: "1,284" });',
+    'Teryx.card(col3, { title: "Orders", content: "356" });'
+  ].join('\n'), function (el) {
+    var row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '1rem';
+    el.appendChild(row);
+    var stats = [
+      { title: 'Revenue', value: '$42,500', color: '#2563eb' },
+      { title: 'Users', value: '1,284', color: '#16a34a' },
+      { title: 'Orders', value: '356', color: '#dc2626' },
+    ];
+    stats.forEach(function (s) {
+      var col = document.createElement('div');
+      col.style.flex = '1';
+      row.appendChild(col);
+      Teryx.card(col, {
+        title: s.title,
+        content: '<div style="font-size:1.75rem;font-weight:700;color:' + s.color + '">' + s.value + '</div>',
+      });
+    });
+  });
+});
+
+// ── Drawer ──
+ExplorerRegistry.add('Layout', 'Drawer', function (container) {
+
+  // 1. Position demos
+  ExplorerDemo(container, 'Drawer Positions', [
+    'var d = Teryx.drawer({',
+    '  title: "Right Drawer", position: "right",',
+    '  content: "<p>Drawer content here</p>"',
+    '});',
+    'd.open();'
+  ].join('\n'), function (el) {
+    var positions = ['left', 'right', 'top', 'bottom'];
+    var btnRow = document.createElement('div');
+    btnRow.style.display = 'flex';
+    btnRow.style.gap = '0.5rem';
+    btnRow.style.flexWrap = 'wrap';
+    el.appendChild(btnRow);
+    positions.forEach(function (pos) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-primary tx-btn-sm';
+      btn.textContent = pos.charAt(0).toUpperCase() + pos.slice(1) + ' Drawer';
+      btn.setAttribute('data-drawer-position', pos);
+      btn.addEventListener('click', function () {
+        var d = Teryx.drawer({
+          title: pos.charAt(0).toUpperCase() + pos.slice(1) + ' Drawer',
+          position: pos,
+          content: '<div style="padding:1rem"><p style="color:#475569;margin:0 0 1rem">This drawer slides in from the <strong>' + pos + '</strong> edge of the viewport.</p><p style="color:#94a3b8;margin:0">Click the backdrop or press Escape to close.</p></div>',
+        });
+        d.open();
+      });
+      btnRow.appendChild(btn);
+    });
+  });
+
+  // 2. Size variants
+  ExplorerDemo(container, 'Drawer Sizes', [
+    'Teryx.drawer({',
+    '  title: "Small Drawer",',
+    '  position: "right",',
+    '  size: "280px",',
+    '  content: "<p>Narrow panel</p>"',
+    '});'
+  ].join('\n'), function (el) {
+    var sizes = [
+      { label: 'Small (280px)', size: '280px' },
+      { label: 'Medium (400px)', size: '400px' },
+      { label: 'Large (600px)', size: '600px' },
+    ];
+    var btnRow = document.createElement('div');
+    btnRow.style.display = 'flex';
+    btnRow.style.gap = '0.5rem';
+    btnRow.style.flexWrap = 'wrap';
+    el.appendChild(btnRow);
+    sizes.forEach(function (s) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-sm';
+      btn.textContent = s.label;
+      btn.setAttribute('data-drawer-size', s.size);
+      btn.addEventListener('click', function () {
+        var d = Teryx.drawer({
+          title: s.label,
+          position: 'right',
+          size: s.size,
+          content: '<div style="padding:1rem"><p style="color:#475569;margin:0">This drawer has a width of <strong>' + s.size + '</strong>.</p></div>',
+        });
+        d.open();
+      });
+      btnRow.appendChild(btn);
+    });
+  });
+});
+
+// ── Splitter ──
+ExplorerRegistry.add('Layout', 'Splitter', function (container) {
+
+  // 1. Horizontal Splitter
+  ExplorerDemo(container, 'Horizontal Splitter', [
+    'Teryx.splitter(el, {',
+    '  orientation: "horizontal",',
+    '  sizes: [30, 70]',
+    '});'
+  ].join('\n'), function (el) {
+    var wrap = document.createElement('div');
+    wrap.style.height = '200px';
+    wrap.style.border = '1px solid #e2e8f0';
+    wrap.style.borderRadius = '6px';
+    wrap.style.overflow = 'hidden';
+    var left = document.createElement('div');
+    left.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Sidebar</h4><p style="margin:0;color:#64748b;font-size:0.875rem">Drag the gutter to resize panels.</p></div>';
+    var right = document.createElement('div');
+    right.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Main Content</h4><p style="margin:0;color:#64748b;font-size:0.875rem">This panel takes the remaining space.</p></div>';
+    wrap.appendChild(left);
+    wrap.appendChild(right);
+    el.appendChild(wrap);
+    Teryx.splitter(wrap, { orientation: 'horizontal', sizes: [30, 70] });
+  });
+
+  // 2. Vertical Splitter
+  ExplorerDemo(container, 'Vertical Splitter', [
+    'Teryx.splitter(el, {',
+    '  orientation: "vertical",',
+    '  sizes: [40, 60]',
+    '});'
+  ].join('\n'), function (el) {
+    var wrap = document.createElement('div');
+    wrap.style.height = '250px';
+    wrap.style.border = '1px solid #e2e8f0';
+    wrap.style.borderRadius = '6px';
+    wrap.style.overflow = 'hidden';
+    var top = document.createElement('div');
+    top.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Top Panel</h4><p style="margin:0;color:#64748b;font-size:0.875rem">Editor area</p></div>';
+    var bottom = document.createElement('div');
+    bottom.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Bottom Panel</h4><p style="margin:0;color:#64748b;font-size:0.875rem">Console output</p></div>';
+    wrap.appendChild(top);
+    wrap.appendChild(bottom);
+    el.appendChild(wrap);
+    Teryx.splitter(wrap, { orientation: 'vertical', sizes: [40, 60] });
+  });
+
+  // 3. Nested Splitter
+  ExplorerDemo(container, 'Nested Splitter', [
+    'var outer = Teryx.splitter(wrap, {',
+    '  orientation: "horizontal", sizes: [25, 75]',
+    '});',
+    'Teryx.splitter(rightPanel, {',
+    '  orientation: "vertical", sizes: [60, 40]',
+    '});'
+  ].join('\n'), function (el) {
+    var wrap = document.createElement('div');
+    wrap.style.height = '280px';
+    wrap.style.border = '1px solid #e2e8f0';
+    wrap.style.borderRadius = '6px';
+    wrap.style.overflow = 'hidden';
+    var nav = document.createElement('div');
+    nav.innerHTML = '<div style="padding:1rem;background:#f8fafc;height:100%"><h4 style="margin:0 0 0.5rem;color:#334155">Nav</h4><p style="margin:0;color:#64748b;font-size:0.8125rem">File tree</p></div>';
+    var rightWrap = document.createElement('div');
+    var editor = document.createElement('div');
+    editor.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Editor</h4><p style="margin:0;color:#64748b;font-size:0.8125rem">Code editing area</p></div>';
+    var terminal = document.createElement('div');
+    terminal.innerHTML = '<div style="padding:1rem;background:#1e293b;height:100%"><h4 style="margin:0 0 0.5rem;color:#e2e8f0">Terminal</h4><p style="margin:0;color:#94a3b8;font-size:0.8125rem;font-family:monospace">$ npm run build</p></div>';
+    rightWrap.appendChild(editor);
+    rightWrap.appendChild(terminal);
+    wrap.appendChild(nav);
+    wrap.appendChild(rightWrap);
+    el.appendChild(wrap);
+    Teryx.splitter(wrap, { orientation: 'horizontal', sizes: [25, 75] });
+    Teryx.splitter(rightWrap, { orientation: 'vertical', sizes: [60, 40] });
+  });
+});
+
+// ── Carousel ──
+ExplorerRegistry.add('Layout', 'Carousel', function (container) {
+
+  // 1. Basic Carousel
+  ExplorerDemo(container, 'Basic Carousel', [
+    'Teryx.carousel(el, {',
+    '  slides: [',
+    '    { title: "Slide 1", content: "..." },',
+    '    { title: "Slide 2", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var wrap = document.createElement('div');
+    wrap.style.maxWidth = '600px';
+    el.appendChild(wrap);
+    Teryx.carousel(wrap, {
+      slides: [
+        { title: 'Welcome', description: 'Get started with Teryx widgets', content: '<div style="padding:3rem;text-align:center;background:linear-gradient(135deg,#eff6ff,#dbeafe)"><h2 style="margin:0;color:#1e40af">Welcome to Teryx</h2></div>' },
+        { title: 'Components', description: 'Over 45 widgets available', content: '<div style="padding:3rem;text-align:center;background:linear-gradient(135deg,#f0fdf4,#dcfce7)"><h2 style="margin:0;color:#166534">45+ Widgets</h2></div>' },
+        { title: 'Open Source', description: 'Free and open source forever', content: '<div style="padding:3rem;text-align:center;background:linear-gradient(135deg,#fef3c7,#fde68a)"><h2 style="margin:0;color:#92400e">Open Source</h2></div>' },
+      ],
+    });
+  });
+
+  // 2. Autoplay Carousel
+  ExplorerDemo(container, 'Autoplay Carousel', [
+    'Teryx.carousel(el, {',
+    '  slides: [ ... ],',
+    '  autoplay: true,',
+    '  interval: 3000',
+    '});'
+  ].join('\n'), function (el) {
+    var wrap = document.createElement('div');
+    wrap.style.maxWidth = '600px';
+    el.appendChild(wrap);
+    Teryx.carousel(wrap, {
+      slides: [
+        { content: '<div style="padding:3rem;text-align:center;background:#dbeafe"><h3 style="margin:0;color:#1e40af">Slide A</h3><p style="color:#3b82f6;margin:0.5rem 0 0">Auto-advances every 3 seconds</p></div>' },
+        { content: '<div style="padding:3rem;text-align:center;background:#dcfce7"><h3 style="margin:0;color:#166534">Slide B</h3><p style="color:#22c55e;margin:0.5rem 0 0">Hover to pause</p></div>' },
+        { content: '<div style="padding:3rem;text-align:center;background:#fce7f3"><h3 style="margin:0;color:#9d174d">Slide C</h3><p style="color:#ec4899;margin:0.5rem 0 0">Loops continuously</p></div>' },
+      ],
+      autoplay: true,
+      interval: 3000,
+    });
+  });
+
+  // 3. Carousel with Indicators
+  ExplorerDemo(container, 'No Indicators', [
+    'Teryx.carousel(el, {',
+    '  slides: [ ... ],',
+    '  indicators: false,',
+    '  arrows: true',
+    '});'
+  ].join('\n'), function (el) {
+    var wrap = document.createElement('div');
+    wrap.style.maxWidth = '600px';
+    el.appendChild(wrap);
+    Teryx.carousel(wrap, {
+      slides: [
+        { content: '<div style="padding:3rem;text-align:center;background:#e0e7ff"><h3 style="margin:0;color:#3730a3">First</h3></div>' },
+        { content: '<div style="padding:3rem;text-align:center;background:#fef9c3"><h3 style="margin:0;color:#854d0e">Second</h3></div>' },
+        { content: '<div style="padding:3rem;text-align:center;background:#ffe4e6"><h3 style="margin:0;color:#9f1239">Third</h3></div>' },
+      ],
+      indicators: false,
+      arrows: true,
+    });
+  });
+});
+
+// ── Lightbox ──
+ExplorerRegistry.add('Layout', 'Lightbox', function (container) {
+
+  // 1. Single Image
+  ExplorerDemo(container, 'Single Image', [
+    'Teryx.lightbox(el, {',
+    '  images: [{ src: "photo.jpg", alt: "Photo" }]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.lightbox(el, {
+      images: [
+        { src: 'https://picsum.photos/seed/lb1/800/600', alt: 'Landscape', caption: 'A beautiful landscape photograph' },
+      ],
+    });
+  });
+
+  // 2. Gallery
+  ExplorerDemo(container, 'Gallery', [
+    'Teryx.lightbox(el, {',
+    '  images: [',
+    '    { src: "a.jpg", alt: "A", caption: "Photo A" },',
+    '    { src: "b.jpg", alt: "B", caption: "Photo B" },',
+    '    { src: "c.jpg", alt: "C", caption: "Photo C" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.lightbox(el, {
+      images: [
+        { src: 'https://picsum.photos/seed/lbg1/800/600', alt: 'Mountains', caption: 'Mountain range at dawn' },
+        { src: 'https://picsum.photos/seed/lbg2/800/600', alt: 'Forest', caption: 'Dense forest canopy' },
+        { src: 'https://picsum.photos/seed/lbg3/800/600', alt: 'Ocean', caption: 'Ocean waves at sunset' },
+        { src: 'https://picsum.photos/seed/lbg4/800/600', alt: 'Desert', caption: 'Sand dunes at midday' },
+        { src: 'https://picsum.photos/seed/lbg5/800/600', alt: 'City', caption: 'City skyline at night' },
+        { src: 'https://picsum.photos/seed/lbg6/800/600', alt: 'Lake', caption: 'Still lake with reflections' },
+      ],
+    });
+  });
+
+  // 3. Zoom & Rotate
+  ExplorerDemo(container, 'Zoom & Rotate', [
+    'Teryx.lightbox(el, {',
+    '  images: [ ... ],',
+    '  zoom: true,',
+    '  rotate: true',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.lightbox(el, {
+      images: [
+        { src: 'https://picsum.photos/seed/lbz1/1200/900', alt: 'Detail Shot', caption: 'Use +/- to zoom, R to rotate' },
+        { src: 'https://picsum.photos/seed/lbz2/1200/900', alt: 'Architecture', caption: 'Architectural detail' },
+      ],
+      zoom: true,
+      rotate: true,
     });
   });
 });
