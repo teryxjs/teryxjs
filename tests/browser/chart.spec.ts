@@ -255,8 +255,7 @@ test.describe('Chart', () => {
     await page.waitForTimeout(200);
 
     const svg = page.locator('.tx-chart svg');
-    await expect(svg).toHaveAttribute('height', '250');
-    await expect(svg).toHaveAttribute('width', '600');
+    await expect(svg).toHaveAttribute('viewBox', '0 0 600 250');
   });
 
   test('chart title renders in SVG', async ({ page }) => {

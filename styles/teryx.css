@@ -3805,10 +3805,7 @@ body.tx-drawer-open {
 .tx-chart {
   position: relative;
 }
-.tx-chart-container {
-  width: 100%;
-}
-.tx-chart-container svg {
+.tx-chart svg {
   display: block;
   width: 100%;
   height: auto;
