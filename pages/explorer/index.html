@@ -197,6 +197,12 @@
     });
   });
 
+  // ── Prevent demo links from hijacking hash routing ──
+  contentEl.addEventListener('click', function (e) {
+    var link = e.target.closest('.ex-demo-body a');
+    if (link) e.preventDefault();
+  });
+
   // ── Hash routing ──
   function onHashChange() {
     var id = location.hash.replace('#', '');
@@ -2622,7 +2628,8 @@ ExplorerRegistry.add('Navigation', 'Sidebar', function (container) {
   ].join('\n'), function (el) {
     el.style.position = 'relative';
     el.style.height = '300px';
-    Teryx.sidebar(el, {
+    el.style.overflow = 'hidden';
+    var sb = Teryx.sidebar(el, {
       brand: 'MyApp',
       collapsible: true,
       variant: 'dark',
@@ -2632,6 +2639,7 @@ ExplorerRegistry.add('Navigation', 'Sidebar', function (container) {
         { label: 'Settings', icon: 'settings', href: '#' },
       ]
     });
+    sb.el.style.height = '100%';
   });
 
   // 2. Nested Items Sidebar
@@ -2654,7 +2662,8 @@ ExplorerRegistry.add('Navigation', 'Sidebar', function (container) {
   ].join('\n'), function (el) {
     el.style.position = 'relative';
     el.style.height = '350px';
-    Teryx.sidebar(el, {
+    el.style.overflow = 'hidden';
+    var sb = Teryx.sidebar(el, {
       brand: 'Admin',
       variant: 'light',
       items: [
@@ -2669,6 +2678,7 @@ ExplorerRegistry.add('Navigation', 'Sidebar', function (container) {
         ]},
       ]
     });
+    sb.el.style.height = '100%';
   });
 });
 
