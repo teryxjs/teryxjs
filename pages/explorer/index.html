@@ -1649,15 +1649,109 @@ ExplorerRegistry.add('Feedback', 'MessageBox', function (container) {
 
 // ── Progress ──
 ExplorerRegistry.add('Feedback', 'Progress', function (container) {
-  ExplorerDemo(container, 'Progress Bars', [
-    'Teryx.progress(el, { value: 65, label: "65%" });'
+
+  // 1. Basic Progress Bars
+  ExplorerDemo(container, 'Basic Progress Bars', [
+    'Teryx.progress(el, { value: 65, showValue: true });'
   ].join('\n'), function (el) {
     var values = [25, 50, 75, 100];
     values.forEach(function (v) {
       var row = document.createElement('div');
       row.style.marginBottom = '0.75rem';
       el.appendChild(row);
-      Teryx.progress(row, { value: v, label: v + '%' });
+      Teryx.progress(row, { value: v, label: v + '%', showValue: true });
+    });
+  });
+
+  // 2. Sizes
+  ExplorerDemo(container, 'Progress Sizes', [
+    'Teryx.progress(el, { value: 60, size: "sm" });',
+    'Teryx.progress(el, { value: 60, size: "md" });',
+    'Teryx.progress(el, { value: 60, size: "lg" });'
+  ].join('\n'), function (el) {
+    ['sm', 'md', 'lg'].forEach(function (sz) {
+      var row = document.createElement('div');
+      row.style.marginBottom = '0.75rem';
+      el.appendChild(row);
+      Teryx.progress(row, { value: 60, size: sz, label: sz.toUpperCase(), showValue: true });
+    });
+  });
+
+  // 3. Colors
+  ExplorerDemo(container, 'Progress Colors', [
+    'Teryx.progress(el, { value: 60, color: "primary" });',
+    'Teryx.progress(el, { value: 60, color: "success" });',
+    'Teryx.progress(el, { value: 60, color: "warning" });',
+    'Teryx.progress(el, { value: 60, color: "danger" });'
+  ].join('\n'), function (el) {
+    ['primary', 'success', 'warning', 'danger'].forEach(function (c) {
+      var row = document.createElement('div');
+      row.style.marginBottom = '0.75rem';
+      el.appendChild(row);
+      Teryx.progress(row, { value: 60, color: c, label: c, showValue: true });
+    });
+  });
+
+  // 4. Striped & Animated
+  ExplorerDemo(container, 'Striped & Animated', [
+    'Teryx.progress(el, { value: 70, striped: true });',
+    'Teryx.progress(el, { value: 70, striped: true, animated: true });'
+  ].join('\n'), function (el) {
+    var row1 = document.createElement('div');
+    row1.style.marginBottom = '0.75rem';
+    el.appendChild(row1);
+    Teryx.progress(row1, { value: 70, striped: true, label: 'Striped', showValue: true });
+
+    var row2 = document.createElement('div');
+    row2.style.marginBottom = '0.75rem';
+    el.appendChild(row2);
+    Teryx.progress(row2, { value: 70, striped: true, animated: true, label: 'Animated', showValue: true });
+  });
+
+  // 5. Multi-Segment Progress
+  ExplorerDemo(container, 'Multi-Segment Progress', [
+    'Teryx.progress(el, {',
+    '  value: 0, max: 100,',
+    '  segments: [',
+    '    { value: 30, color: "success", label: "Done" },',
+    '    { value: 20, color: "warning", label: "In Progress" },',
+    '    { value: 10, color: "danger", label: "Blocked" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.progress(el, {
+      value: 0,
+      max: 100,
+      showValue: true,
+      segments: [
+        { value: 30, color: 'success', label: 'Done' },
+        { value: 20, color: 'warning', label: 'In Progress' },
+        { value: 10, color: 'danger', label: 'Blocked' }
+      ]
+    });
+  });
+
+  // 6. Dynamic Progress (setValue)
+  ExplorerDemo(container, 'Dynamic Progress', [
+    'var inst = Teryx.progress(el, { value: 0, showValue: true });',
+    'inst.setValue(50); // update dynamically'
+  ].join('\n'), function (el) {
+    var wrapper = document.createElement('div');
+    el.appendChild(wrapper);
+    var inst = Teryx.progress(wrapper, { value: 0, showValue: true });
+
+    var controls = document.createElement('div');
+    controls.style.marginTop = '0.75rem';
+    controls.style.display = 'flex';
+    controls.style.gap = '0.5rem';
+    el.appendChild(controls);
+
+    [0, 25, 50, 75, 100].forEach(function (v) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-sm tx-btn-secondary';
+      btn.textContent = v + '%';
+      btn.addEventListener('click', function () { inst.setValue(v); });
+      controls.appendChild(btn);
     });
   });
 });
@@ -2022,10 +2116,59 @@ ExplorerRegistry.add('Layout', 'Card', function (container) {
 
 // ── Skeleton ──
 ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
-  ExplorerDemo(container, 'Loading Skeleton', [
-    'Teryx.skeleton(el, { rows: 3 });'
+
+  // 1. Text Skeleton
+  ExplorerDemo(container, 'Text Skeleton', [
+    'Teryx.skeleton(el, { lines: 3 });'
   ].join('\n'), function (el) {
-    Teryx.skeleton(el, { rows: 4 });
+    Teryx.skeleton(el, { lines: 3 });
+  });
+
+  // 2. Card Skeleton (avatar + lines)
+  ExplorerDemo(container, 'Card Skeleton', [
+    'Teryx.skeleton(el, { avatar: true, lines: 4 });'
+  ].join('\n'), function (el) {
+    Teryx.skeleton(el, { avatar: true, lines: 4 });
+  });
+
+  // 3. Image + Text Skeleton
+  ExplorerDemo(container, 'Image Skeleton', [
+    'Teryx.skeleton(el, { image: true, lines: 2, height: "120px" });'
+  ].join('\n'), function (el) {
+    Teryx.skeleton(el, { image: true, lines: 2, height: '120px' });
+  });
+
+  // 4. Grid of Skeletons
+  ExplorerDemo(container, 'Skeleton Grid', [
+    '// Three skeleton cards in a row',
+    'for (var i = 0; i < 3; i++) {',
+    '  Teryx.skeleton(col, { avatar: true, lines: 2 });',
+    '}'
+  ].join('\n'), function (el) {
+    var grid = document.createElement('div');
+    grid.style.display = 'grid';
+    grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    grid.style.gap = '1rem';
+    el.appendChild(grid);
+    for (var i = 0; i < 3; i++) {
+      var col = document.createElement('div');
+      grid.appendChild(col);
+      Teryx.skeleton(col, { avatar: true, lines: 2 });
+    }
+  });
+
+  // 5. Custom Width Skeleton
+  ExplorerDemo(container, 'Custom Width Skeleton', [
+    'Teryx.skeleton(el, { lines: 2, width: "50%" });'
+  ].join('\n'), function (el) {
+    Teryx.skeleton(el, { lines: 2, width: '50%' });
+  });
+
+  // 6. No-Animation Skeleton
+  ExplorerDemo(container, 'Static Skeleton (no animation)', [
+    'Teryx.skeleton(el, { lines: 3, animated: false });'
+  ].join('\n'), function (el) {
+    Teryx.skeleton(el, { lines: 3, animated: false });
   });
 });
 </script>
