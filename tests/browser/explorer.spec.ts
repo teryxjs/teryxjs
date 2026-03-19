@@ -93,7 +93,7 @@ test.describe('Explorer', () => {
 
     const demos = page.locator('.ex-demo');
     const count = await demos.count();
-    expect(count).toBe(4); // tabs, underline, pills, card variants
+    expect(count).toBe(8); // basic, underline, pills, card, vertical, scrollable, closable, lazy-load
 
     // Each demo should contain a tabs widget
     for (let i = 0; i < count; i++) {

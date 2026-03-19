@@ -1085,31 +1085,174 @@ ExplorerRegistry.add('Data Display', 'Pivot Grid', function (container) {
 
 // ── Tabs ──
 ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
-  var variants = ['tabs', 'underline', 'pills', 'card'];
-  variants.forEach(function (v) {
-    ExplorerDemo(container, v.charAt(0).toUpperCase() + v.slice(1) + ' Variant', [
-      'Teryx.tabs(el, {',
-      '  variant: \'' + v + '\',',
-      '  items: [',
-      '    { id: "t1", title: "Overview", content: "..." },',
-      '    { id: "t2", title: "Settings", content: "..." },',
-      '  ]',
-      '});'
-    ].join('\n'), function (el) {
-      Teryx.tabs(el, {
-        variant: v,
-        items: [
-          { id: v + '1', title: 'Overview', content: '<p style="padding:0.5rem 0;color:#475569">Tab content for the overview panel.</p>' },
-          { id: v + '2', title: 'Settings', content: '<p style="padding:0.5rem 0;color:#475569">Configuration and preferences.</p>' },
-          { id: v + '3', title: 'Activity', content: '<p style="padding:0.5rem 0;color:#475569">Recent activity and logs.</p>' },
-        ]
+  // 1. Basic Tabs (default variant)
+  ExplorerDemo(container, 'Basic Tabs', [
+    'Teryx.tabs(el, {',
+    '  items: [',
+    '    { id: "t1", title: "Overview", content: "..." },',
+    '    { id: "t2", title: "Settings", content: "..." },',
+    '    { id: "t3", title: "Activity", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tabs(el, {
+      items: [
+        { id: 'basic1', title: 'Overview', content: '<p style="padding:0.5rem 0;color:#475569">Tab content for the overview panel.</p>' },
+        { id: 'basic2', title: 'Settings', content: '<p style="padding:0.5rem 0;color:#475569">Configuration and preferences.</p>' },
+        { id: 'basic3', title: 'Activity', content: '<p style="padding:0.5rem 0;color:#475569">Recent activity and logs.</p>' },
+      ]
+    });
+  });
+
+  // 2. Underline Variant
+  ExplorerDemo(container, 'Underline Variant', [
+    'Teryx.tabs(el, {',
+    '  variant: "underline",',
+    '  items: [',
+    '    { id: "u1", title: "Profile", content: "..." },',
+    '    { id: "u2", title: "Billing", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tabs(el, {
+      variant: 'underline',
+      items: [
+        { id: 'ul1', title: 'Profile', content: '<p style="padding:0.5rem 0;color:#475569">User profile information.</p>' },
+        { id: 'ul2', title: 'Billing', content: '<p style="padding:0.5rem 0;color:#475569">Billing and subscription details.</p>' },
+        { id: 'ul3', title: 'Notifications', content: '<p style="padding:0.5rem 0;color:#475569">Notification preferences.</p>' },
+      ]
+    });
+  });
+
+  // 3. Pills Variant
+  ExplorerDemo(container, 'Pills Variant', [
+    'Teryx.tabs(el, {',
+    '  variant: "pills",',
+    '  items: [',
+    '    { id: "p1", title: "All", content: "..." },',
+    '    { id: "p2", title: "Active", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tabs(el, {
+      variant: 'pills',
+      items: [
+        { id: 'pill1', title: 'All', content: '<p style="padding:0.5rem 0;color:#475569">All items listed here.</p>' },
+        { id: 'pill2', title: 'Active', content: '<p style="padding:0.5rem 0;color:#475569">Only active items.</p>' },
+        { id: 'pill3', title: 'Archived', content: '<p style="padding:0.5rem 0;color:#475569">Archived items.</p>' },
+      ]
+    });
+  });
+
+  // 4. Card Variant
+  ExplorerDemo(container, 'Card Variant', [
+    'Teryx.tabs(el, {',
+    '  variant: "card",',
+    '  items: [',
+    '    { id: "c1", title: "Details", content: "..." },',
+    '    { id: "c2", title: "Reviews", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tabs(el, {
+      variant: 'card',
+      items: [
+        { id: 'card1', title: 'Details', content: '<p style="padding:0.5rem 0;color:#475569">Product details and specifications.</p>' },
+        { id: 'card2', title: 'Reviews', content: '<p style="padding:0.5rem 0;color:#475569">Customer reviews and ratings.</p>' },
+        { id: 'card3', title: 'Related', content: '<p style="padding:0.5rem 0;color:#475569">Related products.</p>' },
+      ]
+    });
+  });
+
+  // 5. Vertical Tabs
+  ExplorerDemo(container, 'Vertical Tabs', [
+    'Teryx.tabs(el, {',
+    '  vertical: true,',
+    '  items: [',
+    '    { id: "v1", title: "General", content: "..." },',
+    '    { id: "v2", title: "Security", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tabs(el, {
+      vertical: true,
+      items: [
+        { id: 'vert1', title: 'General', content: '<p style="padding:0.5rem 0;color:#475569">General settings and options.</p>' },
+        { id: 'vert2', title: 'Security', content: '<p style="padding:0.5rem 0;color:#475569">Security and privacy settings.</p>' },
+        { id: 'vert3', title: 'Advanced', content: '<p style="padding:0.5rem 0;color:#475569">Advanced configuration options.</p>' },
+      ]
+    });
+  });
+
+  // 6. Scrollable Tabs
+  ExplorerDemo(container, 'Scrollable Tabs', [
+    'Teryx.tabs(el, {',
+    '  scrollable: true,',
+    '  items: [ /* many tabs */ ]',
+    '});'
+  ].join('\n'), function (el) {
+    var scrollItems = [];
+    for (var i = 1; i <= 15; i++) {
+      scrollItems.push({
+        id: 'scroll' + i,
+        title: 'Tab ' + i,
+        content: '<p style="padding:0.5rem 0;color:#475569">Content for tab ' + i + '.</p>'
       });
+    }
+    Teryx.tabs(el, {
+      scrollable: true,
+      items: scrollItems
+    });
+  });
+
+  // 7. Closable Tabs
+  ExplorerDemo(container, 'Closable Tabs', [
+    'Teryx.tabs(el, {',
+    '  addable: true,',
+    '  items: [',
+    '    { id: "cl1", title: "Home", content: "...", closable: true },',
+    '    { id: "cl2", title: "Editor", content: "...", closable: true },',
+    '  ],',
+    '  onAdd: function () { return { id: "new", title: "New Tab", closable: true }; }',
+    '});'
+  ].join('\n'), function (el) {
+    var counter = 0;
+    Teryx.tabs(el, {
+      addable: true,
+      items: [
+        { id: 'close1', title: 'Home', content: '<p style="padding:0.5rem 0;color:#475569">Home page content.</p>', closable: true },
+        { id: 'close2', title: 'Editor', content: '<p style="padding:0.5rem 0;color:#475569">Code editor panel.</p>', closable: true },
+        { id: 'close3', title: 'Preview', content: '<p style="padding:0.5rem 0;color:#475569">Live preview panel.</p>', closable: true },
+      ],
+      onAdd: function () {
+        counter++;
+        return { id: 'new' + counter, title: 'New ' + counter, content: '<p style="padding:0.5rem 0;color:#475569">New tab content.</p>', closable: true, active: true };
+      }
+    });
+  });
+
+  // 8. Lazy-Load Tabs (simulated with source attribute)
+  ExplorerDemo(container, 'Lazy-Load Tabs', [
+    'Teryx.tabs(el, {',
+    '  items: [',
+    '    { id: "l1", title: "Loaded", content: "..." },',
+    '    { id: "l2", title: "Lazy", source: "/api/data" },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.tabs(el, {
+      items: [
+        { id: 'lazy1', title: 'Loaded', content: '<p style="padding:0.5rem 0;color:#475569">This content was loaded immediately.</p>' },
+        { id: 'lazy2', title: 'Icons', content: '<p style="padding:0.5rem 0;color:#475569">Content that could be lazy-loaded from an API endpoint.</p>', icon: 'star' },
+        { id: 'lazy3', title: 'Disabled', content: '<p style="padding:0.5rem 0;color:#475569">This tab is disabled.</p>', disabled: true },
+      ]
     });
   });
 });
 
 // ── Accordion ──
 ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
+  // 1. Basic Accordion
   ExplorerDemo(container, 'Basic Accordion', [
     'Teryx.accordion(el, {',
     '  items: [',
@@ -1125,6 +1268,73 @@ ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
         { id: 'a3', title: 'Is it free?', content: '<p style="color:#475569;margin:0">Yes, MIT licensed.</p>' },
       ]
     });
+  });
+
+  // 2. Multiple Open
+  ExplorerDemo(container, 'Multiple Open', [
+    'Teryx.accordion(el, {',
+    '  multiple: true,',
+    '  items: [',
+    '    { id: "m1", title: "First", content: "...", open: true },',
+    '    { id: "m2", title: "Second", content: "...", open: true },',
+    '    { id: "m3", title: "Third", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.accordion(el, {
+      multiple: true,
+      items: [
+        { id: 'm1', title: 'Frontend', content: '<p style="color:#475569;margin:0">HTML, CSS, JavaScript, TypeScript, React, Vue, Angular.</p>', open: true },
+        { id: 'm2', title: 'Backend', content: '<p style="color:#475569;margin:0">Node.js, Go, Rust, Python, Java, .NET.</p>', open: true },
+        { id: 'm3', title: 'Database', content: '<p style="color:#475569;margin:0">PostgreSQL, MySQL, MongoDB, Redis, ScyllaDB.</p>' },
+      ]
+    });
+  });
+
+  // 3. With Icons
+  ExplorerDemo(container, 'With Icons', [
+    'Teryx.accordion(el, {',
+    '  items: [',
+    '    { id: "i1", title: "Settings", icon: "settings", content: "...", open: true },',
+    '    { id: "i2", title: "Users", icon: "user", content: "..." },',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.accordion(el, {
+      items: [
+        { id: 'i1', title: 'Settings', icon: 'settings', content: '<p style="color:#475569;margin:0">General application settings and configuration.</p>', open: true },
+        { id: 'i2', title: 'Users', icon: 'user', content: '<p style="color:#475569;margin:0">User management and access controls.</p>' },
+        { id: 'i3', title: 'Files', icon: 'folder', content: '<p style="color:#475569;margin:0">File management and storage settings.</p>' },
+      ]
+    });
+  });
+
+  // 4. Nested Accordion
+  ExplorerDemo(container, 'Nested Accordion', [
+    'Teryx.accordion(el, {',
+    '  items: [',
+    '    { id: "n1", title: "Parent", content: "<div id=\\"nested\\"></div>", open: true },',
+    '  ]',
+    '});',
+    '// Then: Teryx.accordion("#nested", { items: [...] });'
+  ].join('\n'), function (el) {
+    Teryx.accordion(el, {
+      items: [
+        { id: 'n1', title: 'Getting Started', content: '<div id="nested-acc"></div>', open: true },
+        { id: 'n2', title: 'API Reference', content: '<p style="color:#475569;margin:0">Full API documentation for all widgets.</p>' },
+        { id: 'n3', title: 'Changelog', content: '<p style="color:#475569;margin:0">Version history and release notes.</p>' },
+      ]
+    });
+    var nestedEl = el.querySelector('#nested-acc');
+    if (nestedEl) {
+      Teryx.accordion(nestedEl, {
+        bordered: false,
+        items: [
+          { id: 'ns1', title: 'Installation', content: '<p style="color:#475569;margin:0">npm install teryx</p>', open: true },
+          { id: 'ns2', title: 'Quick Start', content: '<p style="color:#475569;margin:0">Import and use widgets in your project.</p>' },
+        ]
+      });
+    }
   });
 });
 
