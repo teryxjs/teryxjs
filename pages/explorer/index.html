@@ -1973,6 +1973,117 @@ ExplorerRegistry.add('Data Entry', 'Form', function (container) {
   });
 });
 
+// ── Date Picker ──
+ExplorerRegistry.add('Data Entry', 'Date Picker', function (container) {
+  // 1. Basic Date Picker
+  ExplorerDemo(container, 'Basic Date Picker', [
+    'Teryx.datePicker(el, {',
+    '  value: "2026-03-18",',
+    '  placeholder: "Pick a date"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.datePicker(el, {
+      value: '2026-03-18',
+      placeholder: 'Pick a date'
+    });
+  });
+
+  // 2. Date Range Picker
+  ExplorerDemo(container, 'Date Range Picker', [
+    'Teryx.datePicker(el, {',
+    '  range: true,',
+    '  value: "2026-03-01 - 2026-03-15",',
+    '  placeholder: "Select range"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.datePicker(el, {
+      range: true,
+      value: '2026-03-01 - 2026-03-15',
+      placeholder: 'Select range'
+    });
+  });
+
+  // 3. Min / Max Constraints
+  ExplorerDemo(container, 'Min / Max Constraints', [
+    'Teryx.datePicker(el, {',
+    '  min: "2026-03-10",',
+    '  max: "2026-03-25",',
+    '  placeholder: "Mar 10 – 25 only"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.datePicker(el, {
+      min: '2026-03-10',
+      max: '2026-03-25',
+      placeholder: 'Mar 10 – 25 only'
+    });
+  });
+
+  // 4. Disabled Dates
+  ExplorerDemo(container, 'Disabled Dates (weekends)', [
+    'Teryx.datePicker(el, {',
+    '  disabledDates: function (d) {',
+    '    return d.getDay() === 0 || d.getDay() === 6;',
+    '  },',
+    '  placeholder: "Weekdays only"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.datePicker(el, {
+      disabledDates: function (d) {
+        return d.getDay() === 0 || d.getDay() === 6;
+      },
+      placeholder: 'Weekdays only'
+    });
+  });
+});
+
+// ── Color Picker ──
+ExplorerRegistry.add('Data Entry', 'Color Picker', function (container) {
+  // 1. Basic Color Picker
+  ExplorerDemo(container, 'Basic Color Picker', [
+    'Teryx.colorPicker(el, {',
+    '  value: "#3b82f6"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.colorPicker(el, {
+      value: '#3b82f6'
+    });
+  });
+
+  // 2. Custom Palette
+  ExplorerDemo(container, 'Custom Palette', [
+    'Teryx.colorPicker(el, {',
+    '  value: "#ef4444",',
+    '  presets: [',
+    '    "#ef4444", "#f97316", "#eab308",',
+    '    "#22c55e", "#3b82f6", "#8b5cf6",',
+    '    "#ec4899", "#000000", "#ffffff"',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.colorPicker(el, {
+      value: '#ef4444',
+      presets: [
+        '#ef4444', '#f97316', '#eab308',
+        '#22c55e', '#3b82f6', '#8b5cf6',
+        '#ec4899', '#000000', '#ffffff'
+      ]
+    });
+  });
+
+  // 3. No Input (presets only)
+  ExplorerDemo(container, 'Presets Only (no text input)', [
+    'Teryx.colorPicker(el, {',
+    '  value: "#22c55e",',
+    '  showInput: false',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.colorPicker(el, {
+      value: '#22c55e',
+      showInput: false
+    });
+  });
+});
+
 // ── Steps ──
 ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   // 1. Horizontal Steps
