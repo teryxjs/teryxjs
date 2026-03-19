@@ -3854,5 +3854,430 @@ ExplorerRegistry.add('Specialized', 'Kanban Board', function (container) {
 });
 </script>
 
+<script>
+// ── Tooltip ──
+ExplorerRegistry.add('Utilities', 'Tooltip', function (container) {
+  // 1. Tooltip Positions
+  ExplorerDemo(container, 'Tooltip Positions', [
+    'Teryx.tooltip(btn, { content: "Top", position: "top" });',
+    'Teryx.tooltip(btn, { content: "Bottom", position: "bottom" });',
+    'Teryx.tooltip(btn, { content: "Left", position: "left" });',
+    'Teryx.tooltip(btn, { content: "Right", position: "right" });'
+  ].join('\n'), function (el) {
+    var positions = ['top', 'bottom', 'left', 'right'];
+    positions.forEach(function (pos) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-secondary';
+      btn.style.cssText = 'margin:0.25rem;';
+      btn.textContent = pos.charAt(0).toUpperCase() + pos.slice(1);
+      el.appendChild(btn);
+      Teryx.tooltip(btn, { content: 'Tooltip on ' + pos, position: pos });
+    });
+  });
+
+  // 2. Tooltip Triggers
+  ExplorerDemo(container, 'Tooltip Triggers', [
+    'Teryx.tooltip(btn, { content: "Hover me", trigger: "hover" });',
+    'Teryx.tooltip(btn, { content: "Click me", trigger: "click" });',
+    'Teryx.tooltip(btn, { content: "Focus me", trigger: "focus" });'
+  ].join('\n'), function (el) {
+    var triggers = ['hover', 'click', 'focus'];
+    triggers.forEach(function (t) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-primary';
+      btn.style.cssText = 'margin:0.25rem;';
+      btn.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+      el.appendChild(btn);
+      Teryx.tooltip(btn, { content: 'Triggered by ' + t, trigger: t });
+    });
+  });
+
+  // 3. Tooltip with Delay
+  ExplorerDemo(container, 'Tooltip with Delay', [
+    'Teryx.tooltip(btn, { content: "Delayed 500ms", delay: 500 });'
+  ].join('\n'), function (el) {
+    var delays = [0, 300, 500, 1000];
+    delays.forEach(function (d) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-secondary';
+      btn.style.cssText = 'margin:0.25rem;';
+      btn.textContent = d === 0 ? 'No delay' : d + 'ms';
+      el.appendChild(btn);
+      Teryx.tooltip(btn, { content: 'Delay: ' + d + 'ms', delay: d });
+    });
+  });
+
+  // 4. Tooltip with HTML Content
+  ExplorerDemo(container, 'Tooltip with HTML', [
+    'Teryx.tooltip(btn, {',
+    '  content: "<strong>Bold</strong> and <em>italic</em>",',
+    '  html: true',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Hover for HTML Tooltip';
+    el.appendChild(btn);
+    Teryx.tooltip(btn, { content: '<strong>Bold</strong> and <em>italic</em>', html: true });
+  });
+});
+</script>
+
+<script>
+// ── Popover ──
+ExplorerRegistry.add('Utilities', 'Popover', function (container) {
+  // 1. Popover Click Trigger
+  ExplorerDemo(container, 'Popover Click Trigger', [
+    'Teryx.popover(btn, {',
+    '  title: "Click Popover",',
+    '  content: "Popover triggered by click.",',
+    '  trigger: "click",',
+    '  position: "bottom"',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Click me';
+    el.appendChild(btn);
+    Teryx.popover(btn, { title: 'Click Popover', content: 'Popover triggered by click.', trigger: 'click', position: 'bottom' });
+  });
+
+  // 2. Popover Hover Trigger
+  ExplorerDemo(container, 'Popover Hover Trigger', [
+    'Teryx.popover(btn, {',
+    '  title: "Hover Popover",',
+    '  content: "Popover triggered by hover.",',
+    '  trigger: "hover",',
+    '  position: "top"',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-secondary';
+    btn.textContent = 'Hover me';
+    el.appendChild(btn);
+    Teryx.popover(btn, { title: 'Hover Popover', content: 'Popover triggered by hover.', trigger: 'hover', position: 'top' });
+  });
+
+  // 3. Popover Positions
+  ExplorerDemo(container, 'Popover Positions', [
+    'Teryx.popover(btn, { title: "Top", content: "...", position: "top" });',
+    'Teryx.popover(btn, { title: "Bottom", content: "...", position: "bottom" });',
+    'Teryx.popover(btn, { title: "Left", content: "...", position: "left" });',
+    'Teryx.popover(btn, { title: "Right", content: "...", position: "right" });'
+  ].join('\n'), function (el) {
+    var positions = ['top', 'bottom', 'left', 'right'];
+    positions.forEach(function (pos) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-secondary';
+      btn.style.cssText = 'margin:0.25rem;';
+      btn.textContent = pos.charAt(0).toUpperCase() + pos.slice(1);
+      el.appendChild(btn);
+      Teryx.popover(btn, { title: pos.charAt(0).toUpperCase() + pos.slice(1), content: 'Popover positioned at ' + pos + '.', trigger: 'click', position: pos });
+    });
+  });
+
+  // 4. Popover with HTML Content
+  ExplorerDemo(container, 'Popover with HTML', [
+    'Teryx.popover(btn, {',
+    '  title: "Rich Content",',
+    '  content: "<strong>Bold</strong> and <em>italic</em>",',
+    '  html: true',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Click for HTML Popover';
+    el.appendChild(btn);
+    Teryx.popover(btn, { title: 'Rich Content', content: '<strong>Bold</strong> and <em>italic</em> text in a popover.', html: true, trigger: 'click', position: 'bottom' });
+  });
+
+  // 5. Popover Non-closable
+  ExplorerDemo(container, 'Popover Non-closable', [
+    'Teryx.popover(btn, {',
+    '  title: "No Close Button",',
+    '  content: "This popover has no close button.",',
+    '  closable: false',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-secondary';
+    btn.textContent = 'Click (no close button)';
+    el.appendChild(btn);
+    Teryx.popover(btn, { title: 'No Close Button', content: 'This popover has no close button. Click outside to dismiss.', closable: false, trigger: 'click', position: 'bottom' });
+  });
+});
+</script>
+
+<script>
+// ── Context Menu ──
+ExplorerRegistry.add('Utilities', 'Context Menu', function (container) {
+  // 1. Basic Context Menu
+  ExplorerDemo(container, 'Basic Context Menu', [
+    'Teryx.contextMenu({',
+    '  trigger: el,',
+    '  items: [',
+    '    { label: "Cut", shortcut: "Ctrl+X" },',
+    '    { label: "Copy", shortcut: "Ctrl+C" },',
+    '    { label: "Paste", shortcut: "Ctrl+V" },',
+    '    { divider: true },',
+    '    { label: "Select All", shortcut: "Ctrl+A" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var area = document.createElement('div');
+    area.className = 'tx-card';
+    area.style.cssText = 'padding:2rem;text-align:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;color:#64748b;cursor:context-menu;user-select:none;';
+    area.textContent = 'Right-click here for context menu';
+    area.setAttribute('data-testid', 'ctx-basic-area');
+    el.appendChild(area);
+    Teryx.contextMenu({
+      trigger: area,
+      items: [
+        { label: 'Cut', shortcut: 'Ctrl+X', handler: function () {} },
+        { label: 'Copy', shortcut: 'Ctrl+C', handler: function () {} },
+        { label: 'Paste', shortcut: 'Ctrl+V', handler: function () {} },
+        { divider: true },
+        { label: 'Select All', shortcut: 'Ctrl+A', handler: function () {} }
+      ]
+    });
+  });
+
+  // 2. Context Menu with Icons
+  ExplorerDemo(container, 'Context Menu with Icons', [
+    'Teryx.contextMenu({',
+    '  trigger: el,',
+    '  items: [',
+    '    { label: "Edit", icon: "edit" },',
+    '    { label: "Delete", icon: "trash" },',
+    '    { label: "Download", icon: "download" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var area = document.createElement('div');
+    area.className = 'tx-card';
+    area.style.cssText = 'padding:2rem;text-align:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;color:#64748b;cursor:context-menu;user-select:none;';
+    area.textContent = 'Right-click here for icon menu';
+    area.setAttribute('data-testid', 'ctx-icon-area');
+    el.appendChild(area);
+    Teryx.contextMenu({
+      trigger: area,
+      items: [
+        { label: 'Edit', icon: 'edit', handler: function () {} },
+        { label: 'Delete', icon: 'trash', handler: function () {} },
+        { label: 'Download', icon: 'download', handler: function () {} }
+      ]
+    });
+  });
+
+  // 3. Nested Context Menu
+  ExplorerDemo(container, 'Nested Context Menu', [
+    'Teryx.contextMenu({',
+    '  trigger: el,',
+    '  items: [',
+    '    { label: "File", children: [',
+    '      { label: "New" }, { label: "Open" }',
+    '    ]},',
+    '    { label: "Edit", children: [',
+    '      { label: "Undo" }, { label: "Redo" }',
+    '    ]}',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var area = document.createElement('div');
+    area.className = 'tx-card';
+    area.style.cssText = 'padding:2rem;text-align:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;color:#64748b;cursor:context-menu;user-select:none;';
+    area.textContent = 'Right-click here for nested menu';
+    area.setAttribute('data-testid', 'ctx-nested-area');
+    el.appendChild(area);
+    Teryx.contextMenu({
+      trigger: area,
+      items: [
+        { label: 'File', children: [
+          { label: 'New', handler: function () {} },
+          { label: 'Open', handler: function () {} },
+          { label: 'Save', handler: function () {} }
+        ]},
+        { label: 'Edit', children: [
+          { label: 'Undo', handler: function () {} },
+          { label: 'Redo', handler: function () {} }
+        ]},
+        { divider: true },
+        { label: 'Help', handler: function () {} }
+      ]
+    });
+  });
+
+  // 4. Context Menu with Disabled Items
+  ExplorerDemo(container, 'Context Menu with Disabled Items', [
+    'Teryx.contextMenu({',
+    '  trigger: el,',
+    '  items: [',
+    '    { label: "Open" },',
+    '    { label: "Edit", disabled: true },',
+    '    { label: "Delete", disabled: true }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var area = document.createElement('div');
+    area.className = 'tx-card';
+    area.style.cssText = 'padding:2rem;text-align:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;color:#64748b;cursor:context-menu;user-select:none;';
+    area.textContent = 'Right-click here (some items disabled)';
+    area.setAttribute('data-testid', 'ctx-disabled-area');
+    el.appendChild(area);
+    Teryx.contextMenu({
+      trigger: area,
+      items: [
+        { label: 'Open', handler: function () {} },
+        { label: 'Edit', disabled: true },
+        { label: 'Delete', disabled: true }
+      ]
+    });
+  });
+});
+</script>
+
+<script>
+// ── Dropdown ──
+ExplorerRegistry.add('Utilities', 'Dropdown', function (container) {
+  // 1. Basic Dropdown
+  ExplorerDemo(container, 'Basic Dropdown', [
+    'Teryx.dropdown({',
+    '  trigger: btn,',
+    '  items: [',
+    '    { label: "Profile" },',
+    '    { label: "Settings" },',
+    '    { divider: true },',
+    '    { label: "Logout" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Open Dropdown';
+    el.appendChild(btn);
+    Teryx.dropdown({
+      trigger: btn,
+      items: [
+        { label: 'Profile', handler: function () {} },
+        { label: 'Settings', handler: function () {} },
+        { divider: true },
+        { label: 'Logout', handler: function () {} }
+      ]
+    });
+  });
+
+  // 2. Dropdown with Sections
+  ExplorerDemo(container, 'Dropdown with Sections', [
+    'Teryx.dropdown({',
+    '  trigger: btn,',
+    '  items: [',
+    '    { label: "New File" },',
+    '    { label: "Open File" },',
+    '    { divider: true },',
+    '    { label: "Save" },',
+    '    { label: "Save As..." },',
+    '    { divider: true },',
+    '    { label: "Exit" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-secondary';
+    btn.textContent = 'File Menu';
+    el.appendChild(btn);
+    Teryx.dropdown({
+      trigger: btn,
+      items: [
+        { label: 'New File', handler: function () {} },
+        { label: 'Open File', handler: function () {} },
+        { divider: true },
+        { label: 'Save', handler: function () {} },
+        { label: 'Save As...', handler: function () {} },
+        { divider: true },
+        { label: 'Exit', handler: function () {} }
+      ]
+    });
+  });
+
+  // 3. Dropdown with Icons
+  ExplorerDemo(container, 'Dropdown with Icons', [
+    'Teryx.dropdown({',
+    '  trigger: btn,',
+    '  items: [',
+    '    { label: "Edit", icon: "edit" },',
+    '    { label: "Copy", icon: "copy" },',
+    '    { label: "Delete", icon: "trash" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Actions';
+    el.appendChild(btn);
+    Teryx.dropdown({
+      trigger: btn,
+      items: [
+        { label: 'Edit', icon: 'edit', handler: function () {} },
+        { label: 'Copy', icon: 'copy', handler: function () {} },
+        { label: 'Delete', icon: 'trash', handler: function () {} }
+      ]
+    });
+  });
+
+  // 4. Dropdown with Disabled Items
+  ExplorerDemo(container, 'Dropdown with Disabled Items', [
+    'Teryx.dropdown({',
+    '  trigger: btn,',
+    '  items: [',
+    '    { label: "Active" },',
+    '    { label: "Disabled", disabled: true },',
+    '    { label: "Also Active" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-secondary';
+    btn.textContent = 'Mixed Items';
+    el.appendChild(btn);
+    Teryx.dropdown({
+      trigger: btn,
+      items: [
+        { label: 'Active', handler: function () {} },
+        { label: 'Disabled', disabled: true },
+        { label: 'Also Active', handler: function () {} }
+      ]
+    });
+  });
+
+  // 5. Right-aligned Dropdown
+  ExplorerDemo(container, 'Right-aligned Dropdown', [
+    'Teryx.dropdown({',
+    '  trigger: btn,',
+    '  align: "right",',
+    '  items: [',
+    '    { label: "Profile" },',
+    '    { label: "Settings" },',
+    '    { label: "Logout" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    el.style.textAlign = 'right';
+    var btn = document.createElement('button');
+    btn.className = 'tx-btn tx-btn-primary';
+    btn.textContent = 'Right-aligned';
+    el.appendChild(btn);
+    Teryx.dropdown({
+      trigger: btn,
+      align: 'right',
+      items: [
+        { label: 'Profile', handler: function () {} },
+        { label: 'Settings', handler: function () {} },
+        { label: 'Logout', handler: function () {} }
+      ]
+    });
+  });
+});
+</script>
+
 </body>
 </html>
