@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Teryx</title>
+  <link rel="stylesheet" href="../teryx.css">
+  <link rel="stylesheet" href="../site-layout.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--tx-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif); color: var(--tx-text); background: var(--tx-bg); }
+
+    .blog-header {
+      text-align: center;
+      padding: 4rem 2rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .blog-header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .blog-header p {
+      font-size: 1.125rem;
+      color: var(--tx-text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .blog-entries {
+      max-width: 740px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .blog-entry {
+      border-bottom: 1px solid var(--tx-border);
+      padding: 2rem 0;
+    }
+    .blog-entry:first-child {
+      padding-top: 0;
+    }
+    .blog-entry:last-child {
+      border-bottom: none;
+    }
+
+    .blog-entry-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .blog-entry-date {
+      font-size: 0.8125rem;
+      color: var(--tx-text-muted);
+      font-weight: 500;
+    }
+    .blog-entry-tag {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: var(--tx-radius-full, 9999px);
+    }
+    .blog-entry-tag.release {
+      background: var(--tx-success-light, #d1fae5);
+      color: var(--tx-success, #10b981);
+    }
+    .blog-entry-tag.tutorial {
+      background: var(--tx-primary-light, #dbeafe);
+      color: var(--tx-primary, #3b82f6);
+    }
+    .blog-entry-tag.announcement {
+      background: var(--tx-warning-light, #fef3c7);
+      color: var(--tx-warning-hover, #d97706);
+    }
+
+    .blog-entry h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.75rem;
+    }
+    .blog-entry h2 a {
+      color: var(--tx-text);
+      text-decoration: none;
+    }
+    .blog-entry h2 a:hover {
+      color: var(--tx-primary);
+    }
+
+    .blog-entry p {
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      color: var(--tx-text-secondary);
+      margin: 0 0 0.75rem;
+    }
+
+    .blog-entry ul {
+      padding-left: 1.25rem;
+      margin: 0.5rem 0 1rem;
+    }
+    .blog-entry li {
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      color: var(--tx-text-secondary);
+      padding: 0.125rem 0;
+    }
+
+    .blog-entry code {
+      font-family: var(--tx-font-mono, monospace);
+      font-size: 0.85em;
+      background: var(--tx-bg-tertiary, #f3f4f6);
+      padding: 0.125rem 0.375rem;
+      border-radius: var(--tx-radius-sm, 0.25rem);
+    }
+
+    .blog-entry h3 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .blog-header h1 {
+        font-size: 1.75rem;
+      }
+      .blog-entry h2 {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blog-header">
+    <h1>Blog</h1>
+    <p>Release notes, tutorials, and updates from the Teryx team.</p>
+  </div>
+
+  <div class="blog-entries">
+
+    <!-- v0.3.0 -->
+    <article class="blog-entry">
+      <div class="blog-entry-meta">
+        <span class="blog-entry-date">March 19, 2026</span>
+        <span class="blog-entry-tag release">Release</span>
+      </div>
+      <h2><a href="#v030" id="v030">Teryx v0.3.0 — Product Website &amp; Explorer Complete</a></h2>
+      <p>This release focuses on the Teryx product website and completing the Explorer interactive demo site.</p>
+
+      <h3>Website</h3>
+      <ul>
+        <li>Shared site layout with consistent navigation, footer, and dark mode toggle across all pages</li>
+        <li>Pricing page with Community (free) and Pro tier comparison</li>
+        <li>Blog/changelog page for release notes and tutorials</li>
+      </ul>
+
+      <h3>Explorer</h3>
+      <ul>
+        <li>All 45+ widget demos now available in the Explorer</li>
+        <li>Sidebar navigation with search and category filtering</li>
+        <li>Source code toggle for every demo</li>
+        <li>Drag &amp; drop and export demos</li>
+      </ul>
+
+      <h3>Infrastructure</h3>
+      <ul>
+        <li>Replaced vendored <code>xhtmlx.js</code> with proper npm dependency</li>
+        <li>Fixed explorer sidebar/navbar demo link navigation</li>
+      </ul>
+    </article>
+
+    <!-- v0.2.0 -->
+    <article class="blog-entry">
+      <div class="blog-entry-meta">
+        <span class="blog-entry-date">March 18, 2026</span>
+        <span class="blog-entry-tag release">Release</span>
+      </div>
+      <h2><a href="#v020" id="v020">Teryx v0.2.0 — Charts, Mobile &amp; Explorer</a></h2>
+      <p>Major feature release adding chart engine, mobile widgets, front-office components, and the Explorer demo site.</p>
+
+      <h3>Charts (Pure SVG)</h3>
+      <ul>
+        <li>Bar, line, area, pie, donut, scatter, and gauge chart types</li>
+        <li>Zero dependencies — rendered as pure SVG</li>
+        <li>Legends, tooltips, and responsive sizing</li>
+      </ul>
+
+      <h3>Mobile Widgets</h3>
+      <ul>
+        <li>Navigation View — iOS/Android-style push/pop navigation</li>
+        <li>Bottom Tabs — tab bar navigation</li>
+        <li>Pull List — pull-to-refresh with infinite scroll</li>
+        <li>Sheet — bottom sheet / action sheet</li>
+      </ul>
+
+      <h3>Front-Office Components</h3>
+      <ul>
+        <li>Hero section, feature grid, pricing table, testimonials, footer</li>
+        <li>Landing page building blocks for marketing sites</li>
+      </ul>
+
+      <h3>Explorer Demo Site</h3>
+      <ul>
+        <li>Interactive widget demos organized by category</li>
+        <li>Sidebar navigation, search, breadcrumbs</li>
+        <li>Source code panel for every demo</li>
+      </ul>
+
+      <h3>New Widgets</h3>
+      <ul>
+        <li>Calendar — month/week/day views with event management</li>
+        <li>Timeline — vertical timeline with status colors</li>
+        <li>Kanban Board — columns with draggable cards and WIP limits</li>
+        <li>Transfer List — dual-list selection with search</li>
+        <li>Pivot Grid — aggregation, grouping, collapsible rows</li>
+        <li>Rich Text Editor — toolbar, formatting, read-only mode</li>
+        <li>File Upload — single, multiple, drag-and-drop</li>
+      </ul>
+    </article>
+
+    <!-- v0.1.0 -->
+    <article class="blog-entry">
+      <div class="blog-entry-meta">
+        <span class="blog-entry-date">March 17, 2026</span>
+        <span class="blog-entry-tag release">Release</span>
+      </div>
+      <h2><a href="#v010" id="v010">Teryx v0.1.0 — Initial Release</a></h2>
+      <p>The first public release of Teryx — an enterprise-grade widget framework built on xhtmlx with TypeScript, zero dependencies, and dual declarative/imperative APIs.</p>
+
+      <h3>Core Framework</h3>
+      <ul>
+        <li>Widget registry with auto-discovery via <code>data-tx-widget</code> attributes</li>
+        <li>Event bus for cross-widget communication</li>
+        <li>Theme system with light, dark, and high-contrast modes</li>
+        <li>Internationalization support with locale management</li>
+        <li>Client-side router for single-page applications</li>
+      </ul>
+
+      <h3>30+ Widgets</h3>
+      <ul>
+        <li><strong>Data Display:</strong> Grid (sorting, filtering, pagination, editing), Tree, Data List, Property Grid, Descriptions</li>
+        <li><strong>Navigation:</strong> Tabs, Accordion, Steps/Wizard, Sidebar, Navbar, Pagination</li>
+        <li><strong>Feedback:</strong> Toast, Alert, Modal/Dialog, Message Box, Progress, Skeleton</li>
+        <li><strong>Data Entry:</strong> Form (20+ field types), Date Picker, Color Picker, Slider, Rating, Tag Input, Segmented Control</li>
+        <li><strong>Layout:</strong> Card, Drawer, Splitter, Carousel, Lightbox</li>
+        <li><strong>Utilities:</strong> Tooltip, Popover, Context Menu, Dropdown, Drag &amp; Drop, Export (CSV/Excel/JSON/HTML)</li>
+      </ul>
+
+      <h3>Build Output</h3>
+      <ul>
+        <li>ESM, CJS, and IIFE formats via tsup</li>
+        <li>TypeScript declarations for all widgets and options</li>
+        <li>265KB ESM bundle (all widgets included)</li>
+        <li>MIT licensed</li>
+      </ul>
+    </article>
+
+  </div>
+
+  <!-- Footer placeholder (injected by site-layout.js) -->
+  <div id="site-footer"></div>
+
+  <script src="../site-layout.js" data-page="blog"></script>
+</body>
+</html>
