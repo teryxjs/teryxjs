@@ -2837,15 +2837,208 @@ ExplorerRegistry.add('Specialized', 'Charts', function (container) {
 
 // ── Timeline ──
 ExplorerRegistry.add('Specialized', 'Timeline', function (container) {
+
+  // 1. Basic Timeline
   ExplorerDemo(container, 'Basic Timeline', [
-    'Teryx.timeline(el, { items: [ ... ] });'
+    'Teryx.timeline(el, {',
+    '  items: [',
+    '    { title: "v0.1.0", content: "Initial release", time: "Jan 2026", status: "completed" },',
+    '    { title: "v0.2.0", content: "Charts & calendar", time: "Feb 2026", status: "completed" },',
+    '    { title: "v0.3.0", content: "Explorer demo site", time: "Mar 2026", status: "active" },',
+    '    { title: "v0.4.0", content: "Theming overhaul", time: "Apr 2026", status: "pending" }',
+    '  ]',
+    '});'
   ].join('\n'), function (el) {
     Teryx.timeline(el, {
       items: [
-        { title: 'v0.1.0', content: 'Initial release with core widgets', time: 'Mar 2026', status: 'completed', color: 'success' },
-        { title: 'v0.2.0', content: 'Charts, calendar, pivot grid', time: 'Mar 2026', status: 'completed', color: 'info' },
-        { title: 'v0.3.0', content: 'Explorer demo site', time: 'Mar 2026', status: 'active', color: 'primary' },
+        { title: 'v0.1.0', content: 'Initial release with core widgets', time: 'Jan 2026', status: 'completed' },
+        { title: 'v0.2.0', content: 'Charts, calendar, pivot grid', time: 'Feb 2026', status: 'completed' },
+        { title: 'v0.3.0', content: 'Explorer demo site', time: 'Mar 2026', status: 'active' },
+        { title: 'v0.4.0', content: 'Theming overhaul', time: 'Apr 2026', status: 'pending' },
       ]
+    });
+  });
+
+  // 2. Alternating Timeline
+  ExplorerDemo(container, 'Alternating Timeline', [
+    'Teryx.timeline(el, {',
+    '  alternate: true,',
+    '  items: [ ... ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.timeline(el, {
+      alternate: true,
+      items: [
+        { title: 'Research', content: 'Competitive analysis completed', time: '9:00 AM', status: 'completed' },
+        { title: 'Design', content: 'Wireframes approved by stakeholders', time: '11:30 AM', status: 'completed' },
+        { title: 'Development', content: 'Frontend build in progress', time: '2:00 PM', status: 'active' },
+        { title: 'Testing', content: 'QA review scheduled', time: '4:00 PM', status: 'pending' },
+        { title: 'Deploy', content: 'Production release', time: '6:00 PM', status: 'pending' },
+      ]
+    });
+  });
+
+  // 3. Colored Timeline
+  ExplorerDemo(container, 'Colored Timeline', [
+    'Teryx.timeline(el, {',
+    '  items: [',
+    '    { title: "Success", color: "success", status: "completed" },',
+    '    { title: "Info", color: "info", status: "completed" },',
+    '    { title: "Warning", color: "warning", status: "active" },',
+    '    { title: "Danger", color: "danger", status: "pending" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.timeline(el, {
+      items: [
+        { title: 'Order Placed', content: 'Your order #1234 has been confirmed', time: '10:00 AM', status: 'completed', color: 'success' },
+        { title: 'Payment Processed', content: 'Credit card ending in 4242 charged', time: '10:02 AM', status: 'completed', color: 'info' },
+        { title: 'Shipping', content: 'Package handed to carrier', time: '2:30 PM', status: 'active', color: 'warning' },
+        { title: 'Delivery', content: 'Estimated arrival tomorrow', time: 'Pending', status: 'pending', color: 'danger' },
+      ]
+    });
+  });
+
+  // 4. Timeline with Icons
+  ExplorerDemo(container, 'Timeline with Icons', [
+    'Teryx.timeline(el, {',
+    '  items: [',
+    '    { title: "Step 1", icon: "check", status: "completed" },',
+    '    { title: "Step 2", icon: "star", status: "active" },',
+    '    { title: "Step 3", icon: "clock", status: "pending" }',
+    '  ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.timeline(el, {
+      items: [
+        { title: 'Account Created', content: 'Welcome to the platform', time: 'Day 1', status: 'completed', icon: 'check', color: 'success' },
+        { title: 'Profile Setup', content: 'Added avatar and bio', time: 'Day 1', status: 'completed', icon: 'user', color: 'info' },
+        { title: 'First Project', content: 'Created initial workspace', time: 'Day 2', status: 'active', icon: 'star', color: 'primary' },
+        { title: 'Invite Team', content: 'Collaborate with colleagues', time: 'Upcoming', status: 'pending', icon: 'clock', color: 'warning' },
+      ]
+    });
+  });
+});
+
+// ── Calendar ──
+ExplorerRegistry.add('Specialized', 'Calendar', function (container) {
+
+  // Helper: generate sample events around today
+  function sampleEvents() {
+    var today = new Date();
+    var y = today.getFullYear();
+    var m = String(today.getMonth() + 1).padStart(2, '0');
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function dt(day) { return y + '-' + m + '-' + pad(day); }
+    function dtT(day, h, min) { return dt(day) + 'T' + pad(h) + ':' + pad(min); }
+    var d = today.getDate();
+    return [
+      { id: 'e1', title: 'Team Standup', start: dtT(d, 9, 0), end: dtT(d, 9, 30), color: '#3b82f6' },
+      { id: 'e2', title: 'Sprint Planning', start: dtT(d, 10, 0), end: dtT(d, 11, 30), color: '#8b5cf6' },
+      { id: 'e3', title: 'Lunch Break', start: dtT(d, 12, 0), end: dtT(d, 13, 0), color: '#22c55e' },
+      { id: 'e4', title: 'Design Review', start: dtT(d + 1, 14, 0), end: dtT(d + 1, 15, 0), color: '#f59e0b' },
+      { id: 'e5', title: 'Release Day', start: dt(d + 2), allDay: true, color: '#ef4444' },
+      { id: 'e6', title: 'Conference', start: dt(d + 3), end: dt(d + 5), allDay: true, color: '#06b6d4' },
+      { id: 'e7', title: '1:1 with Manager', start: dtT(d - 1, 16, 0), end: dtT(d - 1, 16, 30), color: '#ec4899' },
+    ];
+  }
+
+  // 1. Month View
+  ExplorerDemo(container, 'Month View', [
+    'Teryx.calendar(el, {',
+    '  view: "month",',
+    '  events: [ ... ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.calendar(el, {
+      view: 'month',
+      events: sampleEvents(),
+    });
+  });
+
+  // 2. Week View
+  ExplorerDemo(container, 'Week View', [
+    'Teryx.calendar(el, {',
+    '  view: "week",',
+    '  events: [ ... ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.calendar(el, {
+      view: 'week',
+      events: sampleEvents(),
+    });
+  });
+
+  // 3. Day View
+  ExplorerDemo(container, 'Day View', [
+    'Teryx.calendar(el, {',
+    '  view: "day",',
+    '  events: [ ... ]',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.calendar(el, {
+      view: 'day',
+      events: sampleEvents(),
+    });
+  });
+
+  // 4. Events & Navigation
+  ExplorerDemo(container, 'Events & Navigation', [
+    'var cal = Teryx.calendar(el, {',
+    '  view: "month",',
+    '  events: [ ... ],',
+    '  onEventClick: function (ev) { alert(ev.title); },',
+    '  onDateClick: function (date) { console.log(date); }',
+    '});',
+    '// cal.next(); cal.prev(); cal.today();',
+    '// cal.setView("week"); cal.setDate("2026-04-01");'
+  ].join('\n'), function (el) {
+    var logBox = document.createElement('div');
+    logBox.style.cssText = 'margin-bottom:12px;padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;font-size:0.8125rem;color:#475569;min-height:32px;';
+    logBox.textContent = 'Click an event or date to see the callback log here.';
+    el.appendChild(logBox);
+
+    var calEl = document.createElement('div');
+    el.appendChild(calEl);
+
+    var cal = Teryx.calendar(calEl, {
+      view: 'month',
+      events: sampleEvents(),
+      onEventClick: function (ev) {
+        logBox.textContent = 'Event clicked: ' + ev.title + ' (' + ev.start + ')';
+      },
+      onDateClick: function (date) {
+        logBox.textContent = 'Date clicked: ' + date;
+      },
+    });
+
+    var btnRow = document.createElement('div');
+    btnRow.style.cssText = 'margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;';
+    var actions = [
+      { label: 'Prev', fn: function () { cal.prev(); } },
+      { label: 'Today', fn: function () { cal.today(); } },
+      { label: 'Next', fn: function () { cal.next(); } },
+    ];
+    actions.forEach(function (a) {
+      var btn = document.createElement('button');
+      btn.className = 'tx-btn tx-btn-sm';
+      btn.textContent = a.label;
+      btn.onclick = a.fn;
+      btnRow.appendChild(btn);
+    });
+    el.appendChild(btnRow);
+  });
+
+  // 5. Remote Events Source
+  ExplorerDemo(container, 'Remote Events Source', [
+    'Teryx.calendar(el, {',
+    '  view: "month",',
+    '  source: "/api/calendar/events"',
+    '});'
+  ].join('\n'), function (el) {
+    Teryx.calendar(el, {
+      view: 'month',
+      source: '/api/calendar/events',
     });
   });
 });
