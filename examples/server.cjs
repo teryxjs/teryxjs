@@ -11,8 +11,14 @@ app.use('/teryx.js', express.static(path.join(__dirname, '..', 'dist', 'index.gl
 // Serve the showcase directory
 app.use('/showcase', express.static(path.join(__dirname, 'showcase')));
 
-// Serve the explorer directory (pages/explorer uses ../teryx.css etc.)
+// Serve site layout files (shared nav/footer/dark mode)
+app.use('/site-layout.css', express.static(path.join(__dirname, '..', 'pages', 'site-layout.css')));
+app.use('/site-layout.js', express.static(path.join(__dirname, '..', 'pages', 'site-layout.js')));
+
+// Serve pages directory (homepage, explorer, docs)
 app.use('/explorer', express.static(path.join(__dirname, '..', 'pages', 'explorer')));
+app.use('/docs', express.static(path.join(__dirname, '..', 'pages', 'docs')));
+app.use('/pages-home', express.static(path.join(__dirname, '..', 'pages'), { index: 'index.html' }));
 
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
