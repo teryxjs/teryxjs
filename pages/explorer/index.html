@@ -4344,8 +4344,8 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
     items.forEach(function (text) {
       var li = document.createElement('li');
       li.className = 'tx-dd-sortable-item';
-      li.style.cssText = 'padding:0.625rem 1rem;margin:0.25rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:6px;cursor:grab;display:flex;align-items:center;gap:0.5rem;';
-      li.innerHTML = '<span style="color:#94a3b8;">&#x2630;</span> ' + text;
+      li.style.cssText = 'padding:0.625rem 1rem;margin:0.25rem 0;background:var(--tx-bg-elevated,#fff);border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;cursor:grab;display:flex;align-items:center;gap:0.5rem;color:var(--tx-text,inherit);';
+      li.innerHTML = '<span style="color:var(--tx-text-muted,#94a3b8);">&#x2630;</span> ' + text;
       list.appendChild(li);
       makeSortable(li, text);
     });
@@ -4397,10 +4397,10 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
 
     function makePanel(title, id, items) {
       var panel = document.createElement('div');
-      panel.style.cssText = 'flex:1;min-width:200px;border:2px dashed #e2e8f0;border-radius:8px;padding:0.75rem;min-height:180px;background:#fafbfc;';
+      panel.style.cssText = 'flex:1;min-width:200px;border:2px dashed var(--tx-border,#e2e8f0);border-radius:8px;padding:0.75rem;min-height:180px;background:var(--tx-bg-secondary,#fafbfc);';
       panel.setAttribute('data-testid', id);
       var heading = document.createElement('div');
-      heading.style.cssText = 'font-weight:600;font-size:0.8125rem;color:#64748b;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;';
+      heading.style.cssText = 'font-weight:600;font-size:0.8125rem;color:var(--tx-text-muted,#64748b);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;';
       heading.textContent = title;
       panel.appendChild(heading);
 
@@ -4429,7 +4429,7 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
     function addItem(listEl, text) {
       var item = document.createElement('div');
       item.className = 'tx-dd-between-item';
-      item.style.cssText = 'padding:0.5rem 0.75rem;margin:0.25rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:4px;cursor:grab;font-size:0.8125rem;';
+      item.style.cssText = 'padding:0.5rem 0.75rem;margin:0.25rem 0;background:var(--tx-bg-elevated,#fff);border:1px solid var(--tx-border,#e2e8f0);border-radius:4px;cursor:grab;font-size:0.8125rem;color:var(--tx-text,inherit);';
       item.textContent = text;
       listEl.appendChild(item);
       Teryx.draggable(item, { data: text, ghost: true });
@@ -4455,10 +4455,10 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
     cards.forEach(function (text) {
       var card = document.createElement('div');
       card.className = 'tx-dd-handle-card';
-      card.style.cssText = 'display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;margin:0.25rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:6px;';
+      card.style.cssText = 'display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;margin:0.25rem 0;background:var(--tx-bg-elevated,#fff);border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;color:var(--tx-text,inherit);';
       var handle = document.createElement('span');
       handle.className = 'dd-handle';
-      handle.style.cssText = 'cursor:grab;color:#94a3b8;font-size:1.125rem;flex-shrink:0;';
+      handle.style.cssText = 'cursor:grab;color:var(--tx-text-muted,#94a3b8);font-size:1.125rem;flex-shrink:0;';
       handle.innerHTML = '&#x2630;';
       var label = document.createElement('span');
       label.textContent = text;
@@ -4528,7 +4528,7 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
 
     var zone = document.createElement('div');
     zone.setAttribute('data-testid', 'dd-accept-zone');
-    zone.style.cssText = 'flex:1;min-width:180px;min-height:120px;border:2px dashed #e2e8f0;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:1rem;color:#94a3b8;font-size:0.8125rem;';
+    zone.style.cssText = 'flex:1;min-width:180px;min-height:120px;border:2px dashed var(--tx-border,#e2e8f0);border-radius:8px;display:flex;align-items:center;justify-content:center;padding:1rem;color:var(--tx-text-muted,#94a3b8);font-size:0.8125rem;';
     zone.textContent = 'Drop valid items here';
 
     var log = document.createElement('div');

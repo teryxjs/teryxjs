@@ -50,9 +50,9 @@ describe('Site Layout', () => {
     it('renders all nav links', () => {
       loadLayout('home');
       const links = document.querySelectorAll('.site-nav-link');
-      expect(links.length).toBe(5);
+      expect(links.length).toBe(4);
       const texts = Array.from(links).map((l) => l.textContent);
-      expect(texts).toEqual(['Home', 'Widgets', 'Explorer', 'Docs', 'Pricing']);
+      expect(texts).toEqual(['Home', 'Widgets', 'Explorer', 'Docs']);
     });
 
     it('marks the current page as active', () => {
@@ -91,7 +91,7 @@ describe('Site Layout', () => {
       const menu = document.querySelector('.site-nav-mobile-menu');
       expect(menu).not.toBeNull();
       const links = menu!.querySelectorAll('a');
-      expect(links.length).toBe(6); // 5 nav + GitHub
+      expect(links.length).toBe(5); // 4 nav + GitHub
     });
   });
 
@@ -220,7 +220,7 @@ describe('Site Layout', () => {
 
   describe('Nav links for all subdirectory pages', () => {
     // Blog is not in the nav links, only in the footer
-    const navPages = ['widgets', 'pricing', 'docs', 'explorer'] as const;
+    const navPages = ['widgets', 'docs', 'explorer'] as const;
 
     for (const page of navPages) {
       it(`marks ${page} as active when data-page="${page}"`, () => {
@@ -231,12 +231,6 @@ describe('Site Layout', () => {
         expect(active!.textContent).toBe(expected);
       });
     }
-
-    it('injects footer for pricing page', () => {
-      loadLayout('pricing');
-      const footer = document.querySelector('.site-footer');
-      expect(footer).not.toBeNull();
-    });
 
     it('injects footer for blog page', () => {
       loadLayout('blog');
