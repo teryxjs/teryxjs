@@ -8,55 +8,57 @@
   <link rel="stylesheet" href="../site-layout.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--tx-bg, #f8fafc); color: var(--tx-text, #0f172a); }
     .ex-app { display: flex; height: calc(100vh - 56px); overflow: hidden; }
 
     /* ── Sidebar ── */
-    .ex-sidebar { width: 260px; min-width: 260px; background: #fff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden; }
-    .ex-sidebar-header { padding: 1rem 1.25rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.75rem; }
-    .ex-sidebar-header h1 { margin: 0; font-size: 1.125rem; font-weight: 700; color: #0f172a; }
-    .ex-sidebar-header a { font-size: 0.75rem; color: #64748b; text-decoration: none; margin-left: auto; }
-    .ex-sidebar-header a:hover { color: #0f172a; }
-    .ex-search { padding: 0.75rem 1.25rem; border-bottom: 1px solid #e2e8f0; }
-    .ex-search input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8125rem; outline: none; background: #f8fafc; }
+    .ex-sidebar { width: 260px; min-width: 260px; background: var(--tx-bg-elevated, #fff); border-right: 1px solid var(--tx-border, #e2e8f0); display: flex; flex-direction: column; overflow: hidden; }
+    .ex-sidebar-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--tx-border, #e2e8f0); display: flex; align-items: center; gap: 0.75rem; }
+    .ex-sidebar-header h1 { margin: 0; font-size: 1.125rem; font-weight: 700; color: var(--tx-text, #0f172a); }
+    .ex-sidebar-header a { font-size: 0.75rem; color: var(--tx-text-muted, #64748b); text-decoration: none; margin-left: auto; }
+    .ex-sidebar-header a:hover { color: var(--tx-text, #0f172a); }
+    .ex-search { padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--tx-border, #e2e8f0); }
+    .ex-search input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--tx-border, #e2e8f0); border-radius: 6px; font-size: 0.8125rem; outline: none; background: var(--tx-bg, #f8fafc); color: var(--tx-text, #0f172a); }
     .ex-search input:focus { border-color: var(--tx-primary, #3b82f6); }
     .ex-nav { flex: 1; overflow-y: auto; padding: 0.5rem 0; }
     .ex-nav-group { margin-bottom: 0.25rem; }
-    .ex-nav-group-title { padding: 0.5rem 1.25rem 0.25rem; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
-    .ex-nav-item { display: block; padding: 0.4rem 1.25rem 0.4rem 1.75rem; font-size: 0.8125rem; color: #475569; text-decoration: none; cursor: pointer; border-left: 3px solid transparent; }
-    .ex-nav-item:hover { background: #f1f5f9; color: #0f172a; }
+    .ex-nav-group-title { padding: 0.5rem 1.25rem 0.25rem; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--tx-text-muted, #94a3b8); }
+    .ex-nav-item { display: block; padding: 0.4rem 1.25rem 0.4rem 1.75rem; font-size: 0.8125rem; color: var(--tx-text-secondary, #475569); text-decoration: none; cursor: pointer; border-left: 3px solid transparent; }
+    .ex-nav-item:hover { background: var(--tx-bg-secondary, #f1f5f9); color: var(--tx-text, #0f172a); }
     .ex-nav-item.active { background: #eff6ff; color: #2563eb; border-left-color: #2563eb; font-weight: 500; }
     .ex-nav-item.hidden { display: none; }
+    [data-theme='dark'] .ex-nav-item.active { background: rgba(37, 99, 235, 0.15); }
 
     /* ── Main content ── */
     .ex-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .ex-toolbar { padding: 0.75rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #fff; display: flex; align-items: center; gap: 1rem; min-height: 52px; }
-    .ex-breadcrumb { font-size: 0.8125rem; color: #64748b; }
-    .ex-breadcrumb span { color: #0f172a; font-weight: 500; }
+    .ex-toolbar { padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--tx-border, #e2e8f0); background: var(--tx-bg-elevated, #fff); display: flex; align-items: center; gap: 1rem; min-height: 52px; }
+    .ex-breadcrumb { font-size: 0.8125rem; color: var(--tx-text-muted, #64748b); }
+    .ex-breadcrumb span { color: var(--tx-text, #0f172a); font-weight: 500; }
     .ex-toolbar-actions { margin-left: auto; display: flex; gap: 0.5rem; }
-    .ex-toolbar-btn { padding: 0.375rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; font-size: 0.75rem; cursor: pointer; color: #475569; }
-    .ex-toolbar-btn:hover { background: #f1f5f9; }
+    .ex-toolbar-btn { padding: 0.375rem 0.75rem; border: 1px solid var(--tx-border, #e2e8f0); border-radius: 6px; background: var(--tx-bg-elevated, #fff); font-size: 0.75rem; cursor: pointer; color: var(--tx-text-secondary, #475569); }
+    .ex-toolbar-btn:hover { background: var(--tx-bg-secondary, #f1f5f9); }
     .ex-toolbar-btn.active { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+    [data-theme='dark'] .ex-toolbar-btn.active { background: rgba(37, 99, 235, 0.15); }
     .ex-content { flex: 1; overflow-y: auto; padding: 1.5rem; }
 
     /* ── Demo containers ── */
-    .ex-demo { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 1.5rem; }
-    .ex-demo-header { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; }
-    .ex-demo-header h3 { margin: 0; font-size: 0.875rem; font-weight: 600; color: #334155; }
+    .ex-demo { background: var(--tx-bg-elevated, #fff); border: 1px solid var(--tx-border, #e2e8f0); border-radius: 8px; margin-bottom: 1.5rem; }
+    .ex-demo-header { padding: 0.75rem 1rem; border-bottom: 1px solid var(--tx-border, #e2e8f0); display: flex; align-items: center; }
+    .ex-demo-header h3 { margin: 0; font-size: 0.875rem; font-weight: 600; color: var(--tx-text, #334155); }
     .ex-demo-body { padding: 1.25rem; }
-    .ex-demo-source { border-top: 1px solid #e2e8f0; background: #f8fafc; }
-    .ex-demo-source pre { margin: 0; padding: 1rem; font-size: 0.75rem; overflow-x: auto; color: #334155; line-height: 1.6; }
-    .ex-demo-source-toggle { padding: 0.5rem 1rem; font-size: 0.75rem; color: #64748b; cursor: pointer; border-top: 1px solid #e2e8f0; background: none; border-left: none; border-right: none; border-bottom: none; width: 100%; text-align: left; }
-    .ex-demo-source-toggle:hover { color: #0f172a; background: #f1f5f9; }
+    .ex-demo-source { border-top: 1px solid var(--tx-border, #e2e8f0); background: var(--tx-bg-secondary, #f8fafc); }
+    .ex-demo-source pre { margin: 0; padding: 1rem; font-size: 0.75rem; overflow-x: auto; color: var(--tx-text, #334155); line-height: 1.6; }
+    .ex-demo-source-toggle { padding: 0.5rem 1rem; font-size: 0.75rem; color: var(--tx-text-muted, #64748b); cursor: pointer; border-top: 1px solid var(--tx-border, #e2e8f0); background: none; border-left: none; border-right: none; border-bottom: none; width: 100%; text-align: left; }
+    .ex-demo-source-toggle:hover { color: var(--tx-text, #0f172a); background: var(--tx-bg-secondary, #f1f5f9); }
 
     /* ── Welcome page ── */
     .ex-welcome { max-width: 640px; margin: 3rem auto; text-align: center; }
-    .ex-welcome h2 { font-size: 1.75rem; font-weight: 700; color: #0f172a; margin: 0 0 0.75rem; }
-    .ex-welcome p { color: #64748b; line-height: 1.6; margin: 0 0 1.5rem; }
+    .ex-welcome h2 { font-size: 1.75rem; font-weight: 700; color: var(--tx-text, #0f172a); margin: 0 0 0.75rem; }
+    .ex-welcome p { color: var(--tx-text-muted, #64748b); line-height: 1.6; margin: 0 0 1.5rem; }
     .ex-welcome-stats { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; }
     .ex-welcome-stat { text-align: center; }
-    .ex-welcome-stat strong { display: block; font-size: 1.5rem; color: #0f172a; }
-    .ex-welcome-stat span { font-size: 0.8125rem; color: #94a3b8; }
+    .ex-welcome-stat strong { display: block; font-size: 1.5rem; color: var(--tx-text, #0f172a); }
+    .ex-welcome-stat span { font-size: 0.8125rem; color: var(--tx-text-muted, #94a3b8); }
   </style>
 </head>
 <body>
@@ -743,6 +745,14 @@ ExplorerRegistry.add('Data Display', 'Tree', function (container) {
 
 // ── DataList ──
 ExplorerRegistry.add('Data Display', 'DataList', function (container) {
+  var sampleNotifications = [
+    { title: 'New deployment succeeded', time: '2 minutes ago' },
+    { title: 'Build #1234 completed', time: '15 minutes ago' },
+    { title: 'Pull request merged', time: '1 hour ago' },
+    { title: 'Security scan passed', time: '3 hours ago' },
+    { title: 'Database backup complete', time: '6 hours ago' },
+  ];
+
   // 1. Basic DataList
   ExplorerDemo(container, 'Basic DataList', [
     'Teryx.datalist(el, {',
@@ -750,11 +760,12 @@ ExplorerRegistry.add('Data Display', 'DataList', function (container) {
     '  itemTemplate: \'<strong xh-text="title"></strong>\'',
     '});'
   ].join('\n'), function (el) {
-    Teryx.datalist(el, {
-      source: '/api/notifications',
-      itemsField: 'items',
-      itemTemplate: '<div style="padding:0.5rem 0;border-bottom:1px solid #e2e8f0"><strong xh-text="title"></strong><div style="font-size:0.75rem;color:#94a3b8" xh-text="time"></div></div>'
+    var html = '<div class="tx-datalist tx-datalist-list"><div class="tx-datalist-items">';
+    sampleNotifications.forEach(function (n) {
+      html += '<div class="tx-datalist-item"><div style="padding:0.5rem 0;border-bottom:1px solid #e2e8f0"><strong>' + n.title + '</strong><div style="font-size:0.75rem;color:#94a3b8">' + n.time + '</div></div></div>';
     });
+    html += '</div></div>';
+    el.innerHTML = html;
   });
 
   // 2. Grid Layout DataList
@@ -765,13 +776,12 @@ ExplorerRegistry.add('Data Display', 'DataList', function (container) {
     '  gridColumns: 2',
     '});'
   ].join('\n'), function (el) {
-    Teryx.datalist(el, {
-      source: '/api/notifications',
-      itemsField: 'items',
-      layout: 'grid',
-      gridColumns: 2,
-      itemTemplate: '<div style="padding:0.75rem;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0"><strong xh-text="title"></strong><div style="font-size:0.75rem;color:#94a3b8;margin-top:0.25rem" xh-text="time"></div></div>'
+    var html = '<div class="tx-datalist tx-datalist-grid"><div class="tx-datalist-grid" style="--tx-grid-cols:2;--tx-grid-gap:1rem">';
+    sampleNotifications.forEach(function (n) {
+      html += '<div class="tx-datalist-item"><div style="padding:0.75rem;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0"><strong>' + n.title + '</strong><div style="font-size:0.75rem;color:#94a3b8;margin-top:0.25rem">' + n.time + '</div></div></div>';
     });
+    html += '</div></div>';
+    el.innerHTML = html;
   });
 
   // 3. Empty State
@@ -781,12 +791,7 @@ ExplorerRegistry.add('Data Display', 'DataList', function (container) {
     '  emptyMessage: \'No results found\'',
     '});'
   ].join('\n'), function (el) {
-    Teryx.datalist(el, {
-      source: '/api/notifications',
-      itemsField: 'items',
-      emptyMessage: 'No notifications yet',
-      itemTemplate: '<div xh-text="title"></div>'
-    });
+    el.innerHTML = '<div class="tx-datalist tx-datalist-list"><div class="tx-datalist-empty"><div class="tx-datalist-empty-text">No notifications yet</div></div></div>';
   });
 });
 
@@ -2544,6 +2549,7 @@ ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   ExplorerDemo(container, 'Horizontal Steps', [
     'Teryx.steps(el, {',
     '  direction: "horizontal",',
+    '  clickable: true,',
     '  current: 1,',
     '  items: [',
     '    { title: "Account", description: "Create your account" },',
@@ -2554,6 +2560,7 @@ ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   ].join('\n'), function (el) {
     Teryx.steps(el, {
       direction: 'horizontal',
+      clickable: true,
       current: 1,
       items: [
         { title: 'Account', description: 'Create your account' },
@@ -2567,6 +2574,7 @@ ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   ExplorerDemo(container, 'Vertical Steps', [
     'Teryx.steps(el, {',
     '  direction: "vertical",',
+    '  clickable: true,',
     '  current: 2,',
     '  items: [',
     '    { title: "Sign Up", description: "Create account" },',
@@ -2578,6 +2586,7 @@ ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   ].join('\n'), function (el) {
     Teryx.steps(el, {
       direction: 'vertical',
+      clickable: true,
       current: 2,
       items: [
         { title: 'Sign Up', description: 'Create account' },
@@ -3299,14 +3308,14 @@ ExplorerRegistry.add('Layout', 'Card', function (container) {
   ExplorerDemo(container, 'Image Card', [
     'Teryx.card(el, {',
     '  title: "Mountain Vista",',
-    '  image: "https://picsum.photos/seed/card1/600/200",',
+    '  image: "https://picsum.photos/seed/teryx-card/1200/400",',
     '  content: "<p>A beautiful mountain landscape.</p>",',
     '  footer: "<small>Photo credit: Unsplash</small>"',
     '});'
   ].join('\n'), function (el) {
     Teryx.card(el, {
       title: 'Mountain Vista',
-      image: 'https://picsum.photos/seed/card1/600/200',
+      image: 'https://picsum.photos/seed/teryx-card/1200/400',
       content: '<p style="color:#475569;margin:0">A beautiful mountain landscape captured at sunrise with rolling fog over the peaks.</p>',
       footer: '<small style="color:#94a3b8">Photo credit: Unsplash</small>',
     });
@@ -3645,11 +3654,24 @@ ExplorerRegistry.add('Layout', 'Lightbox', function (container) {
 // ── Skeleton ──
 ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
 
-  // 1. Text Skeleton
-  ExplorerDemo(container, 'Text Skeleton', [
-    'Teryx.skeleton(el, { lines: 3 });'
+  // 1. Loading → Content Transition
+  ExplorerDemo(container, 'Loading Transition (click to reload)', [
+    'Teryx.skeleton(el, { lines: 3 });',
+    '// Replace with content after load:'
   ].join('\n'), function (el) {
-    Teryx.skeleton(el, { lines: 3 });
+    function showSkeleton() {
+      Teryx.skeleton(el, { lines: 3 });
+      setTimeout(function () {
+        el.innerHTML = '<div style="padding:0.5rem 0"><p style="margin:0 0 0.5rem"><strong>Profile loaded</strong></p><p style="margin:0 0 0.25rem;color:#64748b">Jane Doe — jane@example.com</p><p style="margin:0;color:#94a3b8;font-size:0.8125rem">Joined March 2024</p></div>';
+        var btn = document.createElement('button');
+        btn.className = 'tx-btn tx-btn-sm';
+        btn.textContent = 'Reload';
+        btn.style.marginTop = '0.5rem';
+        btn.addEventListener('click', showSkeleton);
+        el.appendChild(btn);
+      }, 1500);
+    }
+    showSkeleton();
   });
 
   // 2. Card Skeleton (avatar + lines)
@@ -4305,7 +4327,8 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
     '  li.textContent = text;',
     '  list.appendChild(li);',
     '  Teryx.draggable(li, { data: text, ghost: true });',
-    '});'
+    '});',
+    'Teryx.droppable(list, { onDrop: reorder });'
   ].join('\n'), function (el) {
     var list = document.createElement('ul');
     list.className = 'tx-dd-sortable-list';
@@ -4313,7 +4336,10 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
     list.style.cssText = 'list-style:none;padding:0;margin:0;max-width:320px;';
 
     var items = ['Apples', 'Bananas', 'Cherries', 'Dates', 'Elderberries'];
-    var instances = [];
+
+    function makeSortable(li, text) {
+      Teryx.draggable(li, { data: { text: text, el: li }, ghost: true });
+    }
 
     items.forEach(function (text) {
       var li = document.createElement('li');
@@ -4321,7 +4347,35 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
       li.style.cssText = 'padding:0.625rem 1rem;margin:0.25rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:6px;cursor:grab;display:flex;align-items:center;gap:0.5rem;';
       li.innerHTML = '<span style="color:#94a3b8;">&#x2630;</span> ' + text;
       list.appendChild(li);
-      instances.push(Teryx.draggable(li, { data: text, ghost: true }));
+      makeSortable(li, text);
+    });
+
+    Teryx.droppable(list, {
+      hoverClass: 'tx-drop-hover',
+      onDrop: function (_dropEl, data) {
+        if (!data || !data.el) return;
+        var draggedLi = data.el;
+        var children = Array.from(list.querySelectorAll('.tx-dd-sortable-item'));
+        var rects = children.map(function (c) { return c.getBoundingClientRect(); });
+        // Find closest item by checking last known mouse position via ghost
+        var ghost = document.querySelector('.tx-drag-ghost');
+        if (!ghost) { list.appendChild(draggedLi); return; }
+        var ghostRect = ghost.getBoundingClientRect();
+        var ghostCenterY = ghostRect.top + ghostRect.height / 2;
+        var insertBefore = null;
+        for (var i = 0; i < children.length; i++) {
+          var childCenterY = rects[i].top + rects[i].height / 2;
+          if (ghostCenterY < childCenterY && children[i] !== draggedLi) {
+            insertBefore = children[i];
+            break;
+          }
+        }
+        if (insertBefore) {
+          list.insertBefore(draggedLi, insertBefore);
+        } else {
+          list.appendChild(draggedLi);
+        }
+      }
     });
 
     el.appendChild(list);
@@ -4390,7 +4444,8 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
   ExplorerDemo(container, 'Drag Handle', [
     'var card = document.createElement("div");',
     'card.innerHTML = \'<span class="handle">&#x2630;</span> Card content\';',
-    'Teryx.draggable(card, { handle: ".handle", data: "card" });'
+    'Teryx.draggable(card, { handle: ".handle", data: "card" });',
+    'Teryx.droppable(list, { onDrop: reorder });'
   ].join('\n'), function (el) {
     var list = document.createElement('div');
     list.setAttribute('data-testid', 'dd-handle-list');
@@ -4399,6 +4454,7 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
     var cards = ['Design System', 'API Gateway', 'Dashboard UI'];
     cards.forEach(function (text) {
       var card = document.createElement('div');
+      card.className = 'tx-dd-handle-card';
       card.style.cssText = 'display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;margin:0.25rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:6px;';
       var handle = document.createElement('span');
       handle.className = 'dd-handle';
@@ -4409,7 +4465,33 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
       card.appendChild(handle);
       card.appendChild(label);
       list.appendChild(card);
-      Teryx.draggable(card, { handle: '.dd-handle', data: text, ghost: true });
+      Teryx.draggable(card, { handle: '.dd-handle', data: { text: text, el: card }, ghost: true });
+    });
+
+    Teryx.droppable(list, {
+      hoverClass: 'tx-drop-hover',
+      onDrop: function (_dropEl, data) {
+        if (!data || !data.el) return;
+        var draggedCard = data.el;
+        var children = Array.from(list.querySelectorAll('.tx-dd-handle-card'));
+        var ghost = document.querySelector('.tx-drag-ghost');
+        if (!ghost) { list.appendChild(draggedCard); return; }
+        var ghostRect = ghost.getBoundingClientRect();
+        var ghostCenterY = ghostRect.top + ghostRect.height / 2;
+        var insertBefore = null;
+        for (var i = 0; i < children.length; i++) {
+          var rect = children[i].getBoundingClientRect();
+          if (ghostCenterY < rect.top + rect.height / 2 && children[i] !== draggedCard) {
+            insertBefore = children[i];
+            break;
+          }
+        }
+        if (insertBefore) {
+          list.insertBefore(draggedCard, insertBefore);
+        } else {
+          list.appendChild(draggedCard);
+        }
+      }
     });
 
     el.appendChild(list);

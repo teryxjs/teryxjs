@@ -253,15 +253,17 @@ export function datePicker(target: string | HTMLElement, options: DatePickerOpti
         });
       });
 
-    // Close on outside click
+    // Close on outside click (use mousedown to avoid conflict with the
+    // trigger's click handler which fires render() during the same event)
     if (!isInline) {
       const closeHandler = (e: MouseEvent) => {
-        if (isOpen && !container.contains(e.target as Node)) {
+        const currentContainer = el.querySelector(`#${id}`);
+        if (isOpen && currentContainer && !currentContainer.contains(e.target as Node)) {
           isOpen = false;
           render();
         }
       };
-      document.addEventListener('click', closeHandler);
+      document.addEventListener('mousedown', closeHandler);
     }
   }
 

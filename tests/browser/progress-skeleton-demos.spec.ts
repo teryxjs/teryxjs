@@ -85,10 +85,11 @@ test.describe('Explorer — Skeleton Demos', () => {
     expect(await demos.count()).toBe(6);
   });
 
-  test('text skeleton demo renders skeleton lines', async ({ page }) => {
+  test('first skeleton demo renders skeleton with transition', async ({ page }) => {
     const demo = page.locator('.ex-demo').nth(0);
-    await expect(demo.locator('.ex-demo-header h3')).toHaveText('Text Skeleton');
+    await expect(demo.locator('.ex-demo-header h3')).toHaveText('Loading Transition (click to reload)');
 
+    // Initially renders a skeleton with 3 lines
     const lines = demo.locator('.tx-skeleton-line');
     expect(await lines.count()).toBe(3);
   });

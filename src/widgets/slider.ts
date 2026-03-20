@@ -35,6 +35,67 @@ export function slider(target: string | HTMLElement, options: SliderOptions = {}
     return clamp(snapped, min, max);
   }
 
+  // Update DOM in-place without replacing innerHTML (avoids stale references during drag)
+  function updateVisuals(): void {
+    const container = el.querySelector(`#${id}`) as HTMLElement;
+    if (!container) return;
+
+    const fill = container.querySelector('.tx-slider-fill') as HTMLElement;
+    if (fill) {
+      if (isRange) {
+        const startPct = pct(values[0]);
+        const endPct = pct(values[1]);
+        if (isVertical) {
+          fill.style.cssText = `bottom:${startPct}%;height:${endPct - startPct}%`;
+        } else {
+          fill.style.cssText = `left:${startPct}%;width:${endPct - startPct}%`;
+        }
+      } else {
+        const valPct = pct(value);
+        if (isVertical) {
+          fill.style.cssText = `bottom:0;height:${valPct}%`;
+        } else {
+          fill.style.cssText = `left:0;width:${valPct}%`;
+        }
+      }
+    }
+
+    const thumbs = container.querySelectorAll('.tx-slider-thumb') as NodeListOf<HTMLElement>;
+    const prop = isVertical ? 'bottom' : 'left';
+    if (isRange) {
+      if (thumbs[0]) {
+        thumbs[0].style.setProperty(prop, `${pct(values[0])}%`);
+        const tt0 = thumbs[0].querySelector('.tx-slider-tooltip');
+        if (tt0) tt0.textContent = String(values[0]);
+      }
+      if (thumbs[1]) {
+        thumbs[1].style.setProperty(prop, `${pct(values[1])}%`);
+        const tt1 = thumbs[1].querySelector('.tx-slider-tooltip');
+        if (tt1) tt1.textContent = String(values[1]);
+      }
+    } else {
+      if (thumbs[0]) {
+        thumbs[0].style.setProperty(prop, `${pct(value)}%`);
+        const tt = thumbs[0].querySelector('.tx-slider-tooltip');
+        if (tt) tt.textContent = String(value);
+      }
+    }
+
+    // Update number inputs
+    if (showInput) {
+      container.querySelectorAll('.tx-slider-input').forEach((inp) => {
+        const inputEl = inp as HTMLInputElement;
+        const inputType = inputEl.getAttribute('data-input');
+        if (isRange) {
+          if (inputType === 'start') inputEl.value = String(values[0]);
+          else inputEl.value = String(values[1]);
+        } else {
+          inputEl.value = String(value);
+        }
+      });
+    }
+  }
+
   function render(): void {
     let html = `<div class="${cls(
       'tx-slider',
@@ -133,7 +194,9 @@ export function slider(target: string | HTMLElement, options: SliderOptions = {}
     let dragging: string | null = null;
 
     function getValueFromEvent(e: MouseEvent | TouchEvent): number {
-      const rect = track.getBoundingClientRect();
+      // Always query the current (live) track element for accurate coordinates
+      const liveTrack = el.querySelector(`#${id} .tx-slider-track`) as HTMLElement;
+      const rect = (liveTrack || track).getBoundingClientRect();
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
       let ratio: number;
@@ -158,7 +221,7 @@ export function slider(target: string | HTMLElement, options: SliderOptions = {}
       } else {
         value = newVal;
       }
-      render();
+      updateVisuals();
       fireChange();
     }
 
@@ -207,7 +270,7 @@ export function slider(target: string | HTMLElement, options: SliderOptions = {}
         value = newVal;
         dragging = 'single';
       }
-      render();
+      updateVisuals();
       fireChange();
       document.addEventListener('mousemove', onMove);
       document.addEventListener('mouseup', onUp);
@@ -226,7 +289,7 @@ export function slider(target: string | HTMLElement, options: SliderOptions = {}
           } else {
             value = newVal;
           }
-          render();
+          updateVisuals();
           fireChange();
         });
       });

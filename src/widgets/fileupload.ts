@@ -169,6 +169,12 @@ export function fileupload(target: string | HTMLElement, options: FileUploadOpti
     input.value = '';
   });
 
+  // Click anywhere on dropzone to trigger file input
+  dropzone.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('.tx-upload-browse')) return; // label already handles it
+    input.click();
+  });
+
   // Drag and drop
   if (dragDrop) {
     dropzone.addEventListener('dragover', (e) => {
