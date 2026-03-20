@@ -130,11 +130,11 @@ test.describe('Explorer — Skeleton Demos', () => {
     await expect(skeleton).toHaveAttribute('style', /width:50%/);
   });
 
-  test('static skeleton has no animated class', async ({ page }) => {
+  test('animated skeleton has animated class', async ({ page }) => {
     const demo = page.locator('.ex-demo').nth(5);
-    await expect(demo.locator('.ex-demo-header h3')).toHaveText('Static Skeleton (no animation)');
+    await expect(demo.locator('.ex-demo-header h3')).toHaveText('Animated Skeleton');
 
     const skeleton = demo.locator('.tx-skeleton');
-    await expect(skeleton).not.toHaveClass(/tx-skeleton-animated/);
+    await expect(skeleton).toHaveClass(/tx-skeleton-animated/);
   });
 });
