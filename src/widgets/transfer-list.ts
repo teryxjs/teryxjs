@@ -184,12 +184,20 @@ export function transferList(target: string | HTMLElement, options: TransferOpti
       root.querySelectorAll<HTMLInputElement>('.tx-transfer-search-input').forEach((input) => {
         input.addEventListener('input', () => {
           const side = input.getAttribute('data-side');
+          const cursorPos = input.selectionStart;
           if (side === 'left') {
             leftFilter = input.value;
           } else {
             rightFilter = input.value;
           }
           render();
+          // Restore focus to the search input after re-render
+          const newRoot = el.querySelector(`#${id}`) as HTMLElement;
+          const newInput = newRoot?.querySelector(`.tx-transfer-search-input[data-side="${side}"]`) as HTMLInputElement;
+          if (newInput) {
+            newInput.focus();
+            if (cursorPos !== null) newInput.setSelectionRange(cursorPos, cursorPos);
+          }
         });
       });
     }
