@@ -2997,8 +2997,8 @@ body.tx-drawer-open {
   white-space: nowrap;
 }
 /* Reserve space for mark labels below the track */
-.tx-slider-track:has(.tx-slider-marks) {
-  margin-bottom: 1.5rem;
+.tx-slider-has-marks {
+  padding-bottom: 1.25rem;
 }
 .tx-slider-marks ~ .tx-slider-thumb {
   /* Ensure thumb sits above mark labels */

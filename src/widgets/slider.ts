@@ -97,10 +97,12 @@ export function slider(target: string | HTMLElement, options: SliderOptions = {}
   }
 
   function render(): void {
+    const hasMarks = Object.keys(marks).length > 0;
     let html = `<div class="${cls(
       'tx-slider',
       isVertical && 'tx-slider-vertical',
       isRange && 'tx-slider-range',
+      hasMarks && 'tx-slider-has-marks',
       options.class,
     )}" id="${esc(id)}">`;
 
