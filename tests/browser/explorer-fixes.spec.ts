@@ -126,7 +126,10 @@ test.describe('Explorer — DatePicker demos (open fix)', () => {
     await demo.locator('.tx-datepicker-trigger').click();
     await page.waitForTimeout(200);
 
-    await demo.locator('.tx-datepicker-day:not(.tx-datepicker-day-other):not(.tx-datepicker-day-disabled)').first().click();
+    await demo
+      .locator('.tx-datepicker-day:not(.tx-datepicker-day-other):not(.tx-datepicker-day-disabled)')
+      .first()
+      .click();
     await page.waitForTimeout(200);
 
     const val = await demo.locator('.tx-datepicker-input').inputValue();
@@ -161,9 +164,10 @@ test.describe('Explorer — Slider demos (CSS + interaction)', () => {
   });
 
   test('slider thumb is absolutely positioned (CSS loaded)', async ({ page }) => {
-    const pos = await page.locator('.tx-slider-thumb').first().evaluate(
-      (el) => getComputedStyle(el).position,
-    );
+    const pos = await page
+      .locator('.tx-slider-thumb')
+      .first()
+      .evaluate((el) => getComputedStyle(el).position);
     expect(pos).toBe('absolute');
   });
 
@@ -185,16 +189,12 @@ test.describe('Explorer — Dark mode', () => {
     await page.waitForFunction(() => typeof (window as any).Teryx !== 'undefined');
     await page.waitForTimeout(300);
 
-    const lightBg = await page.locator('.ex-sidebar').evaluate(
-      (el) => getComputedStyle(el).backgroundColor,
-    );
+    const lightBg = await page.locator('.ex-sidebar').evaluate((el) => getComputedStyle(el).backgroundColor);
 
     // Toggle dark mode
     await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
     await page.waitForTimeout(200);
-    const darkBg = await page.locator('.ex-sidebar').evaluate(
-      (el) => getComputedStyle(el).backgroundColor,
-    );
+    const darkBg = await page.locator('.ex-sidebar').evaluate((el) => getComputedStyle(el).backgroundColor);
 
     expect(lightBg).not.toBe(darkBg);
   });
@@ -206,9 +206,10 @@ test.describe('Explorer — Dark mode', () => {
 
     await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
     await page.waitForTimeout(200);
-    const bg = await page.locator('.ex-demo').first().evaluate(
-      (el) => getComputedStyle(el).backgroundColor,
-    );
+    const bg = await page
+      .locator('.ex-demo')
+      .first()
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
     // Dark mode elevated bg is #1e293b = rgb(30, 41, 59)
     expect(bg).toBe('rgb(30, 41, 59)');
   });

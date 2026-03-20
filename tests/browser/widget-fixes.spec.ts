@@ -11,9 +11,10 @@ test.describe('Rating — SVG pointer-events fix', () => {
     await page.evaluate(() => {
       (window as any).Teryx.rating('#target', { max: 5, value: 2 });
     });
-    const pe = await page.locator('.tx-rating-star svg').first().evaluate(
-      (el) => getComputedStyle(el).pointerEvents,
-    );
+    const pe = await page
+      .locator('.tx-rating-star svg')
+      .first()
+      .evaluate((el) => getComputedStyle(el).pointerEvents);
     expect(pe).toBe('none');
   });
 
@@ -38,9 +39,7 @@ test.describe('Slider — CSS and track click fix', () => {
     await page.evaluate(() => {
       (window as any).Teryx.slider('#target', { value: 50 });
     });
-    const pos = await page.locator('.tx-slider-thumb').evaluate(
-      (el) => getComputedStyle(el).position,
-    );
+    const pos = await page.locator('.tx-slider-thumb').evaluate((el) => getComputedStyle(el).position);
     expect(pos).toBe('absolute');
   });
 
@@ -61,7 +60,10 @@ test.describe('Slider — CSS and track click fix', () => {
   test('slider tooltip reflects value after track click', async ({ page }) => {
     await page.evaluate(() => {
       (window as any).__sl = (window as any).Teryx.slider('#target', {
-        value: 10, min: 0, max: 100, showTooltip: true,
+        value: 10,
+        min: 0,
+        max: 100,
+        showTooltip: true,
       });
     });
     const track = page.locator('.tx-slider-track');
@@ -84,9 +86,7 @@ test.describe('TagInput — CSS styling', () => {
     await page.evaluate(() => {
       (window as any).Teryx.tagInput('#target', { value: ['A', 'B'] });
     });
-    const border = await page.locator('.tx-tag-input').evaluate(
-      (el) => getComputedStyle(el).borderStyle,
-    );
+    const border = await page.locator('.tx-tag-input').evaluate((el) => getComputedStyle(el).borderStyle);
     expect(border).toBe('solid');
   });
 
@@ -94,9 +94,7 @@ test.describe('TagInput — CSS styling', () => {
     await page.evaluate(() => {
       (window as any).Teryx.tagInput('#target', { value: ['Tag1'] });
     });
-    const bg = await page.locator('.tx-tag-input-chip').evaluate(
-      (el) => getComputedStyle(el).backgroundColor,
-    );
+    const bg = await page.locator('.tx-tag-input-chip').evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(bg).not.toBe('rgba(0, 0, 0, 0)');
   });
 
@@ -104,9 +102,7 @@ test.describe('TagInput — CSS styling', () => {
     await page.evaluate(() => {
       (window as any).Teryx.tagInput('#target', { value: [] });
     });
-    const border = await page.locator('.tx-tag-input-field').evaluate(
-      (el) => getComputedStyle(el).borderStyle,
-    );
+    const border = await page.locator('.tx-tag-input-field').evaluate((el) => getComputedStyle(el).borderStyle);
     expect(border).toBe('none');
   });
 });
@@ -136,7 +132,9 @@ test.describe('DatePicker — dropdown open fix', () => {
     await page.locator('.tx-datepicker-trigger').click();
     await page.waitForTimeout(200);
 
-    const day = page.locator('.tx-datepicker-day:not(.tx-datepicker-day-other):not(.tx-datepicker-day-disabled)').first();
+    const day = page
+      .locator('.tx-datepicker-day:not(.tx-datepicker-day-other):not(.tx-datepicker-day-disabled)')
+      .first();
     await day.click();
     await page.waitForTimeout(200);
 
