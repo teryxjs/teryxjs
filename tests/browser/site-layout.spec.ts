@@ -16,9 +16,9 @@ test.describe('Site Layout — Navigation', () => {
   test('renders all nav links', async ({ page }) => {
     await page.goto('/explorer/');
     const links = page.locator('.site-nav-links .site-nav-link');
-    await expect(links).toHaveCount(5);
+    await expect(links).toHaveCount(4);
     const texts = await links.allTextContents();
-    expect(texts).toEqual(['Home', 'Widgets', 'Explorer', 'Docs', 'Pricing']);
+    expect(texts).toEqual(['Home', 'Widgets', 'Explorer', 'Docs']);
   });
 
   test('highlights active page in nav', async ({ page }) => {
@@ -129,7 +129,7 @@ test.describe('Site Layout — Mobile Menu', () => {
     await page.locator('.site-nav-mobile-btn').click();
     const links = page.locator('.site-nav-mobile-menu a');
     const texts = await links.allTextContents();
-    expect(texts).toEqual(['Home', 'Widgets', 'Explorer', 'Docs', 'Pricing', 'GitHub']);
+    expect(texts).toEqual(['Home', 'Widgets', 'Explorer', 'Docs', 'GitHub']);
   });
 
   test('clicking hamburger again closes mobile menu', async ({ page }) => {
@@ -190,7 +190,6 @@ test.describe('Site Layout — Footer', () => {
 test.describe('Site Layout — Nav Links on Subdirectory Pages', () => {
   const subdirPages = [
     { path: '/widgets/', name: 'Widgets' },
-    { path: '/pricing/', name: 'Pricing' },
     { path: '/blog/', name: 'Blog' },
     { path: '/docs/', name: 'Docs' },
     { path: '/explorer/', name: 'Explorer' },
