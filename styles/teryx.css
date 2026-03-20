@@ -2996,6 +2996,10 @@ body.tx-drawer-open {
   color: var(--tx-text-muted);
   white-space: nowrap;
 }
+/* Reserve space for mark labels below the track */
+.tx-slider-track:has(.tx-slider-marks) {
+  margin-bottom: 1.5rem;
+}
 .tx-slider-marks ~ .tx-slider-thumb {
   /* Ensure thumb sits above mark labels */
   z-index: 2;
@@ -3004,7 +3008,7 @@ body.tx-drawer-open {
   flex-direction: column;
   width: auto;
   min-height: 200px;
-  padding: 0.5rem 2rem;
+  padding: 12px 2rem;
 }
 .tx-slider-vertical .tx-slider-track {
   width: 6px;
