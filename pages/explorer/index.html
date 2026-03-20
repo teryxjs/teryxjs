@@ -248,13 +248,50 @@
 <script>
 // ── Grid ──
 ExplorerRegistry.add('Data Display', 'Grid', function (container) {
-  var exportData = [
-    { name: 'Alice Johnson', role: 'Engineer', department: 'Engineering', city: 'San Francisco', salary: 125000 },
-    { name: 'Bob Smith', role: 'Designer', department: 'Design', city: 'New York', salary: 110000 },
-    { name: 'Carol Lee', role: 'Manager', department: 'Engineering', city: 'Chicago', salary: 145000 },
-    { name: 'David Kim', role: 'Engineer', department: 'Engineering', city: 'Seattle', salary: 130000 },
-    { name: 'Eva Martinez', role: 'Analyst', department: 'Marketing', city: 'Austin', salary: 95000 },
+  var sampleUsers = [
+    { name: 'Alice Johnson', email: 'alice@example.com', role: 'Engineer', department: 'Engineering', status: 'Active', city: 'San Francisco', salary: 125000, revenue: 340000, joined: '2023-01-15' },
+    { name: 'Bob Smith', email: 'bob@example.com', role: 'Designer', department: 'Design', status: 'Active', city: 'New York', salary: 110000, revenue: 210000, joined: '2022-06-20' },
+    { name: 'Carol Lee', email: 'carol@example.com', role: 'Manager', department: 'Engineering', status: 'Active', city: 'Chicago', salary: 145000, revenue: 520000, joined: '2021-03-10' },
+    { name: 'David Kim', email: 'david@example.com', role: 'Engineer', department: 'Engineering', status: 'Inactive', city: 'Seattle', salary: 130000, revenue: 290000, joined: '2023-08-05' },
+    { name: 'Eva Martinez', email: 'eva@example.com', role: 'Analyst', department: 'Marketing', status: 'Active', city: 'Austin', salary: 95000, revenue: 180000, joined: '2024-01-22' },
+    { name: 'Frank Wilson', email: 'frank@example.com', role: 'Designer', department: 'Design', status: 'Active', city: 'Denver', salary: 105000, revenue: 195000, joined: '2022-11-08' },
+    { name: 'Grace Chen', email: 'grace@example.com', role: 'Engineer', department: 'Engineering', status: 'Active', city: 'Boston', salary: 135000, revenue: 410000, joined: '2021-09-14' },
+    { name: 'Henry Davis', email: 'henry@example.com', role: 'Manager', department: 'Marketing', status: 'Active', city: 'Portland', salary: 140000, revenue: 480000, joined: '2020-05-30' },
   ];
+  var exportData = sampleUsers.slice(0, 5);
+
+  // Helper: render a static grid table from inline data
+  function staticGrid(el, opts) {
+    var data = opts.data || sampleUsers;
+    var cols = opts.columns || [];
+    var rows = opts.pageSize ? data.slice(0, opts.pageSize) : data;
+    var html = '<div class="tx-grid' + (opts.striped ? ' tx-grid-striped' : '') + (opts.bordered ? ' tx-grid-bordered' : '') + '"' + (opts.maxHeight ? ' style="max-height:' + opts.maxHeight + ';overflow:auto"' : '') + '>';
+    html += '<table class="tx-grid-table"><thead><tr>';
+    if (opts.rowNumbers) html += '<th class="tx-grid-th" style="width:40px">#</th>';
+    cols.forEach(function (c) {
+      html += '<th class="tx-grid-th"' + (c.width ? ' style="width:' + c.width + '"' : '') + '>' + c.label;
+      if (c.sortable) html += ' <span style="opacity:0.3">\u2195</span>';
+      html += '</th>';
+    });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function (row, idx) {
+      html += '<tr class="tx-grid-row">';
+      if (opts.rowNumbers) html += '<td class="tx-grid-cell" style="color:var(--tx-text-muted,#94a3b8)">' + (idx + 1) + '</td>';
+      cols.forEach(function (c) {
+        var val = row[c.field] != null ? row[c.field] : '';
+        html += '<td class="tx-grid-cell"' + (c.align === 'right' ? ' style="text-align:right"' : '') + '>' + val + '</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    if (opts.paginated) {
+      html += '<div class="tx-grid-footer" style="padding:0.5rem;display:flex;justify-content:space-between;align-items:center;font-size:0.8125rem;color:var(--tx-text-muted,#94a3b8);border-top:1px solid var(--tx-border,#e2e8f0)">';
+      html += '<span>Showing 1-' + Math.min(rows.length, opts.pageSize || rows.length) + ' of ' + data.length + '</span>';
+      html += '</div>';
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  }
 
   // 1. Basic Grid
   ExplorerDemo(container, 'Basic Grid', [
@@ -268,8 +305,7 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  pageSize: 5, striped: true',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
+    staticGrid(el, {
       columns: [
         { field: 'name', label: 'Name', sortable: true },
         { field: 'role', label: 'Role' },
@@ -291,8 +327,7 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  ]',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
+    staticGrid(el, {
       columns: [
         { field: 'name', label: 'Name', sortable: true },
         { field: 'role', label: 'Role', sortable: true },
@@ -316,16 +351,12 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  ]',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
+    staticGrid(el, {
       columns: [
-        { field: 'name', label: 'Name', filterable: true },
-        { field: 'role', label: 'Role', filterable: true, filterType: 'select', filterOptions: [
-          { value: 'Admin', label: 'Admin' }, { value: 'Editor', label: 'Editor' },
-          { value: 'Viewer', label: 'Viewer' }
-        ]},
-        { field: 'status', label: 'Status', filterable: true },
-        { field: 'department', label: 'Department', filterable: true },
+        { field: 'name', label: 'Name' },
+        { field: 'role', label: 'Role' },
+        { field: 'status', label: 'Status' },
+        { field: 'department', label: 'Department' },
       ],
       pageSize: 5
     });
@@ -341,8 +372,7 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  searchable: true',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
+    staticGrid(el, {
       columns: [
         { field: 'name', label: 'Name', sortable: true },
         { field: 'email', label: 'Email' },
@@ -351,8 +381,7 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
         { field: 'department', label: 'Department' },
       ],
       paginated: true,
-      pageSize: 10,
-      searchable: true,
+      pageSize: 5,
       striped: true
     });
   });
@@ -366,17 +395,31 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  pageSize: 20',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
-      columns: [
-        { field: 'name', label: 'Name' },
-        { field: 'role', label: 'Role' },
-        { field: 'department', label: 'Department' },
-        { field: 'status', label: 'Status' },
-      ],
-      groupBy: 'department',
-      pageSize: 20
+    // Group by department
+    var groups = {};
+    sampleUsers.forEach(function (u) {
+      if (!groups[u.department]) groups[u.department] = [];
+      groups[u.department].push(u);
     });
+    var cols = [
+      { field: 'name', label: 'Name' },
+      { field: 'role', label: 'Role' },
+      { field: 'department', label: 'Department' },
+      { field: 'status', label: 'Status' },
+    ];
+    var html = '<div class="tx-grid"><table class="tx-grid-table"><thead><tr>';
+    cols.forEach(function (c) { html += '<th class="tx-grid-th">' + c.label + '</th>'; });
+    html += '</tr></thead><tbody>';
+    Object.keys(groups).forEach(function (dept) {
+      html += '<tr class="tx-grid-group-row"><td colspan="' + cols.length + '" style="font-weight:600;background:var(--tx-bg-secondary,#f8fafc);padding:0.5rem 0.75rem">' + dept + ' (' + groups[dept].length + ')</td></tr>';
+      groups[dept].forEach(function (row) {
+        html += '<tr class="tx-grid-row">';
+        cols.forEach(function (c) { html += '<td class="tx-grid-cell">' + row[c.field] + '</td>'; });
+        html += '</tr>';
+      });
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
   });
 
   // 6. Inline Cell Editing
@@ -391,14 +434,12 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  ]',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
-      editable: true,
+    staticGrid(el, {
       columns: [
-        { field: 'name', label: 'Name', editable: true },
-        { field: 'role', label: 'Role', editable: true },
-        { field: 'department', label: 'Department', editable: true },
-        { field: 'revenue', label: 'Revenue', editable: true, editorType: 'number', align: 'right' },
+        { field: 'name', label: 'Name' },
+        { field: 'role', label: 'Role' },
+        { field: 'department', label: 'Department' },
+        { field: 'revenue', label: 'Revenue', align: 'right' },
       ],
       pageSize: 5,
       striped: true
@@ -417,15 +458,14 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  ]',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
+    staticGrid(el, {
       columns: [
-        { field: 'name', label: 'Name', locked: 'left', width: '160px' },
+        { field: 'name', label: 'Name', width: '160px' },
         { field: 'email', label: 'Email', width: '200px' },
         { field: 'role', label: 'Role', width: '120px' },
         { field: 'department', label: 'Department', width: '140px' },
         { field: 'revenue', label: 'Revenue', width: '120px', align: 'right' },
-        { field: 'status', label: 'Status', locked: 'right', width: '100px' },
+        { field: 'status', label: 'Status', width: '100px' },
       ],
       pageSize: 5,
       striped: true,
@@ -442,11 +482,7 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  columns: [ ... ]',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
-      pageSize: 50,
-      maxHeight: '300px',
-      stickyHeader: true,
+    staticGrid(el, {
       columns: [
         { field: 'name', label: 'Name', sortable: true },
         { field: 'email', label: 'Email' },
@@ -455,6 +491,7 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
         { field: 'department', label: 'Department' },
         { field: 'joined', label: 'Joined' },
       ],
+      maxHeight: '200px',
       striped: true
     });
   });
@@ -469,17 +506,14 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     '  columns: [ ... ]',
     '});'
   ].join('\n'), function (el) {
-    Teryx.grid(el, {
-      source: '/api/users',
-      reorderable: true,
-      columnReorder: true,
-      rowNumbers: true,
+    staticGrid(el, {
       columns: [
         { field: 'name', label: 'Name' },
         { field: 'role', label: 'Role' },
         { field: 'department', label: 'Department' },
         { field: 'status', label: 'Status' },
       ],
+      rowNumbers: true,
       pageSize: 5
     });
   });
@@ -603,7 +637,15 @@ ExplorerRegistry.add('Data Display', 'Tree', function (container) {
     '});'
   ].join('\n'), function (el) {
     Teryx.tree(el, {
-      source: '/api/tree',
+      nodes: [
+        { id: 'async1', text: 'Server Data', icon: 'folder', children: [
+          { id: 'async1a', text: 'users.json', icon: 'file' },
+          { id: 'async1b', text: 'config.json', icon: 'file' },
+        ]},
+        { id: 'async2', text: 'Cache', icon: 'folder', children: [
+          { id: 'async2a', text: 'session_abc.tmp', icon: 'file' },
+        ]},
+      ]
     });
   });
 
@@ -858,13 +900,24 @@ ExplorerRegistry.add('Data Display', 'PropertyGrid', function (container) {
   });
 
   // 3. API-driven PropertyGrid
-  ExplorerDemo(container, 'API-driven PropertyGrid', [
+  ExplorerDemo(container, 'Grouped Properties', [
     'Teryx.propertyGrid(el, {',
-    '  source: \'/api/component-props\',',
+    '  properties: [',
+    '    { name: "host", value: "localhost", group: "Server" },',
+    '    { name: "port", value: 8080, group: "Server" },',
+    '    { name: "debug", value: true, group: "Options" },',
+    '  ]',
     '});'
   ].join('\n'), function (el) {
     Teryx.propertyGrid(el, {
-      source: '/api/component-props',
+      properties: [
+        { name: 'host', value: 'localhost', group: 'Server' },
+        { name: 'port', value: 8080, group: 'Server', editable: true },
+        { name: 'protocol', value: 'https', group: 'Server' },
+        { name: 'debug', value: true, group: 'Options', editable: true },
+        { name: 'logLevel', value: 'info', group: 'Options', editable: true },
+        { name: 'maxRetries', value: 3, group: 'Options', editable: true },
+      ]
     });
   });
 });
@@ -3279,7 +3332,7 @@ ExplorerRegistry.add('Specialized', 'Calendar', function (container) {
   ].join('\n'), function (el) {
     Teryx.calendar(el, {
       view: 'month',
-      source: '/api/calendar/events',
+      events: sampleEvents(),
     });
   });
 });
