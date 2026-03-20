@@ -88,13 +88,11 @@ test.describe('Explorer — PropertyGrid Demos', () => {
     await expect(status).toContainText('Edit a property');
   });
 
-  test('API-driven propertygrid loads from server', async ({ page }) => {
+  test('grouped properties demo renders property rows', async ({ page }) => {
     const demo = page.locator('.ex-demo').nth(2);
-    await expect(demo.locator('.ex-demo-header h3')).toHaveText('API-driven PropertyGrid');
+    await expect(demo.locator('.ex-demo-header h3')).toHaveText('Grouped Properties');
     await expect(demo.locator('.tx-propgrid')).toBeVisible();
 
-    // Wait for xhtmlx to fetch data
-    await page.waitForTimeout(1000);
     const rows = demo.locator('.tx-propgrid-name');
     expect(await rows.count()).toBeGreaterThanOrEqual(1);
   });
