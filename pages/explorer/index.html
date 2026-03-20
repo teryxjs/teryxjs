@@ -510,7 +510,7 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
     formats.forEach(function (fmt) {
       var btn = document.createElement('button');
       btn.className = 'tx-btn tx-btn-secondary';
-      btn.style.cssText = 'margin:0.25rem;padding:0.5rem 1rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+      btn.style.cssText = 'margin:0.25rem;padding:0.5rem 1rem;border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;cursor:pointer;font-size:0.8125rem;';
       btn.textContent = 'Export ' + fmt;
       btn.onclick = fns[fmt];
       el.appendChild(btn);
@@ -568,7 +568,7 @@ ExplorerRegistry.add('Data Display', 'Tree', function (container) {
   ].join('\n'), function (el) {
     var statusEl = document.createElement('div');
     statusEl.className = 'tx-tree-check-status';
-    statusEl.style.cssText = 'margin-top:0.75rem;padding:0.5rem;background:#f8fafc;border-radius:6px;font-size:0.8125rem;color:#475569;';
+    statusEl.style.cssText = 'margin-top:0.75rem;padding:0.5rem;background:var(--tx-bg,#f8fafc);border-radius:6px;font-size:0.8125rem;color:var(--tx-text-secondary,#475569);';
     statusEl.textContent = 'Check a node to see the event.';
 
     Teryx.tree(el, {
@@ -648,7 +648,7 @@ ExplorerRegistry.add('Data Display', 'Tree', function (container) {
     input.type = 'text';
     input.placeholder = 'Filter tree nodes...';
     input.className = 'tx-tree-filter-input';
-    input.style.cssText = 'width:100%;padding:0.5rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;font-size:0.8125rem;margin-bottom:0.75rem;outline:none;box-sizing:border-box;';
+    input.style.cssText = 'width:100%;padding:0.5rem 0.75rem;border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;font-size:0.8125rem;margin-bottom:0.75rem;outline:none;box-sizing:border-box;';
     el.appendChild(input);
 
     var treeContainer = document.createElement('div');
@@ -702,13 +702,13 @@ ExplorerRegistry.add('Data Display', 'Tree', function (container) {
 
     var btnExpand = document.createElement('button');
     btnExpand.className = 'tx-btn tx-btn-secondary';
-    btnExpand.style.cssText = 'padding:0.375rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+    btnExpand.style.cssText = 'padding:0.375rem 0.75rem;border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;cursor:pointer;font-size:0.8125rem;';
     btnExpand.textContent = 'Expand All';
     toolbar.appendChild(btnExpand);
 
     var btnCollapse = document.createElement('button');
     btnCollapse.className = 'tx-btn tx-btn-secondary';
-    btnCollapse.style.cssText = 'padding:0.375rem 0.75rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+    btnCollapse.style.cssText = 'padding:0.375rem 0.75rem;border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;cursor:pointer;font-size:0.8125rem;';
     btnCollapse.textContent = 'Collapse All';
     toolbar.appendChild(btnCollapse);
 
@@ -762,7 +762,7 @@ ExplorerRegistry.add('Data Display', 'DataList', function (container) {
   ].join('\n'), function (el) {
     var html = '<div class="tx-datalist tx-datalist-list"><div class="tx-datalist-items">';
     sampleNotifications.forEach(function (n) {
-      html += '<div class="tx-datalist-item"><div style="padding:0.5rem 0;border-bottom:1px solid #e2e8f0"><strong>' + n.title + '</strong><div style="font-size:0.75rem;color:#94a3b8">' + n.time + '</div></div></div>';
+      html += '<div class="tx-datalist-item"><div style="padding:0.5rem 0;border-bottom:1px solid var(--tx-border,#e2e8f0)"><strong>' + n.title + '</strong><div style="font-size:0.75rem;color:var(--tx-text-muted,#94a3b8)">' + n.time + '</div></div></div>';
     });
     html += '</div></div>';
     el.innerHTML = html;
@@ -778,7 +778,7 @@ ExplorerRegistry.add('Data Display', 'DataList', function (container) {
   ].join('\n'), function (el) {
     var html = '<div class="tx-datalist tx-datalist-grid"><div class="tx-datalist-grid" style="--tx-grid-cols:2;--tx-grid-gap:1rem">';
     sampleNotifications.forEach(function (n) {
-      html += '<div class="tx-datalist-item"><div style="padding:0.75rem;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0"><strong>' + n.title + '</strong><div style="font-size:0.75rem;color:#94a3b8;margin-top:0.25rem">' + n.time + '</div></div></div>';
+      html += '<div class="tx-datalist-item"><div style="padding:0.75rem;background:var(--tx-bg,#f8fafc);border-radius:6px;border:1px solid var(--tx-border,#e2e8f0)"><strong>' + n.title + '</strong><div style="font-size:0.75rem;color:var(--tx-text-muted,#94a3b8);margin-top:0.25rem">' + n.time + '</div></div></div>';
     });
     html += '</div></div>';
     el.innerHTML = html;
@@ -832,7 +832,7 @@ ExplorerRegistry.add('Data Display', 'PropertyGrid', function (container) {
   ].join('\n'), function (el) {
     var statusEl = document.createElement('div');
     statusEl.className = 'tx-propgrid-change-status';
-    statusEl.style.cssText = 'margin-top:0.75rem;padding:0.5rem;background:#f8fafc;border-radius:6px;font-size:0.8125rem;color:#475569;';
+    statusEl.style.cssText = 'margin-top:0.75rem;padding:0.5rem;background:var(--tx-bg,#f8fafc);border-radius:6px;font-size:0.8125rem;color:var(--tx-text-secondary,#475569);';
     statusEl.textContent = 'Edit a property to see changes.';
 
     Teryx.propertyGrid(el, {
@@ -1070,7 +1070,7 @@ ExplorerRegistry.add('Data Display', 'Pivot Grid', function (container) {
 
     var btnCsv = document.createElement('button');
     btnCsv.className = 'tx-btn tx-btn-secondary';
-    btnCsv.style.cssText = 'padding:0.5rem 1rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+    btnCsv.style.cssText = 'padding:0.5rem 1rem;border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;cursor:pointer;font-size:0.8125rem;';
     btnCsv.textContent = 'Export CSV';
     btnCsv.onclick = function () {
       var data = inst.getAggregatedData();
@@ -1086,7 +1086,7 @@ ExplorerRegistry.add('Data Display', 'Pivot Grid', function (container) {
 
     var btnJson = document.createElement('button');
     btnJson.className = 'tx-btn tx-btn-secondary';
-    btnJson.style.cssText = 'padding:0.5rem 1rem;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:0.8125rem;';
+    btnJson.style.cssText = 'padding:0.5rem 1rem;border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;cursor:pointer;font-size:0.8125rem;';
     btnJson.textContent = 'Export JSON';
     btnJson.onclick = function () {
       var data = inst.getAggregatedData();
@@ -1112,9 +1112,9 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
   ].join('\n'), function (el) {
     Teryx.tabs(el, {
       items: [
-        { id: 'basic1', title: 'Overview', content: '<p style="padding:0.5rem 0;color:#475569">Tab content for the overview panel.</p>' },
-        { id: 'basic2', title: 'Settings', content: '<p style="padding:0.5rem 0;color:#475569">Configuration and preferences.</p>' },
-        { id: 'basic3', title: 'Activity', content: '<p style="padding:0.5rem 0;color:#475569">Recent activity and logs.</p>' },
+        { id: 'basic1', title: 'Overview', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Tab content for the overview panel.</p>' },
+        { id: 'basic2', title: 'Settings', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Configuration and preferences.</p>' },
+        { id: 'basic3', title: 'Activity', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Recent activity and logs.</p>' },
       ]
     });
   });
@@ -1132,9 +1132,9 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
     Teryx.tabs(el, {
       variant: 'underline',
       items: [
-        { id: 'ul1', title: 'Profile', content: '<p style="padding:0.5rem 0;color:#475569">User profile information.</p>' },
-        { id: 'ul2', title: 'Billing', content: '<p style="padding:0.5rem 0;color:#475569">Billing and subscription details.</p>' },
-        { id: 'ul3', title: 'Notifications', content: '<p style="padding:0.5rem 0;color:#475569">Notification preferences.</p>' },
+        { id: 'ul1', title: 'Profile', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">User profile information.</p>' },
+        { id: 'ul2', title: 'Billing', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Billing and subscription details.</p>' },
+        { id: 'ul3', title: 'Notifications', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Notification preferences.</p>' },
       ]
     });
   });
@@ -1152,9 +1152,9 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
     Teryx.tabs(el, {
       variant: 'pills',
       items: [
-        { id: 'pill1', title: 'All', content: '<p style="padding:0.5rem 0;color:#475569">All items listed here.</p>' },
-        { id: 'pill2', title: 'Active', content: '<p style="padding:0.5rem 0;color:#475569">Only active items.</p>' },
-        { id: 'pill3', title: 'Archived', content: '<p style="padding:0.5rem 0;color:#475569">Archived items.</p>' },
+        { id: 'pill1', title: 'All', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">All items listed here.</p>' },
+        { id: 'pill2', title: 'Active', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Only active items.</p>' },
+        { id: 'pill3', title: 'Archived', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Archived items.</p>' },
       ]
     });
   });
@@ -1172,9 +1172,9 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
     Teryx.tabs(el, {
       variant: 'card',
       items: [
-        { id: 'card1', title: 'Details', content: '<p style="padding:0.5rem 0;color:#475569">Product details and specifications.</p>' },
-        { id: 'card2', title: 'Reviews', content: '<p style="padding:0.5rem 0;color:#475569">Customer reviews and ratings.</p>' },
-        { id: 'card3', title: 'Related', content: '<p style="padding:0.5rem 0;color:#475569">Related products.</p>' },
+        { id: 'card1', title: 'Details', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Product details and specifications.</p>' },
+        { id: 'card2', title: 'Reviews', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Customer reviews and ratings.</p>' },
+        { id: 'card3', title: 'Related', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Related products.</p>' },
       ]
     });
   });
@@ -1192,9 +1192,9 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
     Teryx.tabs(el, {
       vertical: true,
       items: [
-        { id: 'vert1', title: 'General', content: '<p style="padding:0.5rem 0;color:#475569">General settings and options.</p>' },
-        { id: 'vert2', title: 'Security', content: '<p style="padding:0.5rem 0;color:#475569">Security and privacy settings.</p>' },
-        { id: 'vert3', title: 'Advanced', content: '<p style="padding:0.5rem 0;color:#475569">Advanced configuration options.</p>' },
+        { id: 'vert1', title: 'General', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">General settings and options.</p>' },
+        { id: 'vert2', title: 'Security', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Security and privacy settings.</p>' },
+        { id: 'vert3', title: 'Advanced', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Advanced configuration options.</p>' },
       ]
     });
   });
@@ -1211,7 +1211,7 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
       scrollItems.push({
         id: 'scroll' + i,
         title: 'Tab ' + i,
-        content: '<p style="padding:0.5rem 0;color:#475569">Content for tab ' + i + '.</p>'
+        content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Content for tab ' + i + '.</p>'
       });
     }
     Teryx.tabs(el, {
@@ -1235,13 +1235,13 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
     Teryx.tabs(el, {
       addable: true,
       items: [
-        { id: 'close1', title: 'Home', content: '<p style="padding:0.5rem 0;color:#475569">Home page content.</p>', closable: true },
-        { id: 'close2', title: 'Editor', content: '<p style="padding:0.5rem 0;color:#475569">Code editor panel.</p>', closable: true },
-        { id: 'close3', title: 'Preview', content: '<p style="padding:0.5rem 0;color:#475569">Live preview panel.</p>', closable: true },
+        { id: 'close1', title: 'Home', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Home page content.</p>', closable: true },
+        { id: 'close2', title: 'Editor', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Code editor panel.</p>', closable: true },
+        { id: 'close3', title: 'Preview', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Live preview panel.</p>', closable: true },
       ],
       onAdd: function () {
         counter++;
-        return { id: 'new' + counter, title: 'New ' + counter, content: '<p style="padding:0.5rem 0;color:#475569">New tab content.</p>', closable: true, active: true };
+        return { id: 'new' + counter, title: 'New ' + counter, content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">New tab content.</p>', closable: true, active: true };
       }
     });
   });
@@ -1257,9 +1257,9 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
   ].join('\n'), function (el) {
     Teryx.tabs(el, {
       items: [
-        { id: 'lazy1', title: 'Loaded', content: '<p style="padding:0.5rem 0;color:#475569">This content was loaded immediately.</p>' },
-        { id: 'lazy2', title: 'Icons', content: '<p style="padding:0.5rem 0;color:#475569">Content that could be lazy-loaded from an API endpoint.</p>', icon: 'star' },
-        { id: 'lazy3', title: 'Disabled', content: '<p style="padding:0.5rem 0;color:#475569">This tab is disabled.</p>', disabled: true },
+        { id: 'lazy1', title: 'Loaded', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">This content was loaded immediately.</p>' },
+        { id: 'lazy2', title: 'Icons', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Content that could be lazy-loaded from an API endpoint.</p>', icon: 'star' },
+        { id: 'lazy3', title: 'Disabled', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">This tab is disabled.</p>', disabled: true },
       ]
     });
   });
@@ -1278,9 +1278,9 @@ ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
   ].join('\n'), function (el) {
     Teryx.accordion(el, {
       items: [
-        { id: 'a1', title: 'What is Teryx?', content: '<p style="color:#475569;margin:0">An enterprise widget framework with 45+ TypeScript components.</p>', open: true },
-        { id: 'a2', title: 'How does it work?', content: '<p style="color:#475569;margin:0">Widgets generate HTML with xhtmlx data attributes. xhtmlx handles data fetching.</p>' },
-        { id: 'a3', title: 'Is it free?', content: '<p style="color:#475569;margin:0">Yes, MIT licensed.</p>' },
+        { id: 'a1', title: 'What is Teryx?', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">An enterprise widget framework with 45+ TypeScript components.</p>', open: true },
+        { id: 'a2', title: 'How does it work?', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">Widgets generate HTML with xhtmlx data attributes. xhtmlx handles data fetching.</p>' },
+        { id: 'a3', title: 'Is it free?', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">Yes, MIT licensed.</p>' },
       ]
     });
   });
@@ -1299,9 +1299,9 @@ ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
     Teryx.accordion(el, {
       multiple: true,
       items: [
-        { id: 'm1', title: 'Frontend', content: '<p style="color:#475569;margin:0">HTML, CSS, JavaScript, TypeScript, React, Vue, Angular.</p>', open: true },
-        { id: 'm2', title: 'Backend', content: '<p style="color:#475569;margin:0">Node.js, Go, Rust, Python, Java, .NET.</p>', open: true },
-        { id: 'm3', title: 'Database', content: '<p style="color:#475569;margin:0">PostgreSQL, MySQL, MongoDB, Redis, ScyllaDB.</p>' },
+        { id: 'm1', title: 'Frontend', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">HTML, CSS, JavaScript, TypeScript, React, Vue, Angular.</p>', open: true },
+        { id: 'm2', title: 'Backend', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">Node.js, Go, Rust, Python, Java, .NET.</p>', open: true },
+        { id: 'm3', title: 'Database', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">PostgreSQL, MySQL, MongoDB, Redis, ScyllaDB.</p>' },
       ]
     });
   });
@@ -1317,9 +1317,9 @@ ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
   ].join('\n'), function (el) {
     Teryx.accordion(el, {
       items: [
-        { id: 'i1', title: 'Settings', icon: 'settings', content: '<p style="color:#475569;margin:0">General application settings and configuration.</p>', open: true },
-        { id: 'i2', title: 'Users', icon: 'user', content: '<p style="color:#475569;margin:0">User management and access controls.</p>' },
-        { id: 'i3', title: 'Files', icon: 'folder', content: '<p style="color:#475569;margin:0">File management and storage settings.</p>' },
+        { id: 'i1', title: 'Settings', icon: 'settings', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">General application settings and configuration.</p>', open: true },
+        { id: 'i2', title: 'Users', icon: 'user', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">User management and access controls.</p>' },
+        { id: 'i3', title: 'Files', icon: 'folder', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">File management and storage settings.</p>' },
       ]
     });
   });
@@ -1336,8 +1336,8 @@ ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
     Teryx.accordion(el, {
       items: [
         { id: 'n1', title: 'Getting Started', content: '<div id="nested-acc"></div>', open: true },
-        { id: 'n2', title: 'API Reference', content: '<p style="color:#475569;margin:0">Full API documentation for all widgets.</p>' },
-        { id: 'n3', title: 'Changelog', content: '<p style="color:#475569;margin:0">Version history and release notes.</p>' },
+        { id: 'n2', title: 'API Reference', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">Full API documentation for all widgets.</p>' },
+        { id: 'n3', title: 'Changelog', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">Version history and release notes.</p>' },
       ]
     });
     var nestedEl = el.querySelector('#nested-acc');
@@ -1345,8 +1345,8 @@ ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
       Teryx.accordion(nestedEl, {
         bordered: false,
         items: [
-          { id: 'ns1', title: 'Installation', content: '<p style="color:#475569;margin:0">npm install teryx</p>', open: true },
-          { id: 'ns2', title: 'Quick Start', content: '<p style="color:#475569;margin:0">Import and use widgets in your project.</p>' },
+          { id: 'ns1', title: 'Installation', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">npm install teryx</p>', open: true },
+          { id: 'ns2', title: 'Quick Start', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">Import and use widgets in your project.</p>' },
         ]
       });
     }
@@ -1582,7 +1582,7 @@ ExplorerRegistry.add('Feedback', 'Modal', function (container) {
     'm.open();'
   ].join('\n'), function (el) {
     var resultEl = document.createElement('span');
-    resultEl.style.cssText = 'margin-left:0.75rem;font-size:0.8125rem;color:#64748b;';
+    resultEl.style.cssText = 'margin-left:0.75rem;font-size:0.8125rem;color:var(--tx-text-muted,#64748b);';
     var btn = document.createElement('button');
     btn.className = 'tx-btn tx-btn-warning';
     btn.textContent = 'Delete Item';
@@ -1625,7 +1625,7 @@ ExplorerRegistry.add('Feedback', 'MessageBox', function (container) {
     '});'
   ].join('\n'), function (el) {
     var resultEl = document.createElement('span');
-    resultEl.style.cssText = 'margin-left:0.75rem;font-size:0.8125rem;color:#64748b;';
+    resultEl.style.cssText = 'margin-left:0.75rem;font-size:0.8125rem;color:var(--tx-text-muted,#64748b);';
     var btn = document.createElement('button');
     btn.className = 'tx-btn tx-btn-warning';
     btn.textContent = 'Show Confirm';
@@ -3235,7 +3235,7 @@ ExplorerRegistry.add('Specialized', 'Calendar', function (container) {
     '// cal.setView("week"); cal.setDate("2026-04-01");'
   ].join('\n'), function (el) {
     var logBox = document.createElement('div');
-    logBox.style.cssText = 'margin-bottom:12px;padding:8px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;font-size:0.8125rem;color:#475569;min-height:32px;';
+    logBox.style.cssText = 'margin-bottom:12px;padding:8px 12px;background:var(--tx-bg,#f8fafc);border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;font-size:0.8125rem;color:var(--tx-text-secondary,#475569);min-height:32px;';
     logBox.textContent = 'Click an event or date to see the callback log here.';
     el.appendChild(logBox);
 
@@ -3298,7 +3298,7 @@ ExplorerRegistry.add('Layout', 'Card', function (container) {
   ].join('\n'), function (el) {
     Teryx.card(el, {
       title: 'Project Update',
-      content: '<p style="color:#475569;margin:0">The project is progressing well. All milestones are on track for the upcoming release.</p>',
+      content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">The project is progressing well. All milestones are on track for the upcoming release.</p>',
       collapsible: true,
       closable: true,
     });
@@ -3316,8 +3316,8 @@ ExplorerRegistry.add('Layout', 'Card', function (container) {
     Teryx.card(el, {
       title: 'Mountain Vista',
       image: 'https://picsum.photos/seed/teryx-card/1200/400',
-      content: '<p style="color:#475569;margin:0">A beautiful mountain landscape captured at sunrise with rolling fog over the peaks.</p>',
-      footer: '<small style="color:#94a3b8">Photo credit: Unsplash</small>',
+      content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">A beautiful mountain landscape captured at sunrise with rolling fog over the peaks.</p>',
+      footer: '<small style="color:var(--tx-text-muted,#94a3b8)">Photo credit: Unsplash</small>',
     });
   });
 
@@ -3335,7 +3335,7 @@ ExplorerRegistry.add('Layout', 'Card', function (container) {
   ].join('\n'), function (el) {
     Teryx.card(el, {
       title: 'Task Summary',
-      content: '<p style="color:#475569;margin:0">Review the quarterly report and approve the budget allocation for the next fiscal year.</p>',
+      content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">Review the quarterly report and approve the budget allocation for the next fiscal year.</p>',
       tools: [
         { icon: 'refresh', tooltip: 'Refresh' },
         { icon: 'settings', tooltip: 'Settings' },
@@ -3401,7 +3401,7 @@ ExplorerRegistry.add('Layout', 'Drawer', function (container) {
         var d = Teryx.drawer({
           title: pos.charAt(0).toUpperCase() + pos.slice(1) + ' Drawer',
           position: pos,
-          content: '<div style="padding:1rem"><p style="color:#475569;margin:0 0 1rem">This drawer slides in from the <strong>' + pos + '</strong> edge of the viewport.</p><p style="color:#94a3b8;margin:0">Click the backdrop or press Escape to close.</p></div>',
+          content: '<div style="padding:1rem"><p style="color:var(--tx-text-secondary,#475569);margin:0 0 1rem">This drawer slides in from the <strong>' + pos + '</strong> edge of the viewport.</p><p style="color:var(--tx-text-muted,#94a3b8);margin:0">Click the backdrop or press Escape to close.</p></div>',
         });
         d.open();
       });
@@ -3438,7 +3438,7 @@ ExplorerRegistry.add('Layout', 'Drawer', function (container) {
           title: s.label,
           position: 'right',
           size: s.size,
-          content: '<div style="padding:1rem"><p style="color:#475569;margin:0">This drawer has a width of <strong>' + s.size + '</strong>.</p></div>',
+          content: '<div style="padding:1rem"><p style="color:var(--tx-text-secondary,#475569);margin:0">This drawer has a width of <strong>' + s.size + '</strong>.</p></div>',
         });
         d.open();
       });
@@ -3459,13 +3459,13 @@ ExplorerRegistry.add('Layout', 'Splitter', function (container) {
   ].join('\n'), function (el) {
     var wrap = document.createElement('div');
     wrap.style.height = '200px';
-    wrap.style.border = '1px solid #e2e8f0';
+    wrap.style.border = '1px solid var(--tx-border,#e2e8f0)';
     wrap.style.borderRadius = '6px';
     wrap.style.overflow = 'hidden';
     var left = document.createElement('div');
-    left.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Sidebar</h4><p style="margin:0;color:#64748b;font-size:0.875rem">Drag the gutter to resize panels.</p></div>';
+    left.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:var(--tx-text,#334155)">Sidebar</h4><p style="margin:0;color:var(--tx-text-muted,#64748b);font-size:0.875rem">Drag the gutter to resize panels.</p></div>';
     var right = document.createElement('div');
-    right.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Main Content</h4><p style="margin:0;color:#64748b;font-size:0.875rem">This panel takes the remaining space.</p></div>';
+    right.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:var(--tx-text,#334155)">Main Content</h4><p style="margin:0;color:var(--tx-text-muted,#64748b);font-size:0.875rem">This panel takes the remaining space.</p></div>';
     wrap.appendChild(left);
     wrap.appendChild(right);
     el.appendChild(wrap);
@@ -3481,13 +3481,13 @@ ExplorerRegistry.add('Layout', 'Splitter', function (container) {
   ].join('\n'), function (el) {
     var wrap = document.createElement('div');
     wrap.style.height = '250px';
-    wrap.style.border = '1px solid #e2e8f0';
+    wrap.style.border = '1px solid var(--tx-border,#e2e8f0)';
     wrap.style.borderRadius = '6px';
     wrap.style.overflow = 'hidden';
     var top = document.createElement('div');
-    top.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Top Panel</h4><p style="margin:0;color:#64748b;font-size:0.875rem">Editor area</p></div>';
+    top.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:var(--tx-text,#334155)">Top Panel</h4><p style="margin:0;color:var(--tx-text-muted,#64748b);font-size:0.875rem">Editor area</p></div>';
     var bottom = document.createElement('div');
-    bottom.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Bottom Panel</h4><p style="margin:0;color:#64748b;font-size:0.875rem">Console output</p></div>';
+    bottom.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:var(--tx-text,#334155)">Bottom Panel</h4><p style="margin:0;color:var(--tx-text-muted,#64748b);font-size:0.875rem">Console output</p></div>';
     wrap.appendChild(top);
     wrap.appendChild(bottom);
     el.appendChild(wrap);
@@ -3505,16 +3505,16 @@ ExplorerRegistry.add('Layout', 'Splitter', function (container) {
   ].join('\n'), function (el) {
     var wrap = document.createElement('div');
     wrap.style.height = '280px';
-    wrap.style.border = '1px solid #e2e8f0';
+    wrap.style.border = '1px solid var(--tx-border,#e2e8f0)';
     wrap.style.borderRadius = '6px';
     wrap.style.overflow = 'hidden';
     var nav = document.createElement('div');
-    nav.innerHTML = '<div style="padding:1rem;background:#f8fafc;height:100%"><h4 style="margin:0 0 0.5rem;color:#334155">Nav</h4><p style="margin:0;color:#64748b;font-size:0.8125rem">File tree</p></div>';
+    nav.innerHTML = '<div style="padding:1rem;background:var(--tx-bg,#f8fafc);height:100%"><h4 style="margin:0 0 0.5rem;color:var(--tx-text,#334155)">Nav</h4><p style="margin:0;color:var(--tx-text-muted,#64748b);font-size:0.8125rem">File tree</p></div>';
     var rightWrap = document.createElement('div');
     var editor = document.createElement('div');
-    editor.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:#334155">Editor</h4><p style="margin:0;color:#64748b;font-size:0.8125rem">Code editing area</p></div>';
+    editor.innerHTML = '<div style="padding:1rem"><h4 style="margin:0 0 0.5rem;color:var(--tx-text,#334155)">Editor</h4><p style="margin:0;color:var(--tx-text-muted,#64748b);font-size:0.8125rem">Code editing area</p></div>';
     var terminal = document.createElement('div');
-    terminal.innerHTML = '<div style="padding:1rem;background:#1e293b;height:100%"><h4 style="margin:0 0 0.5rem;color:#e2e8f0">Terminal</h4><p style="margin:0;color:#94a3b8;font-size:0.8125rem;font-family:monospace">$ npm run build</p></div>';
+    terminal.innerHTML = '<div style="padding:1rem;background:#1e293b;height:100%"><h4 style="margin:0 0 0.5rem;color:#e2e8f0">Terminal</h4><p style="margin:0;color:var(--tx-text-muted,#94a3b8);font-size:0.8125rem;font-family:monospace">$ npm run build</p></div>';
     rightWrap.appendChild(editor);
     rightWrap.appendChild(terminal);
     wrap.appendChild(nav);
@@ -3662,7 +3662,7 @@ ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
     function showSkeleton() {
       Teryx.skeleton(el, { lines: 3 });
       setTimeout(function () {
-        el.innerHTML = '<div style="padding:0.5rem 0"><p style="margin:0 0 0.5rem"><strong>Profile loaded</strong></p><p style="margin:0 0 0.25rem;color:#64748b">Jane Doe — jane@example.com</p><p style="margin:0;color:#94a3b8;font-size:0.8125rem">Joined March 2024</p></div>';
+        el.innerHTML = '<div style="padding:0.5rem 0"><p style="margin:0 0 0.5rem"><strong>Profile loaded</strong></p><p style="margin:0 0 0.25rem;color:var(--tx-text-muted,#64748b)">Jane Doe — jane@example.com</p><p style="margin:0;color:var(--tx-text-muted,#94a3b8);font-size:0.8125rem">Joined March 2024</p></div>';
         var btn = document.createElement('button');
         btn.className = 'tx-btn tx-btn-sm';
         btn.textContent = 'Reload';
@@ -3676,23 +3676,23 @@ ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
 
   // 2. Card Skeleton (avatar + lines)
   ExplorerDemo(container, 'Card Skeleton', [
-    'Teryx.skeleton(el, { avatar: true, lines: 4 });'
+    'Teryx.skeleton(el, { avatar: true, lines: 4, animated: false });'
   ].join('\n'), function (el) {
-    Teryx.skeleton(el, { avatar: true, lines: 4 });
+    Teryx.skeleton(el, { avatar: true, lines: 4, animated: false });
   });
 
   // 3. Image + Text Skeleton
   ExplorerDemo(container, 'Image Skeleton', [
-    'Teryx.skeleton(el, { image: true, lines: 2, height: "120px" });'
+    'Teryx.skeleton(el, { image: true, lines: 2, height: "120px", animated: false });'
   ].join('\n'), function (el) {
-    Teryx.skeleton(el, { image: true, lines: 2, height: '120px' });
+    Teryx.skeleton(el, { image: true, lines: 2, height: '120px', animated: false });
   });
 
   // 4. Grid of Skeletons
   ExplorerDemo(container, 'Skeleton Grid', [
     '// Three skeleton cards in a row',
     'for (var i = 0; i < 3; i++) {',
-    '  Teryx.skeleton(col, { avatar: true, lines: 2 });',
+    '  Teryx.skeleton(col, { avatar: true, lines: 2, animated: false });',
     '}'
   ].join('\n'), function (el) {
     var grid = document.createElement('div');
@@ -3703,22 +3703,22 @@ ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
     for (var i = 0; i < 3; i++) {
       var col = document.createElement('div');
       grid.appendChild(col);
-      Teryx.skeleton(col, { avatar: true, lines: 2 });
+      Teryx.skeleton(col, { avatar: true, lines: 2, animated: false });
     }
   });
 
   // 5. Custom Width Skeleton
   ExplorerDemo(container, 'Custom Width Skeleton', [
-    'Teryx.skeleton(el, { lines: 2, width: "50%" });'
+    'Teryx.skeleton(el, { lines: 2, width: "50%", animated: false });'
   ].join('\n'), function (el) {
-    Teryx.skeleton(el, { lines: 2, width: '50%' });
+    Teryx.skeleton(el, { lines: 2, width: '50%', animated: false });
   });
 
-  // 6. No-Animation Skeleton
-  ExplorerDemo(container, 'Static Skeleton (no animation)', [
-    'Teryx.skeleton(el, { lines: 3, animated: false });'
+  // 6. Animated Skeleton
+  ExplorerDemo(container, 'Animated Skeleton', [
+    'Teryx.skeleton(el, { lines: 3, animated: true });'
   ].join('\n'), function (el) {
-    Teryx.skeleton(el, { lines: 3, animated: false });
+    Teryx.skeleton(el, { lines: 3, animated: true });
   });
 });
 
@@ -3820,9 +3820,9 @@ ExplorerRegistry.add('Specialized', 'Kanban Board', function (container) {
     '});'
   ].join('\n'), function (el) {
     Teryx.kanban(el, {
-      cardTemplate: '<div class="custom-tpl" data-card-id="{{id}}" style="padding:0.75rem;margin-bottom:0.5rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer">' +
+      cardTemplate: '<div class="custom-tpl" data-card-id="{{id}}" style="padding:0.75rem;margin-bottom:0.5rem;background:var(--tx-bg,#f8fafc);border:1px solid var(--tx-border,#e2e8f0);border-radius:6px;cursor:pointer">' +
         '<div style="font-weight:600;margin-bottom:0.25rem">{{title}}</div>' +
-        '<div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#64748b">' +
+        '<div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--tx-text-muted,#64748b)">' +
         '<span>{{assignee}}</span>' +
         '<span style="background:#dbeafe;color:#2563eb;padding:0 0.375rem;border-radius:4px">{{priority}}</span>' +
         '</div></div>',
@@ -4062,7 +4062,7 @@ ExplorerRegistry.add('Utilities', 'Context Menu', function (container) {
   ].join('\n'), function (el) {
     var area = document.createElement('div');
     area.className = 'tx-card';
-    area.style.cssText = 'padding:2rem;text-align:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;color:#64748b;cursor:context-menu;user-select:none;';
+    area.style.cssText = 'padding:2rem;text-align:center;background:var(--tx-bg,#f8fafc);border:2px dashed var(--tx-border-strong,#cbd5e1);border-radius:8px;color:var(--tx-text-muted,#64748b);cursor:context-menu;user-select:none;';
     area.textContent = 'Right-click here for context menu';
     area.setAttribute('data-testid', 'ctx-basic-area');
     el.appendChild(area);
@@ -4091,7 +4091,7 @@ ExplorerRegistry.add('Utilities', 'Context Menu', function (container) {
   ].join('\n'), function (el) {
     var area = document.createElement('div');
     area.className = 'tx-card';
-    area.style.cssText = 'padding:2rem;text-align:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;color:#64748b;cursor:context-menu;user-select:none;';
+    area.style.cssText = 'padding:2rem;text-align:center;background:var(--tx-bg,#f8fafc);border:2px dashed var(--tx-border-strong,#cbd5e1);border-radius:8px;color:var(--tx-text-muted,#64748b);cursor:context-menu;user-select:none;';
     area.textContent = 'Right-click here for icon menu';
     area.setAttribute('data-testid', 'ctx-icon-area');
     el.appendChild(area);
@@ -4121,7 +4121,7 @@ ExplorerRegistry.add('Utilities', 'Context Menu', function (container) {
   ].join('\n'), function (el) {
     var area = document.createElement('div');
     area.className = 'tx-card';
-    area.style.cssText = 'padding:2rem;text-align:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;color:#64748b;cursor:context-menu;user-select:none;';
+    area.style.cssText = 'padding:2rem;text-align:center;background:var(--tx-bg,#f8fafc);border:2px dashed var(--tx-border-strong,#cbd5e1);border-radius:8px;color:var(--tx-text-muted,#64748b);cursor:context-menu;user-select:none;';
     area.textContent = 'Right-click here for nested menu';
     area.setAttribute('data-testid', 'ctx-nested-area');
     el.appendChild(area);
@@ -4156,7 +4156,7 @@ ExplorerRegistry.add('Utilities', 'Context Menu', function (container) {
   ].join('\n'), function (el) {
     var area = document.createElement('div');
     area.className = 'tx-card';
-    area.style.cssText = 'padding:2rem;text-align:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:8px;color:#64748b;cursor:context-menu;user-select:none;';
+    area.style.cssText = 'padding:2rem;text-align:center;background:var(--tx-bg,#f8fafc);border:2px dashed var(--tx-border-strong,#cbd5e1);border-radius:8px;color:var(--tx-text-muted,#64748b);cursor:context-menu;user-select:none;';
     area.textContent = 'Right-click here (some items disabled)';
     area.setAttribute('data-testid', 'ctx-disabled-area');
     el.appendChild(area);
@@ -4533,7 +4533,7 @@ ExplorerRegistry.add('Utilities', 'Drag & Drop', function (container) {
 
     var log = document.createElement('div');
     log.className = 'tx-dd-accept-log';
-    log.style.cssText = 'margin-top:0.75rem;font-size:0.8125rem;color:#475569;min-height:1.25rem;';
+    log.style.cssText = 'margin-top:0.75rem;font-size:0.8125rem;color:var(--tx-text-secondary,#475569);min-height:1.25rem;';
 
     Teryx.droppable(zone, {
       accept: function (data) { return data && data.type === 'valid'; },
@@ -4585,7 +4585,7 @@ ExplorerRegistry.add('Utilities', 'Export', function (container) {
     el.appendChild(btn);
 
     var desc = document.createElement('p');
-    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:#64748b;';
+    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:var(--tx-text-muted,#64748b);';
     desc.textContent = 'Downloads a comma-separated values file with headers.';
     el.appendChild(desc);
   });
@@ -4602,7 +4602,7 @@ ExplorerRegistry.add('Utilities', 'Export', function (container) {
     el.appendChild(btn);
 
     var desc = document.createElement('p');
-    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:#64748b;';
+    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:var(--tx-text-muted,#64748b);';
     desc.textContent = 'Downloads an Excel XML (.xls) file with styled header row.';
     el.appendChild(desc);
   });
@@ -4619,7 +4619,7 @@ ExplorerRegistry.add('Utilities', 'Export', function (container) {
     el.appendChild(btn);
 
     var desc = document.createElement('p');
-    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:#64748b;';
+    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:var(--tx-text-muted,#64748b);';
     desc.textContent = 'Downloads a pretty-printed JSON file.';
     el.appendChild(desc);
   });
@@ -4636,7 +4636,7 @@ ExplorerRegistry.add('Utilities', 'Export', function (container) {
     el.appendChild(btn);
 
     var desc = document.createElement('p');
-    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:#64748b;';
+    desc.style.cssText = 'margin:0.75rem 0 0;font-size:0.8125rem;color:var(--tx-text-muted,#64748b);';
     desc.textContent = 'Downloads a styled HTML table.';
     el.appendChild(desc);
   });
@@ -4679,7 +4679,7 @@ ExplorerRegistry.add('Utilities', 'Export', function (container) {
     var headerRow = document.createElement('tr');
     sampleCols.forEach(function (col) {
       var th = document.createElement('th');
-      th.style.cssText = 'text-align:left;padding:0.5rem 0.75rem;border-bottom:2px solid #e2e8f0;color:#475569;font-weight:600;';
+      th.style.cssText = 'text-align:left;padding:0.5rem 0.75rem;border-bottom:2px solid var(--tx-border,#e2e8f0);color:var(--tx-text-secondary,#475569);font-weight:600;';
       th.textContent = col.label;
       headerRow.appendChild(th);
     });
