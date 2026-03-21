@@ -129,12 +129,12 @@ test.describe('Explorer — Modal Demos', () => {
   test('basic modal demo has open button', async ({ page }) => {
     const demo = page.locator('.ex-demo').nth(0);
     await expect(demo.locator('.ex-demo-header h3')).toHaveText('Basic Modal');
-    await expect(demo.locator('button')).toBeVisible();
+    await expect(demo.locator('.ex-demo-body button')).toBeVisible();
   });
 
   test('clicking basic modal button opens a modal', async ({ page }) => {
     const demo = page.locator('.ex-demo').nth(0);
-    await demo.locator('button').click();
+    await demo.locator('.ex-demo-body button').click();
     await page.waitForTimeout(200);
 
     await expect(page.locator('.tx-modal-active')).toBeVisible();

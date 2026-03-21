@@ -51,6 +51,10 @@
     .ex-demo-source pre { margin: 0; padding: 1rem; font-size: 0.75rem; overflow-x: auto; color: var(--tx-text, #334155); line-height: 1.6; }
     .ex-demo-source-toggle { padding: 0.5rem 1rem; font-size: 0.75rem; color: var(--tx-text-muted, #64748b); cursor: pointer; border-top: 1px solid var(--tx-border, #e2e8f0); background: none; border-left: none; border-right: none; border-bottom: none; width: 100%; text-align: left; }
     .ex-demo-source-toggle:hover { color: var(--tx-text, #0f172a); background: var(--tx-bg-secondary, #f1f5f9); }
+    .ex-demo-source-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--tx-border, #e2e8f0); }
+    .ex-demo-source-tab { padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 500; color: var(--tx-text-muted, #64748b); background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .ex-demo-source-tab:hover { color: var(--tx-text, #0f172a); }
+    .ex-demo-source-tab.active { color: var(--tx-primary, #3b82f6); border-bottom-color: var(--tx-primary, #3b82f6); }
 
     /* ── Welcome page ── */
     .ex-welcome { max-width: 640px; margin: 3rem auto; text-align: center; }
@@ -218,14 +222,41 @@
   window.addEventListener('hashchange', onHashChange);
 
   // ── Demo helper: wrap a demo with title + optional source ──
+  // source can be a string (JS only) or { js: '...', html: '...' } for both tabs
   window.ExplorerDemo = function (container, title, source, renderFn) {
+    var jsSource = typeof source === 'object' ? source.js : source;
+    var htmlSource = typeof source === 'object' ? source.html : null;
     var wrapper = document.createElement('div');
     wrapper.className = 'ex-demo';
+    var sourceHtml = '';
+    if (jsSource || htmlSource) {
+      sourceHtml = '<div class="ex-demo-source" style="display:' + (showSource ? '' : 'none') + '">';
+      if (jsSource && htmlSource) {
+        sourceHtml += '<div class="ex-demo-source-tabs">' +
+          '<button class="ex-demo-source-tab active" data-lang="js">JavaScript</button>' +
+          '<button class="ex-demo-source-tab" data-lang="html">Declarative HTML</button>' +
+          '</div>';
+        sourceHtml += '<pre class="ex-demo-source-panel" data-lang="js">' + escHtml(jsSource) + '</pre>';
+        sourceHtml += '<pre class="ex-demo-source-panel" data-lang="html" style="display:none">' + escHtml(htmlSource) + '</pre>';
+      } else {
+        sourceHtml += '<pre>' + escHtml(jsSource || htmlSource) + '</pre>';
+      }
+      sourceHtml += '</div>';
+    }
     wrapper.innerHTML =
       '<div class="ex-demo-header"><h3>' + escHtml(title) + '</h3></div>' +
-      '<div class="ex-demo-body"></div>' +
-      (source ? '<div class="ex-demo-source" style="display:' + (showSource ? '' : 'none') + '"><pre>' + escHtml(source) + '</pre></div>' : '');
+      '<div class="ex-demo-body"></div>' + sourceHtml;
     container.appendChild(wrapper);
+
+    // Source tab switching
+    wrapper.querySelectorAll('.ex-demo-source-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var lang = tab.getAttribute('data-lang');
+        wrapper.querySelectorAll('.ex-demo-source-tab').forEach(function (t) { t.classList.toggle('active', t === tab); });
+        wrapper.querySelectorAll('.ex-demo-source-panel').forEach(function (p) { p.style.display = p.getAttribute('data-lang') === lang ? '' : 'none'; });
+      });
+    });
+
     var body = wrapper.querySelector('.ex-demo-body');
     renderFn(body);
     return body;
@@ -556,7 +587,7 @@ ExplorerRegistry.add('Data Display', 'Grid', function (container) {
 // ── Tree ──
 ExplorerRegistry.add('Data Display', 'Tree', function (container) {
   // 1. Basic Tree
-  ExplorerDemo(container, 'Basic Tree', [
+  ExplorerDemo(container, 'Basic Tree', { js: [
     'Teryx.tree(el, {',
     '  nodes: [',
     '    { id: "1", text: "Documents", children: [',
@@ -567,7 +598,7 @@ ExplorerRegistry.add('Data Display', 'Tree', function (container) {
     '    { id: "2", text: "Images" },',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="tree">\n  <tx-node id="1" text="Documents">\n    <tx-node id="1a" text="Reports">\n      <tx-node id="1a1" text="Q1 Report.pdf"></tx-node>\n    </tx-node>\n  </tx-node>\n  <tx-node id="2" text="Images"></tx-node>\n</div>' }, function (el) {
     Teryx.tree(el, {
       nodes: [
         { id: '1', text: 'Documents', children: [
@@ -926,7 +957,7 @@ ExplorerRegistry.add('Data Display', 'PropertyGrid', function (container) {
 // ── Descriptions ──
 ExplorerRegistry.add('Data Display', 'Descriptions', function (container) {
   // 1. Basic Descriptions
-  ExplorerDemo(container, 'Basic Descriptions', [
+  ExplorerDemo(container, 'Basic Descriptions', { js: [
     'Teryx.descriptions(el, {',
     '  title: "User Info",',
     '  columns: 2,',
@@ -935,7 +966,7 @@ ExplorerRegistry.add('Data Display', 'Descriptions', function (container) {
     '    { label: "Role", value: "Engineer" },',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="descriptions"\n     title="User Info" columns="2">\n  <tx-item label="Name" value="Alice Johnson"></tx-item>\n  <tx-item label="Role" value="Engineer"></tx-item>\n  <tx-item label="Department"\n           value="Engineering"></tx-item>\n  <tx-item label="Email"\n           value="alice@example.com"></tx-item>\n</div>' }, function (el) {
     Teryx.descriptions(el, {
       title: 'User Info',
       columns: 2,
@@ -1155,7 +1186,7 @@ ExplorerRegistry.add('Data Display', 'Pivot Grid', function (container) {
 // ── Tabs ──
 ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
   // 1. Basic Tabs (default variant)
-  ExplorerDemo(container, 'Basic Tabs', [
+  ExplorerDemo(container, 'Basic Tabs', { js: [
     'Teryx.tabs(el, {',
     '  items: [',
     '    { id: "t1", title: "Overview", content: "..." },',
@@ -1163,7 +1194,7 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
     '    { id: "t3", title: "Activity", content: "..." },',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="tabs">\n  <tx-tab id="t1" title="Overview">\n    Tab content for the overview panel.\n  </tx-tab>\n  <tx-tab id="t2" title="Settings">\n    Configuration and preferences.\n  </tx-tab>\n  <tx-tab id="t3" title="Activity">\n    Recent activity and logs.\n  </tx-tab>\n</div>' }, function (el) {
     Teryx.tabs(el, {
       items: [
         { id: 'basic1', title: 'Overview', content: '<p style="padding:0.5rem 0;color:var(--tx-text-secondary,#475569)">Tab content for the overview panel.</p>' },
@@ -1322,14 +1353,14 @@ ExplorerRegistry.add('Navigation', 'Tabs', function (container) {
 // ── Accordion ──
 ExplorerRegistry.add('Navigation', 'Accordion', function (container) {
   // 1. Basic Accordion
-  ExplorerDemo(container, 'Basic Accordion', [
+  ExplorerDemo(container, 'Basic Accordion', { js: [
     'Teryx.accordion(el, {',
     '  items: [',
     '    { id: "a1", title: "Section 1", content: "...", open: true },',
     '    { id: "a2", title: "Section 2", content: "..." },',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="accordion">\n  <tx-item id="a1" title="What is Teryx?" open>\n    An enterprise widget framework with 45+ components.\n  </tx-item>\n  <tx-item id="a2" title="How does it work?">\n    Widgets generate HTML with xhtmlx data attributes.\n  </tx-item>\n  <tx-item id="a3" title="Is it free?">\n    Yes, MIT licensed.\n  </tx-item>\n</div>' }, function (el) {
     Teryx.accordion(el, {
       items: [
         { id: 'a1', title: 'What is Teryx?', content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">An enterprise widget framework with 45+ TypeScript components.</p>', open: true },
@@ -1547,10 +1578,10 @@ ExplorerRegistry.add('Feedback', 'Alert', function (container) {
 // ── Modal ──
 ExplorerRegistry.add('Feedback', 'Modal', function (container) {
   // 1. Basic Modal
-  ExplorerDemo(container, 'Basic Modal', [
+  ExplorerDemo(container, 'Basic Modal', { js: [
     'var m = Teryx.modal({ title: "Basic Modal", content: "Hello!" });',
     'm.open();'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<!-- Trigger -->\n<button onclick="Teryx.modal({\n  title: \'Welcome\',\n  content: \'<p>Hello from Teryx!</p>\',\n  size: \'md\'\n})">Open Modal</button>\n\n<!-- Or declarative: -->\n<div data-tx-widget="modal"\n     title="Welcome" size="md">\n  <p>Hello from Teryx!</p>\n</div>' }, function (el) {
     var btn = document.createElement('button');
     btn.className = 'tx-btn tx-btn-primary';
     btn.textContent = 'Open Basic Modal';
@@ -1827,9 +1858,9 @@ ExplorerRegistry.add('Feedback', 'Progress', function (container) {
 
 // ── Rating ──
 ExplorerRegistry.add('Data Entry', 'Rating', function (container) {
-  ExplorerDemo(container, 'Interactive Rating', [
+  ExplorerDemo(container, 'Interactive Rating', { js: [
     'Teryx.rating(el, { value: 3, max: 5 });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="rating"\n     value="3" max="5" size="md">\n</div>' }, function (el) {
     Teryx.rating(el, { value: 3, max: 5, size: 'md' });
   });
 
@@ -1860,9 +1891,9 @@ ExplorerRegistry.add('Data Entry', 'Rating', function (container) {
 
 // ── Slider ──
 ExplorerRegistry.add('Data Entry', 'Slider', function (container) {
-  ExplorerDemo(container, 'Basic Slider', [
+  ExplorerDemo(container, 'Basic Slider', { js: [
     'Teryx.slider(el, { value: 40, min: 0, max: 100 });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="slider"\n     value="40" min="0" max="100">\n</div>' }, function (el) {
     Teryx.slider(el, { value: 40, min: 0, max: 100 });
   });
 
@@ -1918,12 +1949,12 @@ ExplorerRegistry.add('Data Entry', 'Slider', function (container) {
 
 // ── Tag Input ──
 ExplorerRegistry.add('Data Entry', 'Tag Input', function (container) {
-  ExplorerDemo(container, 'Basic Tag Input', [
+  ExplorerDemo(container, 'Basic Tag Input', { js: [
     'Teryx.tagInput(el, {',
     '  value: ["JavaScript", "TypeScript"],',
     '  placeholder: "Add a tag..."',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="tagInput"\n     value=\'["JavaScript","TypeScript"]\'\n     placeholder="Add a tag...">\n</div>' }, function (el) {
     Teryx.tagInput(el, {
       value: ['JavaScript', 'TypeScript'],
       placeholder: 'Add a tag...'
@@ -1959,7 +1990,7 @@ ExplorerRegistry.add('Data Entry', 'Tag Input', function (container) {
 
 // ── Segmented ──
 ExplorerRegistry.add('Data Entry', 'Segmented', function (container) {
-  ExplorerDemo(container, 'Basic Segmented', [
+  ExplorerDemo(container, 'Basic Segmented', { js: [
     'Teryx.segmented(el, {',
     '  items: [',
     '    { label: "Day", value: "day" },',
@@ -1967,7 +1998,7 @@ ExplorerRegistry.add('Data Entry', 'Segmented', function (container) {
     '    { label: "Month", value: "month" }',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="segmented">\n  <tx-segment label="Day" value="day"></tx-segment>\n  <tx-segment label="Week" value="week"></tx-segment>\n  <tx-segment label="Month" value="month"></tx-segment>\n</div>' }, function (el) {
     Teryx.segmented(el, {
       items: [
         { label: 'Day', value: 'day' },
@@ -2221,12 +2252,12 @@ ExplorerRegistry.add('Data Entry', 'Form', function (container) {
 // ── Date Picker ──
 ExplorerRegistry.add('Data Entry', 'Date Picker', function (container) {
   // 1. Basic Date Picker
-  ExplorerDemo(container, 'Basic Date Picker', [
+  ExplorerDemo(container, 'Basic Date Picker', { js: [
     'Teryx.datePicker(el, {',
     '  value: "2026-03-18",',
     '  placeholder: "Pick a date"',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="datePicker"\n     value="2026-03-18"\n     placeholder="Pick a date">\n</div>' }, function (el) {
     Teryx.datePicker(el, {
       value: '2026-03-18',
       placeholder: 'Pick a date'
@@ -2284,11 +2315,11 @@ ExplorerRegistry.add('Data Entry', 'Date Picker', function (container) {
 // ── Color Picker ──
 ExplorerRegistry.add('Data Entry', 'Color Picker', function (container) {
   // 1. Basic Color Picker
-  ExplorerDemo(container, 'Basic Color Picker', [
+  ExplorerDemo(container, 'Basic Color Picker', { js: [
     'Teryx.colorPicker(el, {',
     '  value: "#3b82f6"',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="colorPicker"\n     value="#3b82f6">\n</div>' }, function (el) {
     Teryx.colorPicker(el, {
       value: '#3b82f6'
     });
@@ -2472,7 +2503,7 @@ ExplorerRegistry.add('Data Entry', 'File Upload', function (container) {
 ExplorerRegistry.add('Data Entry', 'Transfer List', function (container) {
 
   // 1. Basic dual-list
-  ExplorerDemo(container, 'Basic Transfer List', [
+  ExplorerDemo(container, 'Basic Transfer List', { js: [
     'Teryx.transferList(el, {',
     '  source: [',
     '    { label: "Apple", value: "apple" },',
@@ -2484,7 +2515,7 @@ ExplorerRegistry.add('Data Entry', 'Transfer List', function (container) {
     '  target: ["cherry"],',
     '  titles: ["Available", "Selected"]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="transferList"\n     target=\'["cherry"]\'\n     titles=\'["Available","Selected"]\'>\n  <tx-item label="Apple" value="apple"></tx-item>\n  <tx-item label="Banana" value="banana"></tx-item>\n  <tx-item label="Cherry" value="cherry"></tx-item>\n  <tx-item label="Date" value="date"></tx-item>\n</div>' }, function (el) {
     Teryx.transferList(el, {
       source: [
         { label: 'Apple', value: 'apple' },
@@ -2600,7 +2631,7 @@ ExplorerRegistry.add('Data Entry', 'Transfer List', function (container) {
 // ── Steps ──
 ExplorerRegistry.add('Navigation', 'Steps', function (container) {
   // 1. Horizontal Steps
-  ExplorerDemo(container, 'Horizontal Steps', [
+  ExplorerDemo(container, 'Horizontal Steps', { js: [
     'Teryx.steps(el, {',
     '  direction: "horizontal",',
     '  clickable: true,',
@@ -2611,7 +2642,7 @@ ExplorerRegistry.add('Navigation', 'Steps', function (container) {
     '    { title: "Review", description: "Review and submit" },',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="steps" direction="horizontal"\n     clickable current="1">\n  <tx-step title="Account"\n           description="Create your account"></tx-step>\n  <tx-step title="Profile"\n           description="Set up your profile"></tx-step>\n  <tx-step title="Review"\n           description="Review and submit"></tx-step>\n</div>' }, function (el) {
     Teryx.steps(el, {
       direction: 'horizontal',
       clickable: true,
@@ -2681,7 +2712,7 @@ ExplorerRegistry.add('Navigation', 'Steps', function (container) {
 // ── Sidebar ──
 ExplorerRegistry.add('Navigation', 'Sidebar', function (container) {
   // 1. Collapsible Sidebar
-  ExplorerDemo(container, 'Collapsible Sidebar', [
+  ExplorerDemo(container, 'Collapsible Sidebar', { js: [
     'Teryx.sidebar(el, {',
     '  brand: "MyApp",',
     '  collapsible: true,',
@@ -2692,7 +2723,7 @@ ExplorerRegistry.add('Navigation', 'Sidebar', function (container) {
     '    { label: "Settings", icon: "settings", href: "#" },',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="sidebar" collapsible>\n  <tx-nav-item icon="home" label="Home"\n               active></tx-nav-item>\n  <tx-nav-item icon="settings"\n               label="Settings"></tx-nav-item>\n  <tx-nav-item icon="user"\n               label="Profile"></tx-nav-item>\n</div>' }, function (el) {
     el.style.position = 'relative';
     el.style.height = '300px';
     el.style.overflow = 'hidden';
@@ -2817,14 +2848,14 @@ ExplorerRegistry.add('Navigation', 'Navbar', function (container) {
 // ── Pagination ──
 ExplorerRegistry.add('Navigation', 'Pagination', function (container) {
   // 1. Default Pagination
-  ExplorerDemo(container, 'Default Pagination', [
+  ExplorerDemo(container, 'Default Pagination', { js: [
     'Teryx.pagination(el, {',
     '  total: 200,',
     '  current: 1,',
     '  pageSize: 10,',
     '  onChange: function (page, size) { console.log(page, size); }',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="pagination"\n     total="200" current="1"\n     page-size="10">\n</div>' }, function (el) {
     Teryx.pagination(el, {
       total: 200,
       current: 1,
@@ -3134,7 +3165,7 @@ ExplorerRegistry.add('Specialized', 'Charts', function (container) {
 ExplorerRegistry.add('Specialized', 'Timeline', function (container) {
 
   // 1. Basic Timeline
-  ExplorerDemo(container, 'Basic Timeline', [
+  ExplorerDemo(container, 'Basic Timeline', { js: [
     'Teryx.timeline(el, {',
     '  items: [',
     '    { title: "v0.1.0", content: "Initial release", time: "Jan 2026", status: "completed" },',
@@ -3143,7 +3174,7 @@ ExplorerRegistry.add('Specialized', 'Timeline', function (container) {
     '    { title: "v0.4.0", content: "Theming overhaul", time: "Apr 2026", status: "pending" }',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="timeline">\n  <tx-item title="Project Started"\n           time="Jan 2024"\n           color="#3b82f6">\n    Initial planning and setup.\n  </tx-item>\n  <tx-item title="Beta Launch"\n           time="Mar 2024"\n           color="#22c55e">\n    Public beta released.\n  </tx-item>\n</div>' }, function (el) {
     Teryx.timeline(el, {
       items: [
         { title: 'v0.1.0', content: 'Initial release with core widgets', time: 'Jan 2026', status: 'completed' },
@@ -3342,14 +3373,14 @@ ExplorerRegistry.add('Specialized', 'Calendar', function (container) {
 ExplorerRegistry.add('Layout', 'Card', function (container) {
 
   // 1. Basic Card
-  ExplorerDemo(container, 'Basic Card', [
+  ExplorerDemo(container, 'Basic Card', { js: [
     'Teryx.card(el, {',
     '  title: "Project Update",',
     '  content: "<p>The project is progressing well...</p>",',
     '  collapsible: true,',
     '  closable: true',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="card"\n     title="Project Update"\n     collapsible closable>\n  <p>The project is progressing well...</p>\n</div>' }, function (el) {
     Teryx.card(el, {
       title: 'Project Update',
       content: '<p style="color:var(--tx-text-secondary,#475569);margin:0">The project is progressing well. All milestones are on track for the upcoming release.</p>',
@@ -3583,14 +3614,14 @@ ExplorerRegistry.add('Layout', 'Splitter', function (container) {
 ExplorerRegistry.add('Layout', 'Carousel', function (container) {
 
   // 1. Basic Carousel
-  ExplorerDemo(container, 'Basic Carousel', [
+  ExplorerDemo(container, 'Basic Carousel', { js: [
     'Teryx.carousel(el, {',
     '  slides: [',
     '    { title: "Slide 1", content: "..." },',
     '    { title: "Slide 2", content: "..." },',
     '  ]',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="carousel"\n     show-arrows show-indicators>\n  <tx-slide>\n    <div>Slide 1 content</div>\n  </tx-slide>\n  <tx-slide>\n    <div>Slide 2 content</div>\n  </tx-slide>\n</div>' }, function (el) {
     var wrap = document.createElement('div');
     wrap.style.maxWidth = '600px';
     el.appendChild(wrap);
@@ -3709,10 +3740,10 @@ ExplorerRegistry.add('Layout', 'Lightbox', function (container) {
 ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
 
   // 1. Loading → Content Transition
-  ExplorerDemo(container, 'Loading Transition (click to reload)', [
+  ExplorerDemo(container, 'Loading Transition (click to reload)', { js: [
     'Teryx.skeleton(el, { lines: 3 });',
     '// Replace with content after load:'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="skeleton"\n     lines="3" animated>\n</div>' }, function (el) {
     function showSkeleton() {
       Teryx.skeleton(el, { lines: 3 });
       setTimeout(function () {
