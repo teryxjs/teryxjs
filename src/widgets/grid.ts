@@ -219,11 +219,7 @@ function renderToolbarItem(item: ToolbarItem, _id: string): string {
 // ----------------------------------------------------------
 // Table template rendering
 // ----------------------------------------------------------
-function renderStaticTable(
-  cols: GridColumn[],
-  data: Record<string, unknown>[],
-  options: GridOptions,
-): string {
+function renderStaticTable(cols: GridColumn[], data: Record<string, unknown>[], options: GridOptions): string {
   let html = `<table class="tx-grid-table" style="width:100%;border-collapse:collapse">`;
   html += `<thead><tr>`;
   for (const col of cols) {
