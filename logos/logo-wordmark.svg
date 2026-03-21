@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80" fill="none">
+  <!-- Teryx wordmark: icon + text (light background) -->
+  <defs>
+    <linearGradient id="wm-hex" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <!-- Hexagon icon (scaled to 64x64 area) -->
+  <g transform="translate(8,8) scale(0.125)">
+    <polygon points="256,112 344,160 344,256 256,304 168,256 168,160" fill="url(#wm-hex)"/>
+    <polygon points="344,64 408,96 408,160 344,192 280,160 280,96" fill="#60a5fa" opacity="0.7"/>
+    <polygon points="344,256 408,288 408,352 344,384 280,352 280,288" fill="#60a5fa" opacity="0.5"/>
+    <polygon points="168,256 232,288 232,352 168,384 104,352 104,288" fill="#60a5fa" opacity="0.6"/>
+    <polygon points="168,64 232,96 232,160 168,192 104,160 104,96" fill="#60a5fa" opacity="0.4"/>
+    <polygon points="256,304 320,336 320,400 256,432 192,400 192,336" fill="#60a5fa" opacity="0.55"/>
+    <rect x="216" y="164" width="80" height="18" rx="3" fill="white"/>
+    <rect x="244" y="182" width="24" height="68" rx="3" fill="white"/>
+  </g>
+  <!-- Text -->
+  <text x="84" y="54" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" font-weight="800" font-size="42" fill="#0f172a" letter-spacing="-1">Teryx</text>
+</svg>
