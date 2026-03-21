@@ -14,6 +14,8 @@ app.use('/showcase', express.static(path.join(__dirname, 'showcase')));
 // Serve site layout files (shared nav/footer/dark mode)
 app.use('/site-layout.css', express.static(path.join(__dirname, '..', 'pages', 'site-layout.css')));
 app.use('/site-layout.js', express.static(path.join(__dirname, '..', 'pages', 'site-layout.js')));
+app.use('/favicon.svg', express.static(path.join(__dirname, '..', 'logos', 'favicon.svg')));
+app.use('/favicon.ico', express.static(path.join(__dirname, '..', 'logos', 'favicon.ico')));
 
 // Serve pages directory (homepage, explorer, docs, blog, widgets)
 app.use('/explorer', express.static(path.join(__dirname, '..', 'pages', 'explorer')));

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Teryx logo: small dark variant -->
+  <defs>
+    <linearGradient id="hmd" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <polygon points="32,14 43,20 43,32 32,38 21,32 21,20" fill="url(#hmd)"/>
+  <polygon points="43,8 51,12 51,20 43,24 35,20 35,12" fill="#93c5fd" opacity="0.7"/>
+  <polygon points="43,32 51,36 51,44 43,48 35,44 35,36" fill="#93c5fd" opacity="0.5"/>
+  <polygon points="21,32 29,36 29,44 21,48 13,44 13,36" fill="#93c5fd" opacity="0.6"/>
+  <polygon points="21,8 29,12 29,20 21,24 13,20 13,12" fill="#93c5fd" opacity="0.4"/>
+  <polygon points="32,38 40,42 40,50 32,54 24,50 24,42" fill="#93c5fd" opacity="0.55"/>
+  <rect x="27" y="20.5" width="10" height="2.5" rx="0.5" fill="white"/>
+  <rect x="30.5" y="23" width="3" height="8.5" rx="0.5" fill="white"/>
+</svg>
