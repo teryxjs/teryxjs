@@ -104,7 +104,10 @@
     var brand = document.createElement('a');
     brand.className = 'site-nav-brand';
     brand.href = base || './';
-    brand.textContent = 'Teryx';
+    brand.innerHTML =
+      '<img src="' +
+      base +
+      'favicon.svg" alt="" width="24" height="24" style="vertical-align:-5px;margin-right:6px">Teryx';
     inner.appendChild(brand);
 
     // Desktop links

@@ -41,6 +41,8 @@ jobs:
           cp dist/index.global.js _site/teryx.js
           cp dist/teryx.css _site/teryx.css
           cp node_modules/xhtmlx/xhtmlx.js _site/xhtmlx.js
+          cp logos/favicon.svg _site/favicon.svg
+          cp logos/favicon.ico _site/favicon.ico
           cp -r pages/docs _site/docs
           cp -r pages/explorer _site/explorer
           cp -r pages/widgets _site/widgets
