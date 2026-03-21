@@ -40,27 +40,35 @@ export function grid(target: string | HTMLElement, options: GridOptions): GridIn
 
   html += `<div class="tx-grid-body"${options.maxHeight ? ` style="max-height:${esc(options.maxHeight)};overflow:auto"` : ''}>`;
   html += `<div id="${esc(id)}-data"`;
-  html += ` xh-get="${esc(options.source)}"`;
-  html += ` xh-trigger="${triggerParts.join(', ')}"`;
-  html += ` xh-indicator="#${esc(id)}-loading"`;
+  if (options.source) {
+    html += ` xh-get="${esc(options.source)}"`;
+    html += ` xh-trigger="${triggerParts.join(', ')}"`;
+    html += ` xh-indicator="#${esc(id)}-loading"`;
+  }
   if (options.groupBy) {
     html += ` data-group-by="${esc(options.groupBy)}"`;
   }
   html += `>`;
 
-  // Inline xhtmlx template
-  html += `<template>`;
-  if (hasLockedCols) {
-    html += renderLockedTableTemplate(visibleCols, options, id, rowsField, totalField, pageSize);
-  } else {
-    html += renderTableTemplate(visibleCols, options, id, rowsField, totalField, pageSize);
-  }
-  html += `</template>`;
+  if (options.source) {
+    // Inline xhtmlx template (for server-driven data)
+    html += `<template>`;
+    if (hasLockedCols) {
+      html += renderLockedTableTemplate(visibleCols, options, id, rowsField, totalField, pageSize);
+    } else {
+      html += renderTableTemplate(visibleCols, options, id, rowsField, totalField, pageSize);
+    }
+    html += `</template>`;
 
-  // Loading indicator
-  html += `<div id="${esc(id)}-loading" class="xh-indicator tx-grid-loading">`;
-  html += `<div class="tx-spinner"></div>`;
-  html += `</div>`;
+    // Loading indicator
+    html += `<div id="${esc(id)}-loading" class="xh-indicator tx-grid-loading">`;
+    html += `<div class="tx-spinner"></div>`;
+    html += `</div>`;
+  } else if ((options as any).data) {
+    // Render inline data directly as a static table
+    const data = (options as any).data as Record<string, unknown>[];
+    html += renderStaticTable(visibleCols, data, options);
+  }
 
   html += `</div>`; // #id-data
   html += `</div>`; // .tx-grid-body
@@ -211,6 +219,26 @@ function renderToolbarItem(item: ToolbarItem, _id: string): string {
 // ----------------------------------------------------------
 // Table template rendering
 // ----------------------------------------------------------
+function renderStaticTable(cols: GridColumn[], data: Record<string, unknown>[], options: GridOptions): string {
+  let html = `<table class="tx-grid-table" style="width:100%;border-collapse:collapse">`;
+  html += `<thead><tr>`;
+  for (const col of cols) {
+    html += `<th class="tx-grid-th"${col.width ? ` style="width:${esc(col.width)}"` : ''}>${esc(col.label)}</th>`;
+  }
+  html += `</tr></thead><tbody>`;
+  const rows = options.pageSize ? data.slice(0, options.pageSize) : data;
+  for (const row of rows) {
+    html += `<tr class="tx-grid-row">`;
+    for (const col of cols) {
+      const val = row[col.field] != null ? String(row[col.field]) : '';
+      html += `<td class="tx-grid-cell"${col.align === 'right' ? ' style="text-align:right"' : ''}>${esc(val)}</td>`;
+    }
+    html += `</tr>`;
+  }
+  html += `</tbody></table>`;
+  return html;
+}
+
 function renderTableTemplate(
   cols: GridColumn[],
   options: GridOptions,

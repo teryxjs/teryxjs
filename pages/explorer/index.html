@@ -1864,27 +1864,27 @@ ExplorerRegistry.add('Data Entry', 'Rating', function (container) {
     Teryx.rating(el, { value: 3, max: 5, size: 'md' });
   });
 
-  ExplorerDemo(container, 'Readonly Rating', [
+  ExplorerDemo(container, 'Readonly Rating', { js: [
     'Teryx.rating(el, { value: 4, max: 5, readonly: true });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="rating"\n     value="4" max="5" readonly>\n</div>' }, function (el) {
     Teryx.rating(el, { value: 4, max: 5, readonly: true });
   });
 
-  ExplorerDemo(container, 'Small Rating', [
+  ExplorerDemo(container, 'Small Rating', { js: [
     'Teryx.rating(el, { value: 2, max: 5, size: "sm" });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="rating"\n     value="2" max="5" size="sm">\n</div>' }, function (el) {
     Teryx.rating(el, { value: 2, max: 5, size: 'sm' });
   });
 
-  ExplorerDemo(container, 'Large Rating', [
+  ExplorerDemo(container, 'Large Rating', { js: [
     'Teryx.rating(el, { value: 5, max: 5, size: "lg" });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="rating"\n     value="5" max="5" size="lg">\n</div>' }, function (el) {
     Teryx.rating(el, { value: 5, max: 5, size: 'lg' });
   });
 
-  ExplorerDemo(container, '10-Star Rating', [
+  ExplorerDemo(container, '10-Star Rating', { js: [
     'Teryx.rating(el, { value: 7, max: 10 });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="rating"\n     value="7" max="10">\n</div>' }, function (el) {
     Teryx.rating(el, { value: 7, max: 10 });
   });
 });
@@ -1907,24 +1907,24 @@ ExplorerRegistry.add('Data Entry', 'Slider', function (container) {
     Teryx.slider(el, { range: true, values: [20, 80], min: 0, max: 100 });
   });
 
-  ExplorerDemo(container, 'Slider with Marks', [
+  ExplorerDemo(container, 'Slider with Marks', { js: [
     'Teryx.slider(el, {',
     '  value: 50, min: 0, max: 100,',
     '  marks: { 0: "0%", 25: "25%", 50: "50%", 75: "75%", 100: "100%" }',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="slider"\n     value="50" min="0" max="100"\n     marks=\'{"0":"0%","25":"25%","50":"50%","75":"75%","100":"100%"}\'>\n</div>' }, function (el) {
     Teryx.slider(el, {
       value: 50, min: 0, max: 100,
       marks: { 0: '0%', 25: '25%', 50: '50%', 75: '75%', 100: '100%' }
     });
   });
 
-  ExplorerDemo(container, 'Vertical Slider', [
+  ExplorerDemo(container, 'Vertical Slider', { js: [
     'Teryx.slider(el, {',
     '  value: 60, min: 0, max: 100,',
     '  vertical: true',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="slider"\n     value="60" min="0" max="100"\n     vertical>\n</div>' }, function (el) {
     el.style.height = '240px';
     Teryx.slider(el, { value: 60, min: 0, max: 100, vertical: true });
   });
@@ -2265,13 +2265,13 @@ ExplorerRegistry.add('Data Entry', 'Date Picker', function (container) {
   });
 
   // 2. Date Range Picker
-  ExplorerDemo(container, 'Date Range Picker', [
+  ExplorerDemo(container, 'Date Range Picker', { js: [
     'Teryx.datePicker(el, {',
     '  range: true,',
     '  value: "2026-03-01 - 2026-03-15",',
     '  placeholder: "Select range"',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="datePicker"\n     range\n     value="2026-03-01 - 2026-03-15"\n     placeholder="Select range">\n</div>' }, function (el) {
     Teryx.datePicker(el, {
       range: true,
       value: '2026-03-01 - 2026-03-15',
@@ -2280,13 +2280,13 @@ ExplorerRegistry.add('Data Entry', 'Date Picker', function (container) {
   });
 
   // 3. Min / Max Constraints
-  ExplorerDemo(container, 'Min / Max Constraints', [
+  ExplorerDemo(container, 'Min / Max Constraints', { js: [
     'Teryx.datePicker(el, {',
     '  min: "2026-03-10",',
     '  max: "2026-03-25",',
     '  placeholder: "Mar 10 – 25 only"',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="datePicker"\n     min="2026-03-10" max="2026-03-25"\n     placeholder="Mar 10 - 25 only">\n</div>' }, function (el) {
     Teryx.datePicker(el, {
       min: '2026-03-10',
       max: '2026-03-25',
@@ -2347,12 +2347,12 @@ ExplorerRegistry.add('Data Entry', 'Color Picker', function (container) {
   });
 
   // 3. No Input (presets only)
-  ExplorerDemo(container, 'Presets Only (no text input)', [
+  ExplorerDemo(container, 'Presets Only (no text input)', { js: [
     'Teryx.colorPicker(el, {',
     '  value: "#22c55e",',
     '  showInput: false',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="colorPicker"\n     value="#22c55e" show-input="false">\n</div>' }, function (el) {
     Teryx.colorPicker(el, {
       value: '#22c55e',
       showInput: false
@@ -2364,34 +2364,34 @@ ExplorerRegistry.add('Data Entry', 'Color Picker', function (container) {
 ExplorerRegistry.add('Data Entry', 'Rich Text Editor', function (container) {
 
   // 1. Default toolbar
-  ExplorerDemo(container, 'Default Toolbar', [
+  ExplorerDemo(container, 'Default Toolbar', { js: [
     'Teryx.richEditor(el, {',
     '  placeholder: "Start typing..."',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="richEditor"\n     placeholder="Start typing...">\n</div>' }, function (el) {
     Teryx.richEditor(el, {
       placeholder: 'Start typing...'
     });
   });
 
   // 2. Formatting (bold, italic, underline, lists)
-  ExplorerDemo(container, 'Pre-filled Formatting', [
+  ExplorerDemo(container, 'Pre-filled Formatting', { js: [
     'Teryx.richEditor(el, {',
     '  value: "<p><strong>Bold</strong>, <em>italic</em>, and <u>underline</u>.</p>"',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="richEditor"\n     value="<p><strong>Bold</strong>, <em>italic</em></p>">\n</div>' }, function (el) {
     Teryx.richEditor(el, {
       value: '<p><strong>Bold</strong>, <em>italic</em>, and <u>underline</u>.</p>'
     });
   });
 
   // 3. Readonly
-  ExplorerDemo(container, 'Readonly Editor', [
+  ExplorerDemo(container, 'Readonly Editor', { js: [
     'Teryx.richEditor(el, {',
     '  value: "<p>This content is <strong>read-only</strong>.</p>",',
     '  readonly: true',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="richEditor"\n     value="<p>Read-only content.</p>"\n     readonly>\n</div>' }, function (el) {
     Teryx.richEditor(el, {
       value: '<p>This content is <strong>read-only</strong>.</p>',
       readonly: true
@@ -2441,12 +2441,12 @@ ExplorerRegistry.add('Data Entry', 'Rich Text Editor', function (container) {
 ExplorerRegistry.add('Data Entry', 'File Upload', function (container) {
 
   // 1. Single file upload
-  ExplorerDemo(container, 'Single File Upload', [
+  ExplorerDemo(container, 'Single File Upload', { js: [
     'Teryx.fileupload(el, {',
     '  action: "/api/upload",',
     '  dragDrop: false',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="fileupload"\n     action="/api/upload"\n     drag-drop="false">\n</div>' }, function (el) {
     Teryx.fileupload(el, {
       action: '/api/upload',
       dragDrop: false
@@ -2454,13 +2454,13 @@ ExplorerRegistry.add('Data Entry', 'File Upload', function (container) {
   });
 
   // 2. Multiple files
-  ExplorerDemo(container, 'Multiple Files', [
+  ExplorerDemo(container, 'Multiple Files', { js: [
     'Teryx.fileupload(el, {',
     '  action: "/api/upload",',
     '  multiple: true,',
     '  maxFiles: 5',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="fileupload"\n     action="/api/upload"\n     multiple max-files="5">\n</div>' }, function (el) {
     Teryx.fileupload(el, {
       action: '/api/upload',
       multiple: true,
@@ -2469,13 +2469,13 @@ ExplorerRegistry.add('Data Entry', 'File Upload', function (container) {
   });
 
   // 3. Drag & drop zone
-  ExplorerDemo(container, 'Drag & Drop', [
+  ExplorerDemo(container, 'Drag & Drop', { js: [
     'Teryx.fileupload(el, {',
     '  action: "/api/upload",',
     '  multiple: true,',
     '  dragDrop: true',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="fileupload"\n     action="/api/upload"\n     multiple drag-drop>\n</div>' }, function (el) {
     Teryx.fileupload(el, {
       action: '/api/upload',
       multiple: true,
@@ -2864,7 +2864,7 @@ ExplorerRegistry.add('Navigation', 'Pagination', function (container) {
   });
 
   // 2. Small with Page Info
-  ExplorerDemo(container, 'Simple Pagination with Page Info', [
+  ExplorerDemo(container, 'Simple Pagination with Page Info', { js: [
     'Teryx.pagination(el, {',
     '  total: 100,',
     '  current: 3,',
@@ -2872,7 +2872,7 @@ ExplorerRegistry.add('Navigation', 'Pagination', function (container) {
     '  simple: true,',
     '  showTotal: true,',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="pagination"\n     total="100" current="3" page-size="10"\n     simple show-total>\n</div>' }, function (el) {
     Teryx.pagination(el, {
       total: 100,
       current: 3,
@@ -2883,7 +2883,7 @@ ExplorerRegistry.add('Navigation', 'Pagination', function (container) {
   });
 
   // 3. Full-featured Pagination
-  ExplorerDemo(container, 'Full-Featured Pagination', [
+  ExplorerDemo(container, 'Full-Featured Pagination', { js: [
     'Teryx.pagination(el, {',
     '  total: 500,',
     '  current: 5,',
@@ -2892,7 +2892,7 @@ ExplorerRegistry.add('Navigation', 'Pagination', function (container) {
     '  showSizeChanger: true,',
     '  showJumper: true,',
     '});'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="pagination"\n     total="500" current="5" page-size="25"\n     show-total show-size-changer show-jumper>\n</div>' }, function (el) {
     Teryx.pagination(el, {
       total: 500,
       current: 5,
@@ -3760,16 +3760,16 @@ ExplorerRegistry.add('Feedback', 'Skeleton', function (container) {
   });
 
   // 2. Card Skeleton (avatar + lines)
-  ExplorerDemo(container, 'Card Skeleton', [
+  ExplorerDemo(container, 'Card Skeleton', { js: [
     'Teryx.skeleton(el, { avatar: true, lines: 4, animated: false });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="skeleton"\n     avatar lines="4">\n</div>' }, function (el) {
     Teryx.skeleton(el, { avatar: true, lines: 4, animated: false });
   });
 
   // 3. Image + Text Skeleton
-  ExplorerDemo(container, 'Image Skeleton', [
+  ExplorerDemo(container, 'Image Skeleton', { js: [
     'Teryx.skeleton(el, { image: true, lines: 2, height: "120px", animated: false });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<div data-tx-widget="skeleton"\n     image lines="2" height="120px">\n</div>' }, function (el) {
     Teryx.skeleton(el, { image: true, lines: 2, height: '120px', animated: false });
   });
 
@@ -3979,12 +3979,12 @@ ExplorerRegistry.add('Specialized', 'Kanban Board', function (container) {
 // ── Tooltip ──
 ExplorerRegistry.add('Utilities', 'Tooltip', function (container) {
   // 1. Tooltip Positions
-  ExplorerDemo(container, 'Tooltip Positions', [
+  ExplorerDemo(container, 'Tooltip Positions', { js: [
     'Teryx.tooltip(btn, { content: "Top", position: "top" });',
     'Teryx.tooltip(btn, { content: "Bottom", position: "bottom" });',
     'Teryx.tooltip(btn, { content: "Left", position: "left" });',
     'Teryx.tooltip(btn, { content: "Right", position: "right" });'
-  ].join('\n'), function (el) {
+  ].join('\n'), html: '<button data-tx-widget="tooltip"\n  content="Top tooltip" position="top">\n  Hover me\n</button>' }, function (el) {
     var positions = ['top', 'bottom', 'left', 'right'];
     positions.forEach(function (pos) {
       var btn = document.createElement('button');
