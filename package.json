@@ -58,6 +58,6 @@
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.57.1",
     "vitest": "^1.3.0",
-    "xhtmlx": "0.3.0"
+    "xhtmlx": "0.4.1"
   }
 }
