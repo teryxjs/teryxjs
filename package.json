@@ -1,7 +1,7 @@
 {
   "name": "teryx",
   "packageManager": "pnpm@10.32.1",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Enterprise widget framework built on xhtmlx — Sencha-grade components for JSON-driven UIs",
   "type": "module",
   "main": "./dist/teryx.cjs",
